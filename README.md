@@ -35,4 +35,4 @@
 - **Canterbury Corpus**  
 可逆圧縮アルゴリズムのテストのベンチマークとして使われることを想定したファイルの集合のこと。1997年にCalgary Corpusの上位互換として作られており、Calgary Corpus自体も有用。
 
-
+ 
