@@ -35,4 +35,11 @@
 - **Canterbury Corpus**  
 可逆圧縮アルゴリズムのテストのベンチマークとして使われることを想定したファイルの集合のこと。1997年にCalgary Corpusの上位互換として作られており、Calgary Corpus自体も有用。
 
+- **Mersenne Twister**
+擬似乱数生成器の一つ。
+
+- **xorshift**
+擬似乱数生成器の一つ。むちゃくちゃコードが短い。
+
+- **
  
