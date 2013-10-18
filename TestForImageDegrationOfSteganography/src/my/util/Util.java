@@ -25,15 +25,48 @@ public class Util {
 	 * @param text
 	 */
 	public static void print(String format, Object...args) {
+		System.out.print(String.format(format, args));
+	}
+	
+	/**
+	 * System.out.println
+	 * @param text
+	 */
+	public static void println(String format, Object...args) {
 		System.out.println(String.format(format, args));
 	}
-
+	
+	/**
+	 * 0~maxまでの数値に対応したnビット誤りパターンテーブルを返す
+	 * @param n
+	 * @param max
+	 * @return
+	 */
+	public static int[] errorPatternTable(int n, int max) {
+		int[] table = new int[max];
+		int index = 0, combNum;
+		
+		// ハミングウェイトを変化させる
+		for(int i=0; i<=n; i++) {
+			// nCiを計算	
+			combNum = Calc.combination(n, i);
+			// 0~nCiまでに対応するnビットでハミングウェイとiのパターンを決定する
+			for(int j=0; j<combNum; j++) {
+				table[index] = Calc.countableCode(n, i, j);
+				index++;
+				if(index > max) break;
+			}
+			if(index > max) break;
+		}
+		return table;
+	}
+	
 	/**
 	 * 逆テーブルを生成する
 	 * @param table
 	 * @return
 	 */
-	public static HashMap<Integer, Integer> aitiTable(int[] table) {
+	public static HashMap<Integer, Integer> antiTable(int[] table) {
 		HashMap<Integer, Integer> antiTable = new HashMap<Integer, Integer>();
 		int index = 0;
 		

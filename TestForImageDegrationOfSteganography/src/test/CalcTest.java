@@ -1,13 +1,5 @@
 package test;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-
-import javax.imageio.ImageIO;
-
-import my.util.Calc;
-import my.util.Util;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -29,35 +21,41 @@ public class CalcTest extends TestCase{
 	}
 	
 	static final String[] testOrder = new String[]{
+		"testCountableCode",
+		"testHamingWeight",
 		"testPSNR"
 	};
 	
+	public void testCountableCode() throws Exception {
+		int result = Calc.countableCode(6, 2, 8);
+		assertEquals(20, result);
+
+		result = Calc.countableCode(1, 0, 0);
+		assertEquals(0, result);
+
+		result = Calc.countableCode(1, 1, 0);
+		assertEquals(1, result);
+	}
+	
+	public void testHamingWeight() throws Exception {
+		int result = Calc.hamingWeight(6);
+		assertEquals(2, result);
+
+		result = Calc.hamingWeight(1);
+		assertEquals(1, result);
+
+		result = Calc.hamingWeight(0);
+		assertEquals(0, result);
+	}
+	
 	public void testPSNR() throws Exception {
-		File file = new File("./img/");
-		BufferedImage img1 = ImageIO.read(file.listFiles()[0]);
-		BufferedImage img2 = ImageIO.read(file.listFiles()[0]);
+		byte[] data = new byte[]{1,4,4,23,124};
+		byte[] data2 = data.clone();
 		
-		assertEquals(-1.0, Calc.PSNR(img1, img2));
+		assertEquals(-1.0, Calc.PSNR(data, data2, 0));
 		
-//		for(int i=0; i<img1.getHeight(); i++) {
-//			for(int j=0; j<img1.getWidth(); j++) {
-//				img1.setRGB(j, i, (0 << 24 | 1 << 16 | 1 << 8 | 1) & 0x00ffffff);
-//				Util.print(Util.extractARGB(img1.getRGB(j, i))[0]);
-//				Util.print(Util.extractARGB(img1.getRGB(j, i))[1]);
-//				Util.print(Util.extractARGB(img1.getRGB(j, i))[2]);
-//				Util.print(Util.extractARGB(img1.getRGB(j, i))[3]);
-//				Util.print(Util.extractARGB(img2.getRGB(j, i))[0]);
-//				Util.print(Util.extractARGB(img2.getRGB(j, i))[1]);
-//				Util.print(Util.extractARGB(img2.getRGB(j, i))[2]);
-//				Util.print(Util.extractARGB(img2.getRGB(j, i))[3]);
-//				System.out.println("");
-//			}
-//		}
-//
-//		
-//		
-//		double mse = 1;
-//		double exp = 10 * Math.log10( Math.pow(255, 2) / mse );
-//		assertEquals(exp, Calc.PSNR(img1, img2));
+		data2[0] = -128;
+		
+		assertFalse(-1.0 == Calc.PSNR(data, data2, 0));
 	}
 }

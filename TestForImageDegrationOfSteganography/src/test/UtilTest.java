@@ -1,5 +1,7 @@
 package test;
 
+import java.util.HashMap;
+
 import my.util.Util;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -25,7 +27,9 @@ public class UtilTest extends TestCase{
 		"testExtractByte",
 		"testExtractPutternPerPix",
 		"testExtractARGB",
-		"testEmbedPix"
+		"testEmbedPix",
+		"testErrorPatternTable",
+		"testAntiTable"
 	};
 	
 	public void testExtractByte() throws Exception {
@@ -71,5 +75,25 @@ public class UtilTest extends TestCase{
 		}
 	}
 	
+	public void testErrorPatternTable() throws Exception {
+		int[] table = Util.errorPatternTable(10, 1024);
+		int[] c = new int[1024];
+		
+		for(int i : table) {
+			c[i]++;
+		}
+		
+		for(int j : c) {
+			assertEquals(1, j);
+		}
+	}
 	
+	public void testAntiTable() throws Exception {
+		int[] table = Util.errorPatternTable(10, 1024);
+		HashMap<Integer, Integer> anti = Util.antiTable(table);
+		
+		for(int i=0; i<table.length; i++) {
+			assertEquals(i, anti.get(table[i]).intValue());
+		}
+	}
 }

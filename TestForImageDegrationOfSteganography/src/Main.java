@@ -1,12 +1,9 @@
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
-
-import javax.imageio.ImageIO;
 
 import my.util.Calc;
 import my.util.Util;
@@ -34,18 +31,13 @@ public class Main {
 	
 	public static void main(String[] args) {
 		byte[] msg = getRandomTextByte(MESSAGE_LENGTH);
-		int[] table = Calc.errorPatternTable(ERROR_PATTERN_LENGTH, (int) Math.pow(2, CODE_SIZE));
-		HashMap<Integer, Integer> antiTable = Util.aitiTable(table);
-		
-		if( !compTable(table, antiTable )) {
-			Util.print("not same");
-//			return;
-		}
+		int[] table = Util.errorPatternTable(ERROR_PATTERN_LENGTH, (int) Math.pow(2, CODE_SIZE));
+		HashMap<Integer, Integer> antiTable = Util.antiTable(table);
 		
 		File imgDir = new File(IMAGE_PATH);
-//		for(File f : imgDir.listFiles()) {
-			execStegoProcess(imgDir.listFiles()[0], msg, table, antiTable, MESSAGE_LENGTH, ERROR_PATTERN_LENGTH);
-//		}
+		for(File f : imgDir.listFiles()) {
+			execStegoProcess(f, msg, table, antiTable, MESSAGE_LENGTH, ERROR_PATTERN_LENGTH);
+		}
     }
 	
 	private static void execStegoProcess(File f, byte[] msg, int[] table, HashMap<Integer, Integer> anti, int length, int n) {
@@ -186,16 +178,6 @@ public class Main {
 		return flag;
 	}
 
-	private static boolean compTable(int[] table, HashMap<Integer, Integer> anti) {
-		boolean flag = true;
-		for(int i=0; i<table.length; i++) {
-			if( i != anti.get(table[i]) ) {
-				Util.print(String.format("i:%d, table:%d, anti:%d", i, table[i], anti.get(table[i])));
-				flag = false;
-			}
-		}
-		return flag;
-	}
 	
 	/**
 	 * ランダムな文字列を発生させる
