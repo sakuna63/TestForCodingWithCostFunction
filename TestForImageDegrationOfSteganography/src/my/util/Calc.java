@@ -87,27 +87,21 @@ public class Calc {
 		return weight;
 	}
 	
-	public static double PSNR(BufferedImage img1, BufferedImage img2) {
+	public static double PSNR(byte[] img1, byte[] img2, int offset) {
 		
-		if(img1.getWidth() != img2.getWidth() || img1.getHeight() != img2.getHeight())
+		if(img1.length != img2.length)
 			return -1;
 		
 		double psnr = 0;
 		double mse = 0;
 		
-		int[] argb1, argb2;
-		
-		for(int i=0; i<img1.getWidth(); i++) {
-			for(int j=0; j<img1.getHeight(); j++) {
-				argb1 = Util.extractARGB(img1.getRGB(i, j));
-				argb2 = Util.extractARGB(img2.getRGB(i, j));
-				mse = Math.pow(argb1[0] - argb2[0], 2) + Math.pow(argb1[1] - argb2[1], 2) 
-						+ Math.pow(argb1[2] - argb2[2], 2) + Math.pow(argb1[3] - argb2[3], 2);
-			}
+		for(int i=offset; i<img1.length; i++) {
+			mse += Math.pow(img1[i] - img2[i], 2);
+//			Util.print(mse);
 		}
 		
-		mse /= img1.getWidth() * img1.getHeight() * 3;
-		psnr = 10 * Math.log10( Math.pow(255, 2) / mse );
+		mse /= img1.length;
+		psnr = mse == 0.0 ? -1 : 10 * Math.log10( Math.pow(255, 2) / mse );
 		
 		return psnr;
 	}

@@ -1,5 +1,7 @@
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -10,13 +12,17 @@ import my.util.Calc;
 import my.util.Util;
 
 /**
- * US-ASCIIを用いることを前提にコードを書く
+ * 前提条件
+ * ・US-ASCII
+ * ・GrayScale
+ * ・256 * 256
+ * ・WindowsフォーマットのBitmap
  * @author sakuna63
  */
 
 public class Main {
 	private static final String IMAGE_PATH = "./img/";
-	private static final String BURIED_IMAGE_PATH = "./buried_img/";
+	private static final String BURIED_IMAGE_PATH = "./embuded_img/";
 	private static final String CHARACTER_CODE = "US-ASCII";
 	
 	// CHARACTER_CODEのサイズ
@@ -31,39 +37,71 @@ public class Main {
 		int[] table = Calc.errorPatternTable(ERROR_PATTERN_LENGTH, (int) Math.pow(2, CODE_SIZE));
 		HashMap<Integer, Integer> antiTable = Util.aitiTable(table);
 		
-		File imgDir = new File(IMAGE_PATH);
-		for(File f : imgDir.listFiles()) {
-			execStegoProcess(f, msg, table, antiTable, MESSAGE_LENGTH, ERROR_PATTERN_LENGTH);
+		if( !compTable(table, antiTable )) {
+			Util.print("not same");
+//			return;
 		}
+		
+		File imgDir = new File(IMAGE_PATH);
+//		for(File f : imgDir.listFiles()) {
+			execStegoProcess(imgDir.listFiles()[0], msg, table, antiTable, MESSAGE_LENGTH, ERROR_PATTERN_LENGTH);
+//		}
     }
 	
 	private static void execStegoProcess(File f, byte[] msg, int[] table, HashMap<Integer, Integer> anti, int length, int n) {
-		BufferedImage stego = null;
-		BufferedImage cover = null;
+		FileInputStream stego = null;
+		FileInputStream cover = null;
+		FileOutputStream output = null;
+		int size = 0, offset = 0;
+		byte[] sBuff = null, cBuff = null, sizeBuff = new byte[4], offsetBuff = new byte[4];
+		File oFile = new File(BURIED_IMAGE_PATH + f.getName());
 		try {
-			stego =  ImageIO.read(f);
-			cover =  ImageIO.read(f);
+			// 出力用のファイルを生成
+			oFile.createNewFile();
+			// Streamクラスの初期化
+			stego = new FileInputStream(f);
+			cover = new FileInputStream(f);
+			output = new FileOutputStream(oFile);
+			// Bitmapのサイズを読み込む
+			stego.skip(2);
+			stego.read(sizeBuff);
+			stego.skip(4);
+			stego.read(offsetBuff);
+			stego = new FileInputStream(f);
+			size = sizeBuff[3] << 24 | sizeBuff[2] << 16 | sizeBuff[1] << 8 | sizeBuff[0];
+			offset = offsetBuff[3] << 24 | offsetBuff[2] << 16 | offsetBuff[1] << 8 | offsetBuff[0];
+			// バッファにビットマップを読み込む
+			sBuff = new byte[size];
+			cBuff = new byte[size];
+			stego.read(sBuff);
+			cover.read(cBuff);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		if( stego != null || cover != null ) {
-			stego = embeding(stego, msg, table, n);
-		} else {
-			Util.print(f.getName() + "の読み込みに失敗しました。");
+		
+		if( sBuff == null || cBuff == null ) {
+			Util.print("画像の読み込みに失敗しました。");
 			return;
 		}
+		
+		embeding(sBuff, msg, table, n, offset);
 
-		Util.print(Calc.PSNR(stego, cover));
+		Util.println("PSNR:"+Calc.PSNR(cBuff, cBuff, offset));
+		Util.println("PSNR:"+Calc.PSNR(sBuff, cBuff, offset));
 		
-//		byte[] msg2 = extracting(stego, cover, table, anti, n, length);
-//		Util.print( compMsg(msg, msg2) ? "メッセージの取り出しに成功しました" : "メッセージの取り出しに失敗しました");
-		
+		byte[] msg2 = extracting(sBuff, cBuff, offset, table, anti, n, length);
+		Util.println( compMsg(msg, msg2) ? "メッセージの取り出しに成功しました" : "メッセージの取り出しに失敗しました");
+
 		try {
-			ImageIO.write(stego, "bmp", new File(BURIED_IMAGE_PATH + f.getName()));
+			output.write(sBuff);
+			stego.close();
+			cover.close();
+			output.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		Util.print("end");
 	}
 	
 	/**
@@ -73,24 +111,26 @@ public class Main {
 	 * @param table
 	 * @param n
 	 */
-	private static BufferedImage embeding(BufferedImage img, byte[] msg, int[] table, int n) {
-		int argb, index = 0;
-		int imgW = img.getWidth(), imgH = img.getHeight();
-		int[] eppArray = null;
-		
-		for(int i=0; i<imgH; i++) {
-			for(int j=0; j<imgW; j++) {
-				if(j % n == 0) {
-					eppArray = Util.extractErrorPutternPerPix(table[(int)(msg[index] & 0xFF)], n);
-					index++;
-				}
-				int rgb = img.getRGB(j, i);
-				argb = Util.embededPix(rgb, eppArray[j % n]);
-				Util.print(String.format("(%d,%d) %d -> %d", i,j,rgb,argb));
-				img.setRGB(j, i, argb);
-			}
-		}
-		return img;
+	 private static void embeding(byte[] img, byte[] msg, int[] table, int n, int offset) {
+        byte[] eppArray;
+        int baseIndex = offset;
+        
+        if( msg.length * n > img.length - offset) {
+        	Util.println("メッセージが長過ぎます");
+        	return;
+        }
+        
+        // メッセージの数だけ繰り返す
+        for(byte m : msg) {
+        	// メッセージに対応する誤りパターンを取り出す
+//        	Util.print("byte:%x int:%d", m, (int)(m & 0xFF));
+        	eppArray = Util.extractErrorPutternPerPix(table[(int)(m & 0xFF)], n);
+        	// １ピクセルでARGBの32ビットなのでそれぞれのLSBに対し、誤りパターンのMSBから順に排他的論理和をとる
+        	for(int i=0; i<n ; i++) {
+        		img[baseIndex + i] = (byte) (img[baseIndex + i] ^ eppArray[n-i-1]);
+        	}
+        	baseIndex += n;
+        }
 	}
 	
 	/**
@@ -103,28 +143,24 @@ public class Main {
 	 * @param length: メッセージ長
 	 * @return
 	 */
-	private static byte[] extracting(BufferedImage stego, BufferedImage cover, int[] table, HashMap<Integer, Integer> anti, int n, int length) {
-		int argb1, argb2, ep = 0, index = 0;
-		int imgW = stego.getWidth(), imgH = stego.getHeight();
-		
+	private static byte[] extracting(byte[] stego, byte[] cover, int offset, int[] table, HashMap<Integer, Integer> anti, int n, int length) {
 		byte[] msg = new byte[length];
+		byte eBit, ep = 0;
+		int index = 0;
 		
-		for(int i=0; i<imgH; i++) {
-			for(int j=0; j<imgW; j++) {
-				// それぞれのピクセルからLSBのみを取り出す
-				argb1 = stego.getRGB(j, i) & 0x00000001;
-				argb2 = cover.getRGB(j, i) & 0x00000001;
-				
-				// とりだしたビットのXORをepのLSBに格納し1ビット左シフトする
-				ep = (ep << 1) | (argb1 ^ argb2) ;
-				
-				// エラーパターン長と等しくなったら埋め込みデータを取り出す
-				if( j % n == 0 ) {
-					msg[index] = anti.get(ep).byteValue();
-					index++;
-					ep = 0;
-				}
+		for(int i=offset; i<stego.length; i+=n) {
+			for(int j=i; j<i+n; j++) {
+				eBit = (byte) ((stego[j] ^ cover[j]) & 0x01);
+				// とりだしたビットのXORをepのLSBに格納し1ビット左シフトすることで誤りパターンを取り出す
+				ep = (byte) ((ep << 1) | eBit) ;
 			}
+			
+			// 誤りパターンから埋め込みデータを復元する
+			int key = ep & 0xff;
+			Integer value = anti.get(key);
+			msg[index] = value.byteValue();
+			index++;
+			ep = 0;
 		}
 		
 		return msg;
@@ -142,13 +178,25 @@ public class Main {
 		
 		for(int i=0; i<msg1.length; i++) {
 			if( msg1[i] != msg2[i]) {
+				Util.println(String.format("i: %d, msg1:%d, msg2:%d",i, msg1[i], msg2[i]));
 				flag = false;
-				break;
+//				break;
 			}
 		}
 		return flag;
 	}
 
+	private static boolean compTable(int[] table, HashMap<Integer, Integer> anti) {
+		boolean flag = true;
+		for(int i=0; i<table.length; i++) {
+			if( i != anti.get(table[i]) ) {
+				Util.print(String.format("i:%d, table:%d, anti:%d", i, table[i], anti.get(table[i])));
+				flag = false;
+			}
+		}
+		return flag;
+	}
+	
 	/**
 	 * ランダムな文字列を発生させる
 	 * @param textNum

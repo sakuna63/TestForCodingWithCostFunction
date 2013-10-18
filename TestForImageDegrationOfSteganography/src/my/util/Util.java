@@ -5,11 +5,27 @@ import java.util.HashMap;
 public class Util {
 
 	/**
-	 * System.out.println
+	 * System.out.print
 	 * @param text
 	 */
 	public static <T> void print(T text) {
+		System.out.print(text);
+	}
+	
+	/**
+	 * System.out.println
+	 * @param text
+	 */
+	public static <T> void println(T text) {
 		System.out.println(text);
+	}
+	
+	/**
+	 * System.out.println
+	 * @param text
+	 */
+	public static void print(String format, Object...args) {
+		System.out.println(String.format(format, args));
 	}
 
 	/**
@@ -35,8 +51,8 @@ public class Util {
 	 * @param n
 	 * @return
 	 */
-	public static int[] extractErrorPutternPerPix(int ep, int n) {
-		int[] eppArray = new int[n];
+	public static byte[] extractErrorPutternPerPix(int ep, int n) {
+		byte[] eppArray = new byte[n];
 		for(int i=0; i<n; i++) {
 			eppArray[i] = extractByte(ep, i);
 		}
@@ -49,8 +65,8 @@ public class Util {
 	 * @param bit
 	 * @return
 	 */
-	public static int extractByte(int epp, int bit) {
-		return (epp >>> bit) & 0x00000001;
+	public static byte extractByte(int epp, int bit) {
+		return (byte) ((epp >>> bit) & 0x00000001);
 	}
 	
 	/**
