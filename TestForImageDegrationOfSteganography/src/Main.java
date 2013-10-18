@@ -28,24 +28,30 @@ public class Main {
 		
 		File imgDir = new File(IMAGE_PATH);
 		BufferedImage img = null;
+		BufferedImage img2 = null;
 		try {
 			img =  ImageIO.read(imgDir.listFiles()[0]);
+			img2 =  ImageIO.read(imgDir.listFiles()[1]);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		Util.print(Calc.PSNR(img, img2));
+		
 		
 		if( img != null ) {
 			buryErrorPattern1(img, msg, table, ERROR_PATTERN_LENGTH);
 		} else {
 			Util.print("画像の読み込みに失敗しました。");
 		}
+
+		Util.print(Calc.PSNR(img, img2));
 		
 		try {
 			ImageIO.write(img, "bmp", new File(BURIED_IMAGE_PATH + "buried.bmp"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		Util.print("success");
     }
 	
 	/**
@@ -57,19 +63,18 @@ public class Main {
 	 */
 	private static void buryErrorPattern1(BufferedImage img, byte[] msg, int[] table, int n) {
 		int ePattern;
-		int argb, a, r, g, b;
+		int argb[];
 		int imgW = img.getWidth(), imgH = img.getHeight();
 		int imgX = 0, imgY = 0;
 		for(byte m : msg) {
 			ePattern = table[(int)(m & 0xFF)];
 			for(int i=n-1; 0<=i; i-=4) {
-				argb = img.getRGB(imgX, imgY);
-				a = ((argb >>> 24) & 0xff) ^ putByte(ePattern, i);
-				r = ((argb >>> 16) & 0xff) ^ putByte(ePattern, i-1);
-				g = ((argb >>> 8) & 0xff) ^ putByte(ePattern, i-2);
-				b = (argb & 0xff) ^ putByte(ePattern, i-3);
-				argb = a << 24 | r << 16 | g << 8 | b;
-				img.setRGB(imgX, imgY, argb);
+				argb = Util.putARGB(img.getRGB(imgX, imgY));
+				argb[0] = argb[0] ^ Util.putByte(ePattern, i);
+				argb[1] = argb[1] ^ Util.putByte(ePattern, i-1);
+				argb[2] = argb[2] ^ Util.putByte(ePattern, i-2);
+				argb[3] = argb[3] ^ Util.putByte(ePattern, i-3);
+				img.setRGB(imgX, imgY, argb[0] << 24 | argb[1] << 16 | argb[2] << 8 | argb[3]);
 				imgX++;
 				if(imgX >= imgW) {
 					imgX = 0;
@@ -81,16 +86,6 @@ public class Main {
 				}
 			}
 		}
-	}
-	
-	/**
-	 * bit番目のbitをLSBにし他を0にして返す
-	 * @param pattern
-	 * @param bit
-	 * @return
-	 */
-	private static int putByte(int pattern, int bit) {
-		return (pattern >>> bit) & 0x00000001;
 	}
 	
 	private static byte[] putBuriedMessage(BufferedImage img, byte[] msg, int[] table, int n) {

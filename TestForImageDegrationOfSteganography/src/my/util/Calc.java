@@ -1,5 +1,7 @@
 package my.util;
 
+import java.awt.image.BufferedImage;
+
 public class Calc {
 
 	/**
@@ -84,5 +86,30 @@ public class Calc {
 			num /=2;
 		}
 		return weight;
+	}
+	
+	public static double PSNR(BufferedImage img1, BufferedImage img2) {
+		
+		if(img1.getWidth() != img2.getWidth() || img1.getHeight() != img2.getHeight())
+			return -1;
+		
+		double psnr = 0;
+		double mse = 0;
+		
+		int[] argb1, argb2;
+		
+		for(int i=0; i<img1.getWidth(); i++) {
+			for(int j=0; j<img1.getHeight(); j++) {
+				argb1 = Util.putARGB(img1.getRGB(i, j));
+				argb2 = Util.putARGB(img2.getRGB(i, j));
+				mse = Math.pow(argb1[0] - argb2[0], 2) + Math.pow(argb1[1] - argb2[1], 2) 
+						+ Math.pow(argb1[2] - argb2[2], 2) + Math.pow(argb1[3] - argb2[3], 2);
+			}
+		}
+		
+		mse /= img1.getWidth() * img1.getHeight() * 3;
+		psnr = 10 * Math.log10( Math.pow(255, 2) / mse );
+		
+		return psnr;
 	}
 }
