@@ -7,6 +7,19 @@ public class Util {
 	}
 
 	/**
+	 * nビットの誤りパターンepから各ビットを取り出して配列として返す
+	 * @param ep
+	 * @param n
+	 * @return
+	 */
+	public static int[] putErrorPuttern(int ep, int n) {
+		int[] epArray = new int[n];
+		for(int i=0; i<n; i++) {
+			epArray[i] = putByte(ep, i);
+		}
+		return epArray;
+	}
+	/**
 	 * bit番目のbitをLSBにし他を0にして返す
 	 * @param pattern
 	 * @param bit
