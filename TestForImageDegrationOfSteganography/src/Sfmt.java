@@ -1,7 +1,4 @@
-/*
-Sfmt.java 乱数ライブラリ(216091)
-coded by isaku@pb4.so-net.ne.jp
-*/
+
 
 class Sfmt
 {

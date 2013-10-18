@@ -4,163 +4,98 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
+import javax.imageio.ImageIO;
 
+import my.util.Calc;
+import my.util.Util;
 /**
  * US-ASCIIを用いることを前提にコードを書く
  * @author sakuna63
  *
  */
-import javax.imageio.ImageIO;
 
 public class Main {
 	private static final String IMAGE_PATH = "./img/";
+	private static final String BURIED_IMAGE_PATH = "./buried_img/";
 	private static final String CHARACTER_CODE = "US-ASCII";
-	private static final int TEXT_LENGTH = 256;
+	private static final int CODE_SIZE = 8;
+	private static final int ERROR_PATTERN_LENGTH = 8;
+	private static final int MESSAGE_LENGTH = 256 * 256 * 4 / ERROR_PATTERN_LENGTH;
 	
 	public static void main(String[] args) {
-		byte[] textBuff = getRandomTextByte(256);
-		byte[] table = errorPatternTable(8, 95);
-//		String text = getRandomText(TEXT_LENGTH);
-//		System.out.println( text );
+		byte[] msg = getRandomTextByte(MESSAGE_LENGTH);
+		int[] table = Calc.errorPatternTable(ERROR_PATTERN_LENGTH, (int) Math.pow(2, CODE_SIZE));
 		
 		File imgDir = new File(IMAGE_PATH);
-//		for(String name : imgDir.list()) {
-//			System.out.println(name);
-//		}
-		
-		FileInputStream in = null;
-		byte[] buff = new byte[30];
-		try {
-			in = new FileInputStream(imgDir.listFiles()[0]);
-			if( in != null ) {	
-				in.read(buff);
-				in.close();
-			}
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		print(new String(buff));
-		for(int k=0; k<buff.length; k++)
-			print(buff[k]);
-		
-		
 		BufferedImage img = null;
 		try {
-			img = ImageIO.read(imgDir.listFiles()[0]);
-//			img = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+			img =  ImageIO.read(imgDir.listFiles()[0]);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-//		print("pixel:" + img.getData().getNumDataElements());
 		
-		int argb, a, r, g, b;
-		for(int i=0; i<img.getHeight(); i++) {
-			for(int j=0; j<img.getWidth(); j++) {
-				argb = img.getRGB(i, j);
-				a = (argb>>>24) & 0xff;
-				r = (argb>>>16) & 0xff;
-				g = (argb>>> 8) & 0xff;
-				b = argb        & 0xff;
-//				System.out.println("argb:"+argb+"a:"+a+" r:"+r+" g:"+g+" b:"+b);
-//				print("pixel("+i+","+j+"):" + img.getRGB(i, j));
-			}
+		if( img != null ) {
+			buryErrorPattern1(img, msg, table, ERROR_PATTERN_LENGTH);
+		} else {
+			Util.print("画像の読み込みに失敗しました。");
 		}
+		
+		try {
+			ImageIO.write(img, "bmp", new File(BURIED_IMAGE_PATH + "buried.bmp"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Util.print("success");
     }
 	
-	private static <T> void print(T text) {
-		System.out.println(text);
-	}
-
-	
 	/**
-	 * 0~maxまでの数値に対応したnビット誤りパターンテーブルを返す
+	 * 誤りパターンが埋め込まれたimgを返す
+	 * @param img
+	 * @param msg
+	 * @param table
 	 * @param n
-	 * @param max
-	 * @return
 	 */
-	private static byte[] errorPatternTable(int n, int max) {
-		byte[] table = new byte[max];
-		int index = 0;
-		int combNum;
-		byte pastCombNum = 0;
-		for(int i=0; i<n; i++) {
-			combNum = combination(n, i);
-			for(int j=0; j<combNum; j++) {
-				table[index] = (byte) (countableCode(n, i, j) + pastCombNum);
-				index++;
-				if(index >= max) break;
+	private static void buryErrorPattern1(BufferedImage img, byte[] msg, int[] table, int n) {
+		int ePattern;
+		int argb, a, r, g, b;
+		int imgW = img.getWidth(), imgH = img.getHeight();
+		int imgX = 0, imgY = 0;
+		for(byte m : msg) {
+			ePattern = table[(int)(m & 0xFF)];
+			for(int i=n-1; 0<=i; i-=4) {
+				argb = img.getRGB(imgX, imgY);
+				a = ((argb >>> 24) & 0xff) ^ putByte(ePattern, i);
+				r = ((argb >>> 16) & 0xff) ^ putByte(ePattern, i-1);
+				g = ((argb >>> 8) & 0xff) ^ putByte(ePattern, i-2);
+				b = (argb & 0xff) ^ putByte(ePattern, i-3);
+				argb = a << 24 | r << 16 | g << 8 | b;
+				img.setRGB(imgX, imgY, argb);
+				imgX++;
+				if(imgX >= imgW) {
+					imgX = 0;
+					imgY++;
+					if( imgY >= imgH ) {
+						Util.print("max size");
+						return;
+					}
+				}
 			}
-			if(index >= max) break;
-			pastCombNum += combNum;
 		}
-		return table;
 	}
 	
 	/**
-	 * パスカルの三角形を逆算して、番号numに対応する長さn, ハミングウェイトkの２進数を返す(byte形式)
-	 * @param n
-	 * @param k
-	 * @param num
+	 * bit番目のbitをLSBにし他を0にして返す
+	 * @param pattern
+	 * @param bit
 	 * @return
 	 */
-	private static byte countableCode(int n, int k, int num) {
-		Integer code = 0;
-		int pascalNum;
-		// パスカルの三角形上の座標
-		while(num != 0) {
-			// 右斜め上に移動
-			pascalNum = combination(n-1, k);
-//			System.out.println(pascalNum);
-			if(pascalNum > num) {
-				n--;
-			}
-			// 左斜め上に移動
-			else {
-				n--;
-				k--;
-				num -= pascalNum;
-				code = (int) (code + Math.pow(2, n));
-			}
-		}
-		return code.byteValue();
+	private static int putByte(int pattern, int bit) {
+		return (pattern >>> bit) & 0x00000001;
 	}
 	
-	/**
-	 * 底が２のlogの値を返す
-	 * @param num
-	 * @return
-	 */
-	private static double log2(double num) {
-		return Math.log(num) / Math.log(2);
-	}
-	
-	
-	private static int factorial(int n) {
-		return n <= 1 ? 1 : n * factorial(n-1);
-	}
-	
-	
-	private static int combination(int n, int k) {
-		return factorial(n) / (factorial(k) * factorial(n-k));
-	}
-	
-	
-	private static int hamingWeight(int num) {
-		int weight = 0;
-		while(num != 0) {
-			if(num%2 == 1) {
-				weight++;
-			}
-			num /=2;
-		}
-		return weight;
+	private static byte[] putBuriedMessage(BufferedImage img, byte[] msg, int[] table, int n) {
+		
+		return null;
 	}
 
 	private static String getRandomText(int textNum) {
@@ -181,8 +116,7 @@ public class Main {
 		byte[] randByteArray = new byte[textNum];
 	
 		for( int i=0; i<textNum; i++) {
-		    // null文字などを避ける
-		    num = s.NextInt(95) + 32;
+		    num = s.NextInt((int) Math.pow(2, CODE_SIZE));
 		    byte_num = num.byteValue();
 		    randByteArray[i] = byte_num;
 		}
