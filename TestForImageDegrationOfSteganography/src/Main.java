@@ -40,13 +40,16 @@ public class Main {
 		}
     }
 	
+	@SuppressWarnings("resource")
 	private static void execStegoProcess(File f, byte[] msg, int[] table, HashMap<Integer, Integer> anti, int length, int n) {
 		FileInputStream stego = null;
 		FileInputStream cover = null;
 		FileOutputStream output = null;
-		int size = 0, offset = 0;
-		byte[] sBuff = null, cBuff = null, sizeBuff = new byte[4], offsetBuff = new byte[4];
 		File oFile = new File(BURIED_IMAGE_PATH + f.getName());
+		
+		int size = 0, offset = 0;
+		byte[] sBuff = null, cBuff = null, 
+			   sizeBuff = new byte[4], offsetBuff = new byte[4];
 		try {
 			// 出力用のファイルを生成
 			oFile.createNewFile();
@@ -78,7 +81,7 @@ public class Main {
 		
 		embeding(sBuff, msg, table, n, offset);
 
-		Util.println("PSNR:"+Calc.PSNR(cBuff, cBuff, offset));
+//		Util.println("PSNR:"+Calc.PSNR(cBuff, cBuff, offset));
 		Util.println("PSNR:"+Calc.PSNR(sBuff, cBuff, offset));
 		
 		byte[] msg2 = extracting(sBuff, cBuff, offset, table, anti, n, length);
@@ -93,7 +96,7 @@ public class Main {
 			e.printStackTrace();
 		}
 		
-		Util.print("end");
+		Util.println("end");
 	}
 	
 	/**
