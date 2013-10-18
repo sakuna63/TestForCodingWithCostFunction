@@ -12,20 +12,19 @@ public class Calc {
 	 */
 	public static int[] errorPatternTable(int n, int max) {
 		int[] table = new int[max];
-		int index = 0, combNum, pastCombNum = 0;
+		int index = 0, combNum;
 		
 		// ハミングウェイトを変化させる
-		for(int i=0; i<n; i++) {
-			// nCiを計算
+		for(int i=0; i<=n; i++) {
+			// nCiを計算	
 			combNum = combination(n, i);
 			// 0~nCiまでに対応するnビットでハミングウェイとiのパターンを決定する
 			for(int j=0; j<combNum; j++) {
-				table[index] = countableCode(n, i, j);// + pastCombNum;
+				table[index] = countableCode(n, i, j);
 				index++;
-				if(index >= max) break;
+				if(index > max) break;
 			}
-			if(index >= max) break;
-			pastCombNum += combNum;
+			if(index > max) break;
 		}
 		return table;
 	}
@@ -100,8 +99,8 @@ public class Calc {
 		
 		for(int i=0; i<img1.getWidth(); i++) {
 			for(int j=0; j<img1.getHeight(); j++) {
-				argb1 = Util.putARGB(img1.getRGB(i, j));
-				argb2 = Util.putARGB(img2.getRGB(i, j));
+				argb1 = Util.extractARGB(img1.getRGB(i, j));
+				argb2 = Util.extractARGB(img2.getRGB(i, j));
 				mse = Math.pow(argb1[0] - argb2[0], 2) + Math.pow(argb1[1] - argb2[1], 2) 
 						+ Math.pow(argb1[2] - argb2[2], 2) + Math.pow(argb1[3] - argb2[3], 2);
 			}
