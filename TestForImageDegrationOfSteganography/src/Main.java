@@ -8,31 +8,62 @@ import java.util.HashMap;
  */
 public class Main {
 	public static void main(String[] args) {
-		String text = getRandomText(256);
-		System.out.println( text );
+		byte[] textBuff = getRandomTextByte(256);
+		byte[] table = errorPatternTable(8, 95);
     }
 
-	private static HashMap<Byte, Byte> getCodeTable() {
-		HashMap<Byte, Byte> table = new HashMap<Byte, Byte>();
-		
-		
+	
+	/**
+	 * 0~maxまでの数値に対応したnビット誤りパターンテーブルを返す
+	 * @param n
+	 * @param max
+	 * @return
+	 */
+	private static byte[] errorPatternTable(int n, int max) {
+		byte[] table = new byte[max];
+		int index = 0;
+		int combNum;
+		byte pastCombNum = 0;
+		for(int i=0; i<n; i++) {
+			combNum = combination(n, i);
+			for(int j=0; j<combNum; j++) {
+				table[index] = (byte) (countableCode(n, i, j) + pastCombNum);
+				index++;
+				if(index >= max) break;
+			}
+			if(index >= max) break;
+			pastCombNum += combNum;
+		}
 		return table;
 	}
 	
 	/**
-	 * 数え上げ符号を返す
-	 * @param code_lenght
-	 * @param code_weight
+	 * パスカルの三角形を逆算して、番号numに対応する長さn, ハミングウェイトkの２進数を返す(byte形式)
+	 * @param n
+	 * @param k
 	 * @param num
 	 * @return
 	 */
-	private static byte countableCode(int code_lenght, int code_weight, int num) {
-		byte code = 0;
-		// Step1
-		// ハミングウェイトを計算
-		int weight = hamingWeight(num);
-		int step1_length = p
-		return code;
+	private static byte countableCode(int n, int k, int num) {
+		Integer code = 0;
+		int pascalNum;
+		// パスカルの三角形上の座標
+		while(num != 0) {
+			// 右斜め上に移動
+			pascalNum = combination(n-1, k);
+//			System.out.println(pascalNum);
+			if(pascalNum > num) {
+				n--;
+			}
+			// 左斜め上に移動
+			else {
+				n--;
+				k--;
+				num -= pascalNum;
+				code = (int) (code + Math.pow(2, n));
+			}
+		}
+		return code.byteValue();
 	}
 	
 	/**
@@ -44,13 +75,16 @@ public class Main {
 		return Math.log(num) / Math.log(2);
 	}
 	
+	
 	private static int factorial(int n) {
 		return n <= 1 ? 1 : n * factorial(n-1);
 	}
 	
+	
 	private static int combination(int n, int k) {
 		return factorial(n) / (factorial(k) * factorial(n-k));
 	}
+	
 	
 	private static int hamingWeight(int num) {
 		int weight = 0;
