@@ -80,7 +80,7 @@ public class UtilTest extends TestCase{
 //	
 //
 	public void testCountableCode() throws Exception {
-		long[] result = Util.countableCode(6, 2, 8);
+		int[] result = Util.countableCode(6, 2, 8);
 		assertEquals(20, result[0]);
 
 		result = Util.countableCode(1, 0, 0);
@@ -91,7 +91,7 @@ public class UtilTest extends TestCase{
 	}
 	
 	public void testAntiCountableCode() throws Exception {
-		long[] code = Util.countableCode(6, 2, 8);
+		int[] code = Util.countableCode(6, 2, 8);
 		int result = Util.antiCountableCode(6, 2, code);
 		assertEquals(15, result);
 		
@@ -105,7 +105,7 @@ public class UtilTest extends TestCase{
 	}
 	
 	public void testError2Message() throws Exception {
-		long[] code = Util.countableCode(6, 2, 8);
+		int[] code = Util.countableCode(6, 2, 8);
 		int result = Util.error2Message(6, code);
 		assertEquals(15, result);
 		
@@ -122,7 +122,7 @@ public class UtilTest extends TestCase{
 		byte[] stego = new byte[100];
 		byte[] cover = stego.clone();
 		
-		long[] result = Util.extractErrorPattern(stego, cover, 0, 10);
+		int[] result = Util.extractErrorPattern(stego, cover, 0, 10);
 		assertEquals(result[0], 0);
 		assertEquals(result[1], 0);
 		assertEquals(result[2], 0);
@@ -149,7 +149,7 @@ public class UtilTest extends TestCase{
 	}
 	
 	public void testRaiseBit() throws Exception {
-		long[] code = new long[4];
+		int[] code = new int[8];
 		Util.raiseBit(code, 3);
 		assertEquals(code[0], 8);
 		
@@ -160,5 +160,13 @@ public class UtilTest extends TestCase{
 		Util.raiseBit(code, 255);
 		assertEquals(code[0], 8);
 		assertEquals(code[1], 1);
+		
+		code = new int[8];
+		Util.raiseBit(code, 31);
+//		assertEquals((long)Math.pow(2, 31), code[0]);
+
+		code = new int[8];
+		Util.raiseBit(code, 32);
+		assertEquals((int)Math.pow(2, 32), code[0]);
 	}
 }

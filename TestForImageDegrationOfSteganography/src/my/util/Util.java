@@ -1,7 +1,5 @@
 package my.util;
 
-import java.util.HashMap;
-
 public class Util {
 
 	/**
@@ -42,7 +40,7 @@ public class Util {
 	 * @param ep
 	 * @return
 	 */
-	public static int error2Message(int n, long[] ep) {
+	public static int error2Message(int n, int[] ep) {
 		// ハミングウェイトを計算
 		int weight = hamingWeight(ep[0]) + hamingWeight(ep[1])
 				+ hamingWeight(ep[2]) + hamingWeight(ep[3]);
@@ -55,40 +53,24 @@ public class Util {
 	 * @param max
 	 * @return
 	 */
-	public static long[][] errorPatternTable(int n, int max) {
-		long[][] table = new long[max][4];
-		int index = 0, combNum;
+	public static int[][] errorPatternTable(int n, int max) {
+		int[][] table = new int[max][8];
+		int index = 0;
+		long combNum;
 		
 		// ハミングウェイトを変化させる
 		for(int i=0; i<=n; i++) {
 			// nCiを計算	
 			combNum = Calc.combination(n, i);
 			// 0~nCiまでに対応するnビットでハミングウェイとiのパターンを決定する
-			for(int j=0; j<combNum; j++) {
+			for(long j=0; j<combNum; j++) {
 				table[index] = countableCode(n, i, j);
 				index++;
-				if(index > max) break;
+				if(index >= max) break;
 			}
-			if(index > max) break;
+			if(index >= max) break;
 		}
 		return table;
-	}
-	
-	/**
-	 * 逆テーブルを生成する
-	 * @param table
-	 * @return
-	 */
-	public static HashMap<long[], Integer> antiTable(long[][] table) {
-		HashMap<long[], Integer> antiTable = new HashMap<long[], Integer>();
-		int index = 0;
-		
-		for(long[] item : table) {
-			antiTable.put(item, index);
-			index++;
-		}
-		
-		return antiTable;
 	}
 	
 	/**
@@ -97,7 +79,7 @@ public class Util {
 	 * @param n
 	 * @return
 	 */
-	public static byte[] extractErrorPutternPerPix(long[] ep, int n) {
+	public static byte[] extractErrorPutternPerPix(int[] ep, int n) {
 		byte[] eppArray = new byte[n];
 		for(int i=0; i<n; i++) {
 			eppArray[i] = extractByte(ep, i);
@@ -111,7 +93,7 @@ public class Util {
 	 * @param n
 	 * @return
 	 */
-	public static byte extractByte(long epp, int n) {
+	public static byte extractByte(int epp, int n) {
 		return (byte) ((epp >>> n) & 0x0000000000000000000000000000000000000000000000000000000000000001);
 	}
 	
@@ -121,9 +103,9 @@ public class Util {
 	 * @param n
 	 * @return
 	 */
-	public static byte extractByte(long[] epp, int n) {
-		int index = n/64;
-		int shiftBit = n%64;
+	public static byte extractByte(int[] epp, int n) {
+		int index = n/32;
+		int shiftBit = n%32;
 		return (byte) ((epp[index] >>> shiftBit) & 0x0000000000000000000000000000000000000000000000000000000000000001);
 	}
 	
@@ -135,9 +117,9 @@ public class Util {
 	 * @param n
 	 * @return
 	 */
-	public static long[] extractErrorPattern(byte[] stego, byte[] cover, int start, int n) { 
+	public static int[] extractErrorPattern(byte[] stego, byte[] cover, int start, int n) { 
 		byte eBit;
-		long[] code = new long[4];
+		int[] code = new int[8];
 		for(int i=start; i<start+n; i++) {
 			// 誤りビットを抽出する
 			eBit = (byte) ((stego[i] ^ cover[i]) & 0x01);
@@ -154,9 +136,10 @@ public class Util {
 	 * @param num
 	 * @return
 	 */
-	public static long[] countableCode(int n, int k, int num) {
-		long[] code = new long[4];
-		int pascalNum;
+	public static int[] countableCode(int n, int k, long num) {
+		int[] code = new int[8];
+		long pascalNum;
+		
 		while( !(n < 0) ) {
 			// 右斜め上の値を計算
 			pascalNum = Calc.combination(n, k);
@@ -172,7 +155,7 @@ public class Util {
 		return code;
 	}
 	
-	public static int antiCountableCode(int n, int k, long[] code) {
+	public static int antiCountableCode(int n, int k, int[] code) {
 		int num = 0, offset = 0;
 		
 		for(int i=0; i<k; i++) {
@@ -194,14 +177,12 @@ public class Util {
 	}
 	
 	// codeのnビット目を１にする
-	public static void raiseBit(long[] code, int n) {
+	public static void raiseBit(int[] code, int n) {
 		// 配列のインデックス番号を計算
-		int index = n/64;
-		if( index < 0 || index >= code.length )
-			Util.print("???");
+		int index = n/32;
 		// code[index]中で何ビットずらすのかを計算
-		int shiftNum = n%64;
-		long mask = 0x0000000000000000000000000000000000000000000000000000000000000001 << shiftNum;
+		int shiftNum = n%32;
+		int mask = (0x0000000000000000000000000000000000000000000000000000000000000001 << shiftNum);
 		code[index] = code[index] | mask;
 	}
 	
@@ -210,9 +191,9 @@ public class Util {
 	 * @param num
 	 * @return
 	 */
-	public static int hamingWeight(long num) {
+	public static int hamingWeight(int num) {
 		int weight = 0;
-		for(int i=0; i<64; i++) {
+		for(int i=0; i<32; i++) {
 			if( Util.extractByte(num, i) == 0x01 ) weight++;
 		}
 		return weight;

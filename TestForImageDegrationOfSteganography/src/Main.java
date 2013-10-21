@@ -2,8 +2,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 
 import my.util.Calc;
 import my.util.Util;
@@ -24,18 +22,17 @@ public class Main {
 	
 	// CHARACTER_CODEのサイズ
 	private static final int CODE_SIZE = 8;
-	
 	// 画像の一辺のサイズ
 	private static final int IMAGE_SIZE = 256;
 	
 	private static final int[] ERROR_CODE_LENGTHS = new int[]{
-		8//, 16, 32, 64, 128, 256
+		8, 16, 32, 64, 128//, 256
 	};
 	
 	public static void main(String[] args) {
 		int messageLenght;
 		int[] msg;
-		long[][] table;
+		int[][] table;
 		for(int length : ERROR_CODE_LENGTHS) {
 			messageLenght = IMAGE_SIZE * IMAGE_SIZE / length;
 			msg = getRandomTextByte(messageLenght);
@@ -45,15 +42,16 @@ public class Main {
 			for(File f : imgDir.listFiles()) {
 				execStegoProcess(f, msg, table, messageLenght, length);
 			}
+			Util.print(length);
 		}
     }
 	
 	@SuppressWarnings("resource")
-	private static void execStegoProcess(File f, int[] msg, long[][] table, int length, int n) {
+	private static void execStegoProcess(File f, int[] msg, int[][] table, int length, int n) {
 		FileInputStream stego = null;
 		FileInputStream cover = null;
 		FileOutputStream output = null;
-		File oFile = new File(BURIED_IMAGE_PATH + f.getName());
+		File oFile = new File(BURIED_IMAGE_PATH + n + f.getName());
 		
 		int size = 0, offset = 0;
 		byte[] sBuff = null, cBuff = null, 
@@ -104,7 +102,6 @@ public class Main {
 			e.printStackTrace();
 		}
 		
-//		Util.println("end");
 	}
 	
 	/**
@@ -114,7 +111,7 @@ public class Main {
 	 * @param table
 	 * @param n
 	 */
-	 private static void embeding(byte[] img, int[] msg, long[][] table, int n, int offset) {
+	 private static void embeding(byte[] img, int[] msg, int[][] table, int n, int offset) {
         byte[] eppArray;
         int baseIndex = offset;
         
@@ -148,7 +145,7 @@ public class Main {
 	 */
 	private static int[] extracting(byte[] stego, byte[] cover, int offset, int n, int length) {
 		int[] msg = new int[length];
-		long[] ep = new long[4];
+		int[] ep = new int[8];
 		
 		for(int i=offset; i<stego.length; i+=n) {
 			ep = Util.extractErrorPattern(stego, cover, i, n);

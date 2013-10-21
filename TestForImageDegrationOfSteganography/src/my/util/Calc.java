@@ -10,14 +10,23 @@ public class Calc {
 	public static double log2(double num) {
 		return Math.log(num) / Math.log(2);
 	}
-	
+
 	/**
 	 * nの階乗を計算する
 	 * @param n
 	 * @return
 	 */
-	public static int factorial(int n) {
+	public static long factorial(int n) {
 		return n <= 1 ? 1 : n * factorial(n-1);
+	}
+	
+	/**
+	 * n!/k!を効率よく計算する
+	 * @param n
+	 * @return
+	 */
+	public static long factorial(int n, int k) {
+		return n == k ? 1 : n * factorial(n-1,k);
 	}
 	
 	/**
@@ -26,9 +35,22 @@ public class Calc {
 	 * @param k
 	 * @return
 	 */
-	public static int combination(int n, int k) {
+	public static long combination(int n, int k) {
 		if( n < k ) return 0;
-		return factorial(n) / (factorial(k) * factorial(n-k));
+		else if( k==0 ) return 1;
+
+		long num1, num2;
+		num1 = num2 = 1;
+		
+		if( n/k > 2 ) {
+			num1 = factorial(n, n-k);
+			num2 = factorial(k);
+		} else {
+			num1 = factorial(n, k);
+			num2 = factorial(n-k);
+		}
+		
+		return num1/num2;
 	}
 	
 	/**
