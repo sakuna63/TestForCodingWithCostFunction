@@ -24,24 +24,32 @@ public class Main {
 	
 	// CHARACTER_CODEのサイズ
 	private static final int CODE_SIZE = 8;
-	// エラーパターン長
-	private static final int ERROR_PATTERN_LENGTH = 8;
-	// メッセージ長
-	private static final int MESSAGE_LENGTH = 256 * 256 / ERROR_PATTERN_LENGTH;
+	
+	// 画像の一辺のサイズ
+	private static final int IMAGE_SIZE = 256;
+	
+	private static final int[] ERROR_CODE_LENGTHS = new int[]{
+		8//, 16, 32, 64, 128, 256
+	};
 	
 	public static void main(String[] args) {
-		byte[] msg = getRandomTextByte(MESSAGE_LENGTH);
-		int[] table = Util.errorPatternTable(ERROR_PATTERN_LENGTH, (int) Math.pow(2, CODE_SIZE));
-		HashMap<Integer, Integer> antiTable = Util.antiTable(table);
-		
-		File imgDir = new File(IMAGE_PATH);
-		for(File f : imgDir.listFiles()) {
-			execStegoProcess(f, msg, table, antiTable, MESSAGE_LENGTH, ERROR_PATTERN_LENGTH);
+		int messageLenght;
+		int[] msg;
+		long[][] table;
+		for(int length : ERROR_CODE_LENGTHS) {
+			messageLenght = IMAGE_SIZE * IMAGE_SIZE / length;
+			msg = getRandomTextByte(messageLenght);
+			table = Util.errorPatternTable(length, (int) Math.pow(2, CODE_SIZE));
+			
+			File imgDir = new File(IMAGE_PATH);
+			for(File f : imgDir.listFiles()) {
+				execStegoProcess(f, msg, table, messageLenght, length);
+			}
 		}
     }
 	
 	@SuppressWarnings("resource")
-	private static void execStegoProcess(File f, byte[] msg, int[] table, HashMap<Integer, Integer> anti, int length, int n) {
+	private static void execStegoProcess(File f, int[] msg, long[][] table, int length, int n) {
 		FileInputStream stego = null;
 		FileInputStream cover = null;
 		FileOutputStream output = null;
@@ -84,7 +92,7 @@ public class Main {
 //		Util.println("PSNR:"+Calc.PSNR(cBuff, cBuff, offset));
 		Util.println("PSNR:"+Calc.PSNR(sBuff, cBuff, offset));
 		
-		byte[] msg2 = extracting(sBuff, cBuff, offset, table, anti, n, length);
+		int[] msg2 = extracting(sBuff, cBuff, offset, n, length);
 		Util.println( compMsg(msg, msg2) ? "メッセージの取り出しに成功しました" : "メッセージの取り出しに失敗しました");
 
 		try {
@@ -96,7 +104,7 @@ public class Main {
 			e.printStackTrace();
 		}
 		
-		Util.println("end");
+//		Util.println("end");
 	}
 	
 	/**
@@ -106,7 +114,7 @@ public class Main {
 	 * @param table
 	 * @param n
 	 */
-	 private static void embeding(byte[] img, byte[] msg, int[] table, int n, int offset) {
+	 private static void embeding(byte[] img, int[] msg, long[][] table, int n, int offset) {
         byte[] eppArray;
         int baseIndex = offset;
         
@@ -116,10 +124,10 @@ public class Main {
         }
         
         // メッセージの数だけ繰り返す
-        for(byte m : msg) {
+        for(int m : msg) {
         	// メッセージに対応する誤りパターンを取り出す
 //        	Util.print("byte:%x int:%d", m, (int)(m & 0xFF));
-        	eppArray = Util.extractErrorPutternPerPix(table[(int)(m & 0xFF)], n);
+        	eppArray = Util.extractErrorPutternPerPix(table[m], n);
         	// １ピクセルでARGBの32ビットなのでそれぞれのLSBに対し、誤りパターンのMSBから順に排他的論理和をとる
         	for(int i=0; i<n ; i++) {
         		img[baseIndex + i] = (byte) (img[baseIndex + i] ^ eppArray[n-i-1]);
@@ -138,24 +146,14 @@ public class Main {
 	 * @param length: メッセージ長
 	 * @return
 	 */
-	private static byte[] extracting(byte[] stego, byte[] cover, int offset, int[] table, HashMap<Integer, Integer> anti, int n, int length) {
-		byte[] msg = new byte[length];
-		byte eBit, ep = 0;
-		int index = 0;
+	private static int[] extracting(byte[] stego, byte[] cover, int offset, int n, int length) {
+		int[] msg = new int[length];
+		long[] ep = new long[4];
 		
 		for(int i=offset; i<stego.length; i+=n) {
-			for(int j=i; j<i+n; j++) {
-				eBit = (byte) ((stego[j] ^ cover[j]) & 0x01);
-				// とりだしたビットのXORをepのLSBに格納し1ビット左シフトすることで誤りパターンを取り出す
-				ep = (byte) ((ep << 1) | eBit) ;
-			}
-			
+			ep = Util.extractErrorPattern(stego, cover, i, n);
 			// 誤りパターンから埋め込みデータを復元する
-			int key = ep & 0xff;
-			Integer value = anti.get(key);
-			msg[index] = value.byteValue();
-			index++;
-			ep = 0;
+			msg[(i-offset)/n] = Util.error2Message(n, ep);
 		}
 		
 		return msg;
@@ -167,7 +165,7 @@ public class Main {
 	 * @param msg2
 	 * @return
 	 */
-	private static boolean compMsg(byte[] msg1, byte[] msg2) {
+	private static boolean compMsg(int[] msg1, int[] msg2) {
 		boolean flag = true;
 		if(msg1.length != msg2.length) return false;
 		
@@ -183,35 +181,17 @@ public class Main {
 
 	
 	/**
-	 * ランダムな文字列を発生させる
-	 * @param textNum
-	 * @return
-	 */
-	private static String getRandomText(int textNum) {
-		byte[] randByteArray = getRandomTextByte(textNum);
-		String text = null;
-		try {
-			text =  new String(randByteArray, CHARACTER_CODE);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return text;
-    }
-
-	/**
 	 * 乱数列を生成する
 	 * @param textNum
 	 * @return
 	 */
-	private static byte[] getRandomTextByte(int textNum) {
+	private static int[] getRandomTextByte(int textNum) {
 		Sfmt s = new Sfmt(1);
-		Integer num;
-		byte[] randByteArray = new byte[textNum];
+		int[] randByteArray = new int[textNum];
 	
-		for( int i=0; i<textNum; i++) {
-		    num = s.NextInt((int) Math.pow(2, CODE_SIZE));
-		    randByteArray[i] = num.byteValue();
-		}
+		for( int i=0; i<textNum; i++)
+		    randByteArray[i] = s.NextInt((int) Math.pow(2, CODE_SIZE));
+		
 		return randByteArray;
     }
 }

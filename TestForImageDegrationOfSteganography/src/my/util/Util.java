@@ -37,13 +37,26 @@ public class Util {
 	}
 	
 	/**
+	 * エラーパターンをメッセージに変換する
+	 * @param n
+	 * @param ep
+	 * @return
+	 */
+	public static int error2Message(int n, long[] ep) {
+		// ハミングウェイトを計算
+		int weight = hamingWeight(ep[0]) + hamingWeight(ep[1])
+				+ hamingWeight(ep[2]) + hamingWeight(ep[3]);
+		return antiCountableCode(n, weight, ep);
+	}
+	
+	/**
 	 * 0~maxまでの数値に対応したnビット誤りパターンテーブルを返す
 	 * @param n
 	 * @param max
 	 * @return
 	 */
-	public static int[] errorPatternTable(int n, int max) {
-		int[] table = new int[max];
+	public static long[][] errorPatternTable(int n, int max) {
+		long[][] table = new long[max][4];
 		int index = 0, combNum;
 		
 		// ハミングウェイトを変化させる
@@ -52,7 +65,7 @@ public class Util {
 			combNum = Calc.combination(n, i);
 			// 0~nCiまでに対応するnビットでハミングウェイとiのパターンを決定する
 			for(int j=0; j<combNum; j++) {
-				table[index] = Calc.countableCode(n, i, j);
+				table[index] = countableCode(n, i, j);
 				index++;
 				if(index > max) break;
 			}
@@ -66,11 +79,11 @@ public class Util {
 	 * @param table
 	 * @return
 	 */
-	public static HashMap<Integer, Integer> antiTable(int[] table) {
-		HashMap<Integer, Integer> antiTable = new HashMap<Integer, Integer>();
+	public static HashMap<long[], Integer> antiTable(long[][] table) {
+		HashMap<long[], Integer> antiTable = new HashMap<long[], Integer>();
 		int index = 0;
 		
-		for(int item : table) {
+		for(long[] item : table) {
 			antiTable.put(item, index);
 			index++;
 		}
@@ -84,7 +97,7 @@ public class Util {
 	 * @param n
 	 * @return
 	 */
-	public static byte[] extractErrorPutternPerPix(int ep, int n) {
+	public static byte[] extractErrorPutternPerPix(long[] ep, int n) {
 		byte[] eppArray = new byte[n];
 		for(int i=0; i<n; i++) {
 			eppArray[i] = extractByte(ep, i);
@@ -93,39 +106,115 @@ public class Util {
 	}
 	
 	/**
-	 * bit番目のbitをLSBにし他を0にして返す
+	 * n番目のbitをLSBにし他を0にして返す
 	 * @param epp
-	 * @param bit
+	 * @param n
 	 * @return
 	 */
-	public static byte extractByte(int epp, int bit) {
-		return (byte) ((epp >>> bit) & 0x00000001);
+	public static byte extractByte(long epp, int n) {
+		return (byte) ((epp >>> n) & 0x0000000000000000000000000000000000000000000000000000000000000001);
 	}
 	
 	/**
-	 * argbからそれぞれを抽出する
-	 * @param argb
+	 * n番目のbitをLSBにし他を0にして返す
+	 * @param epp
+	 * @param n
 	 * @return
 	 */
-	public static int[] extractARGB(int argb) {
-		int a = (argb >>> 24) & 0xff;
-		int r = (argb >>> 16) & 0xff;
-		int g = (argb >>> 8) & 0xff;
-		int b = argb & 0xff;
+	public static byte extractByte(long[] epp, int n) {
+		int index = n/64;
+		int shiftBit = n%64;
+		return (byte) ((epp[index] >>> shiftBit) & 0x0000000000000000000000000000000000000000000000000000000000000001);
+	}
+	
+	/**
+	 * ステゴデータから埋め込みデータを抽出して返す
+	 * @param stego
+	 * @param cover
+	 * @param start
+	 * @param n
+	 * @return
+	 */
+	public static long[] extractErrorPattern(byte[] stego, byte[] cover, int start, int n) { 
+		byte eBit;
+		long[] code = new long[4];
+		for(int i=start; i<start+n; i++) {
+			// 誤りビットを抽出する
+			eBit = (byte) ((stego[i] ^ cover[i]) & 0x01);
+			// とりだしたビットが1だったときに対応するビットを立てる
+			if( eBit == 0x01) Util.raiseBit(code, n - 1 - (i - start));
+		}
+		return code;
+	}
+	
+	/**
+	 * パスカルの三角形を逆算して、番号numに対応する長さn, ハミングウェイトkの２進数を返す(byte形式)
+	 * @param n
+	 * @param k
+	 * @param num
+	 * @return
+	 */
+	public static long[] countableCode(int n, int k, int num) {
+		long[] code = new long[4];
+		int pascalNum;
+		while( !(n < 0) ) {
+			// 右斜め上の値を計算
+			pascalNum = Calc.combination(n, k);
+			
+			if(pascalNum <= num) {
+				k--;
+				num -= pascalNum;
+				raiseBit(code, n);
+			}
+			
+			n--;
+		}
+		return code;
+	}
+	
+	public static int antiCountableCode(int n, int k, long[] code) {
+		int num = 0, offset = 0;
 		
-		return new int[]{a, r, g, b};
+		for(int i=0; i<k; i++) {
+			offset += Calc.combination(n, i);
+		}
+		
+		byte bit;
+		for(int j=n-1; j>=0; j--) {
+			// i番目のビットを取り出す
+			bit = Util.extractByte(code, j);
+			// もしLSBが１なら左斜め上に移動
+			if( bit == 0x01 ) {
+				// 右斜め上の数値を記録する
+				num += Calc.combination(j, k);
+				k--;
+			} 
+		}
+		return num + offset;
+	}
+	
+	// codeのnビット目を１にする
+	public static void raiseBit(long[] code, int n) {
+		// 配列のインデックス番号を計算
+		int index = n/64;
+		if( index < 0 || index >= code.length )
+			Util.print("???");
+		// code[index]中で何ビットずらすのかを計算
+		int shiftNum = n%64;
+		long mask = 0x0000000000000000000000000000000000000000000000000000000000000001 << shiftNum;
+		code[index] = code[index] | mask;
 	}
 	
 	/**
-	 * 誤りパターン埋め込み後のピクセル値を返す
-	 * @param rgb
-	 * @param epp
+	 * numのハミングウェイトを計算する
+	 * @param num
+	 * @return
 	 */
-	public static int embededPix(int rgb, int epp) {
-		int[] argb = extractARGB(rgb);
-		argb[1] = argb[1] ^ epp;
-		argb[2] = argb[2] ^ epp;
-		argb[3] = argb[3] ^ epp;
-		return argb[0] << 24 | argb[1] << 16 | argb[2] << 8 | argb[3];
+	public static int hamingWeight(long num) {
+		int weight = 0;
+		for(int i=0; i<64; i++) {
+			if( Util.extractByte(num, i) == 0x01 ) weight++;
+		}
+		return weight;
 	}
 }

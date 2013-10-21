@@ -2,6 +2,7 @@ package test;
 
 import java.util.HashMap;
 
+import my.util.Calc;
 import my.util.Util;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -24,12 +25,13 @@ public class UtilTest extends TestCase{
 	}
 	
 	static final String[] testOrder = new String[]{
-		"testExtractByte",
-		"testExtractPutternPerPix",
-		"testExtractARGB",
-		"testEmbedPix",
-		"testErrorPatternTable",
-		"testAntiTable"
+		"testHamingWeight",
+		"testRaiseBit",
+		"testCountableCode",
+		"testAntiCountableCode",
+		"testError2Message",
+		"testExtractErrorPattern"
+		
 	};
 	
 	public void testExtractByte() throws Exception {
@@ -38,62 +40,125 @@ public class UtilTest extends TestCase{
 		assertEquals(1, Util.extractByte(4, 2));
 	}
 	
-	public void testExtractPutternPerPix() throws Exception {
-		byte[] epp = Util.extractErrorPutternPerPix(255, 8);
-		
-		for( int item : epp ) {
-			assertEquals(1, item);
-		}
-		
-		epp = Util.extractErrorPutternPerPix(127, 8);
-		int[] exp = new int[]{1,1,1,1,1,1,1,0};
-		for( int i=0; i<epp.length; i++ ) {
-			assertEquals(exp[i], epp[i]);
-		}
+//	public void testExtractPutternPerPix() throws Exception {
+//		byte[] epp = Util.extractErrorPutternPerPix(255, 8);
+//		
+//		for( int item : epp ) {
+//			assertEquals(1, item);
+//		}
+//		
+//		epp = Util.extractErrorPutternPerPix(127, 8);
+//		int[] exp = new int[]{1,1,1,1,1,1,1,0};
+//		for( int i=0; i<epp.length; i++ ) {
+//			assertEquals(exp[i], epp[i]);
+//		}
+//	}
+	
+	
+	
+//	public void testErrorPatternTable() throws Exception {
+//		int[] table = Util.errorPatternTable(10, 1024);
+//		int[] c = new int[1024];
+//		
+//		for(int i : table) {
+//			c[i]++;
+//		}
+//		
+//		for(int j : c) {
+//			assertEquals(1, j);
+//		}
+//	}
+//	
+//	public void testAntiTable() throws Exception {
+//		int[] table = Util.errorPatternTable(10, 1024);
+//		HashMap<Integer, Integer> anti = Util.antiTable(table);
+//		
+//		for(int i=0; i<table.length; i++) {
+//			assertEquals(i, anti.get(table[i]).intValue());
+//		}
+//	}
+//	
+//
+	public void testCountableCode() throws Exception {
+		long[] result = Util.countableCode(6, 2, 8);
+		assertEquals(20, result[0]);
+
+		result = Util.countableCode(1, 0, 0);
+		assertEquals(0, result[0]);
+
+		result = Util.countableCode(1, 1, 0);
+		assertEquals(1, result[0]);
 	}
 	
-	public void testExtractARGB() throws Exception {
-		int[] argb = Util.extractARGB(-1);
-		for( int item : argb ) {
-			assertEquals(255, item);
+	public void testAntiCountableCode() throws Exception {
+		long[] code = Util.countableCode(6, 2, 8);
+		int result = Util.antiCountableCode(6, 2, code);
+		assertEquals(15, result);
+		
+		code = Util.countableCode(16, 5, 0);
+		result = Util.antiCountableCode(16, 5, code);
+		int expected=0;
+		for(int i=0; i<5; i++) {
+			expected += Calc.combination(16, i);
 		}
+		assertEquals(expected, result);
 	}
 	
-	public void testEmbedPix() throws Exception {
-		int argb = Util.embededPix(-1, 1);
-		int[] argbArr = Util.extractARGB(argb);
-		int[] exp = new int[]{255, 254, 254, 254};
-		for( int i=0; i<argbArr.length; i++ ) {
-			assertEquals(exp[i], argbArr[i]);
-		}
+	public void testError2Message() throws Exception {
+		long[] code = Util.countableCode(6, 2, 8);
+		int result = Util.error2Message(6, code);
+		assertEquals(15, result);
 		
-		argb = Util.embededPix(0, 1);
-		argbArr = Util.extractARGB(argb);
-		exp = new int[]{0,1,1,1};
-		for( int i=0; i<argbArr.length; i++ ) {
-			assertEquals(exp[i], argbArr[i]);
+		code = Util.countableCode(16, 5, 0);
+		result = Util.error2Message(16, code);
+		int expected=0;
+		for(int i=0; i<5; i++) {
+			expected += Calc.combination(16, i);
 		}
+		assertEquals(expected, result);
 	}
 	
-	public void testErrorPatternTable() throws Exception {
-		int[] table = Util.errorPatternTable(10, 1024);
-		int[] c = new int[1024];
+	public void testExtractErrorPattern() throws Exception {
+		byte[] stego = new byte[100];
+		byte[] cover = stego.clone();
 		
-		for(int i : table) {
-			c[i]++;
-		}
+		long[] result = Util.extractErrorPattern(stego, cover, 0, 10);
+		assertEquals(result[0], 0);
+		assertEquals(result[1], 0);
+		assertEquals(result[2], 0);
+		assertEquals(result[3], 0);
 		
-		for(int j : c) {
-			assertEquals(1, j);
-		}
+		stego[0] = 0x01;
+		result = Util.extractErrorPattern(stego, cover, 0, 10);
+		assertEquals(result[0], 512);
+		assertEquals(result[1], 0);
+		assertEquals(result[2], 0);
+		assertEquals(result[3], 0);
+		
 	}
 	
-	public void testAntiTable() throws Exception {
-		int[] table = Util.errorPatternTable(10, 1024);
-		HashMap<Integer, Integer> anti = Util.antiTable(table);
+	public void testHamingWeight() throws Exception {
+		int result = Util.hamingWeight(6);
+		assertEquals(2, result);
+
+		result = Util.hamingWeight(1);
+		assertEquals(1, result);
+
+		result = Util.hamingWeight(0);
+		assertEquals(0, result);
+	}
+	
+	public void testRaiseBit() throws Exception {
+		long[] code = new long[4];
+		Util.raiseBit(code, 3);
+		assertEquals(code[0], 8);
 		
-		for(int i=0; i<table.length; i++) {
-			assertEquals(i, anti.get(table[i]).intValue());
-		}
+		Util.raiseBit(code, 64);
+		assertEquals(code[0], 8);
+		assertEquals(code[1], 1);
+		
+		Util.raiseBit(code, 255);
+		assertEquals(code[0], 8);
+		assertEquals(code[1], 1);
 	}
 }
