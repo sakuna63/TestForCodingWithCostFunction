@@ -22,7 +22,7 @@ import my.util.Util;
 public class Main {
 	private static final String IMAGE_PATH = "./img/";
 	private static final String BURIED_IMAGE_PATH = "./embuded_img/";
-	private static final String CSV_FILE_NAME = "./data.csv";
+	private static final String CSV_FILE_PATH = "./csv/";
 	private static final String CHARACTER_CODE = "US-ASCII";
 	
 	// CHARACTER_CODEのサイズ
@@ -36,29 +36,42 @@ public class Main {
 	
 	public static void main(String[] args) {
 		int messageLenght;
-		int[] msg = getRandomTextByte(IMAGE_SIZE * IMAGE_SIZE / 8);
+		int[] msg;
 		int[][] table;
-		PrintWriter pw = getPrintWriter(CSV_FILE_NAME);
+		File imgDir = new File(IMAGE_PATH);
+		PrintWriter pw;
 		
-		for(int codeLength : ERROR_CODE_LENGTHS) {
-			messageLenght = IMAGE_SIZE * IMAGE_SIZE / codeLength;
-			table = Util.errorPatternTable(codeLength, (int) Math.pow(2, CODE_SIZE));
-			
-			File imgDir = new File(IMAGE_PATH);
-			for(File f : imgDir.listFiles()) {
-				execStegoProcess(f, pw, msg, table, messageLenght, CHARACTER_CODE, codeLength);
+		for(File f : imgDir.listFiles()) {
+			pw = getPrintWriter(CSV_FILE_PATH + f.getName() + ".csv" );
+			pw.print(f.getName() + ",");
+			pw.println(" ,8,16,32,64,128");
+
+			for(int seed=0; seed<=32; seed++) {
+				msg = getRandomTextByte(seed, IMAGE_SIZE * IMAGE_SIZE / 8);
+				pw.print(CHARACTER_CODE);
+				pw.print(",");
+				pw.print(seed);
+				pw.print(",");
+				for(int codeLength : ERROR_CODE_LENGTHS) {
+					messageLenght = IMAGE_SIZE * IMAGE_SIZE / codeLength;
+					table = Util.errorPatternTable(codeLength, (int) Math.pow(2, CODE_SIZE));
+					
+					execStegoProcess(f, pw, msg, table, messageLenght, codeLength);
+				}
+
+				pw.println();
 			}
+			pw.close();
 		}
-		
-		pw.close();
     }
 	
 	@SuppressWarnings("resource")
-	private static void execStegoProcess(File file, PrintWriter pw, int[] msg, int[][] table, int msgLength, String codeName, int codeLength) {
+	private static void execStegoProcess(File file, PrintWriter pw, int[] msg, int[][] table, int msgLength, int codeLength) {
 		int offset = 0;
 		byte[] sBuff = null, cBuff = null,
 				sizeBuff = new byte[4], offsetBuff = new byte[4];
 		
+		/** 画像の読み込み **/
 		try {
 			// Streamクラスの初期化
 			FileInputStream stego = new FileInputStream(file);
@@ -92,6 +105,7 @@ public class Main {
 			return;
 		}
 		
+		/** メッセージの埋め込み **/
 		embeding(sBuff, msg, table, msgLength, codeLength, offset);
 
 		Util.println(Calc.PSNR(sBuff, cBuff, offset));
@@ -100,7 +114,7 @@ public class Main {
 		Util.println( compMsg(msg, eMsg) ? "メッセージの取り出しに成功しました" : "メッセージの取り出しに失敗しました");
 		
 		outputImg(file, sBuff, codeLength);
-		outputCsv(pw, file.getName(), codeName, codeLength, Calc.PSNR(sBuff, cBuff, offset));
+		outputCsv(pw, file.getName(), codeLength, Calc.PSNR(sBuff, cBuff, offset));
 	}
 	
 	/**
@@ -178,8 +192,8 @@ public class Main {
 	 * @param textNum
 	 * @return
 	 */
-	private static int[] getRandomTextByte(int textNum) {
-		Sfmt s = new Sfmt(1);
+	private static int[] getRandomTextByte(int seed, int textNum) {
+		Sfmt s = new Sfmt(seed);
 		int[] randByteArray = new int[textNum];
 	
 		for( int i=0; i<textNum; i++)
@@ -208,7 +222,7 @@ public class Main {
 	private static PrintWriter getPrintWriter(String fileName) {
 		PrintWriter pw = null;
 		try {
-			FileWriter fw = new FileWriter("./data.csv");
+			FileWriter fw = new FileWriter(fileName);
 			pw = new PrintWriter(new BufferedWriter(fw));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -217,15 +231,12 @@ public class Main {
 		return pw;
 	}
 	
-	private static void outputCsv(PrintWriter pw, String fileName, String codeName, int codeLength, double psnr) {
+	private static void outputCsv(PrintWriter pw, String fileName, int codeLength, double psnr) {
 		// csvにデータを出力する
-		pw.print(fileName);
-		pw.print(",");
-		pw.print(codeName);
-		pw.print(",");
-		pw.print(codeLength);
-		pw.print(",");
-		pw.print(psnr);
-		pw.println();
+//		pw.print(fileName);
+//		pw.print(",");
+//		pw.print(codeLength);
+//		pw.print(",");
+		pw.print(psnr + ",");
 	}
 }

@@ -73,8 +73,10 @@ public class Calc {
 //			Util.print(mse);
 		}
 		
-		mse /= img1.length;
+		mse /= (img1.length - offset);
 		psnr = mse == 0.0 ? -1 : 10 * Math.log10( Math.pow(255, 2) / mse );
+		
+//		Util.println("mse:%f psnr:%f", mse, psnr);
 		
 		return psnr;
 	}
