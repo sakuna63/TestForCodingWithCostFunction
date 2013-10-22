@@ -3,7 +3,7 @@
 .classpath
 
 .DS_Store
-TestForImageDegrationOfSteganography/.DS_Store
+*/.DS_Store
 
 #*
 .#*

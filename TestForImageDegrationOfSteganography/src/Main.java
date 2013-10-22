@@ -36,13 +36,12 @@ public class Main {
 	
 	public static void main(String[] args) {
 		int messageLenght;
-		int[] msg;
+		int[] msg = getRandomTextByte(IMAGE_SIZE * IMAGE_SIZE / 8);
 		int[][] table;
 		PrintWriter pw = getPrintWriter(CSV_FILE_NAME);
 		
 		for(int codeLength : ERROR_CODE_LENGTHS) {
 			messageLenght = IMAGE_SIZE * IMAGE_SIZE / codeLength;
-			msg = getRandomTextByte(messageLenght);
 			table = Util.errorPatternTable(codeLength, (int) Math.pow(2, CODE_SIZE));
 			
 			File imgDir = new File(IMAGE_PATH);
@@ -93,10 +92,12 @@ public class Main {
 			return;
 		}
 		
-		embeding(sBuff, msg, table, codeLength, offset);
+		embeding(sBuff, msg, table, msgLength, codeLength, offset);
 
-		int[] msg2 = extracting(sBuff, cBuff, offset, msgLength, codeLength);
-		Util.println( compMsg(msg, msg2) ? "メッセージの取り出しに成功しました" : "メッセージの取り出しに失敗しました");
+		Util.println(Calc.PSNR(sBuff, cBuff, offset));
+		
+		int[] eMsg = extracting(sBuff, cBuff, offset, msgLength, codeLength);
+		Util.println( compMsg(msg, eMsg) ? "メッセージの取り出しに成功しました" : "メッセージの取り出しに失敗しました");
 		
 		outputImg(file, sBuff, codeLength);
 		outputCsv(pw, file.getName(), codeName, codeLength, Calc.PSNR(sBuff, cBuff, offset));
@@ -109,25 +110,24 @@ public class Main {
 	 * @param table
 	 * @param n
 	 */
-	private static void embeding(byte[] img, int[] msg, int[][] table, int n, int offset) {
+	private static void embeding(byte[] img, int[] msg, int[][] table, int msgLength, int codeLength, int offset) {
         byte[] eppArray;
         int baseIndex = offset;
         
-        if( msg.length * n > img.length - offset) {
+        if( msgLength * codeLength > img.length - offset) {
         	Util.println("メッセージが長過ぎます");
         	return;
         }
         
         // メッセージの数だけ繰り返す
-        for(int m : msg) {
+        for(int i=0; i<msgLength; i++) {
         	// メッセージに対応する誤りパターンを取り出す
-//        	Util.print("byte:%x int:%d", m, (int)(m & 0xFF));
-        	eppArray = Util.extractErrorPutternPerPix(table[m], n);
+        	eppArray = Util.extractErrorPutternPerPix(table[msg[i]], codeLength);
         	// １ピクセルでARGBの32ビットなのでそれぞれのLSBに対し、誤りパターンのMSBから順に排他的論理和をとる
-        	for(int i=0; i<n ; i++) {
-        		img[baseIndex + i] = (byte) (img[baseIndex + i] ^ eppArray[n-i-1]);
+        	for(int j=0; j<codeLength ; j++) {
+        		img[baseIndex + j] = (byte) (img[baseIndex + j] ^ eppArray[codeLength-j-1]);
         	}
-        	baseIndex += n;
+        	baseIndex += codeLength;
         }
 	}
 	
@@ -160,15 +160,14 @@ public class Main {
 	 * @param msg2
 	 * @return
 	 */
-	private static boolean compMsg(int[] msg1, int[] msg2) {
+	private static boolean compMsg(int[] origin, int[] embuded) {
 		boolean flag = true;
-		if(msg1.length != msg2.length) return false;
 		
-		for(int i=0; i<msg1.length; i++) {
-			if( msg1[i] != msg2[i]) {
-				Util.println(String.format("i: %d, msg1:%d, msg2:%d",i, msg1[i], msg2[i]));
+		for(int i=0; i<embuded.length; i++) {
+			if( origin[i] != embuded[i]) {
+				Util.println(String.format("i: %d, origin:%d, embuded:%d",i, origin[i], embuded[i]));
 				flag = false;
-//				break;
+				break;
 			}
 		}
 		return flag;
