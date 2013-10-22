@@ -43,28 +43,35 @@ public class Main {
 		
 		for(File f : imgDir.listFiles()) {
 			pw = getPrintWriter(CSV_FILE_PATH + f.getName() + ".csv" );
-			pw.print(f.getName() + ",");
-			pw.println(" ,8,16,32,64,128");
-
+			outputCsvHead(pw, f.getName(), ERROR_CODE_LENGTHS);
+			
 			for(int seed=0; seed<=32; seed++) {
+				pw.print(CHARACTER_CODE + "," + seed + ",");
+				
 				msg = getRandomTextByte(seed, IMAGE_SIZE * IMAGE_SIZE / 8);
-				pw.print(CHARACTER_CODE);
-				pw.print(",");
-				pw.print(seed);
-				pw.print(",");
 				for(int codeLength : ERROR_CODE_LENGTHS) {
 					messageLenght = IMAGE_SIZE * IMAGE_SIZE / codeLength;
 					table = Util.errorPatternTable(codeLength, (int) Math.pow(2, CODE_SIZE));
 					
 					execStegoProcess(f, pw, msg, table, messageLenght, codeLength);
 				}
-
 				pw.println();
 			}
 			pw.close();
 		}
+		
+		Util.print("埋め込み終了");
     }
 	
+	/**
+	 * ステゴデータの生成プロセスを実行する
+	 * @param file
+	 * @param pw
+	 * @param msg
+	 * @param table
+	 * @param msgLength
+	 * @param codeLength
+	 */
 	@SuppressWarnings("resource")
 	private static void execStegoProcess(File file, PrintWriter pw, int[] msg, int[][] table, int msgLength, int codeLength) {
 		int offset = 0;
@@ -108,14 +115,18 @@ public class Main {
 		/** メッセージの埋め込み **/
 		embeding(sBuff, msg, table, msgLength, codeLength, offset);
 
-		Util.println(Calc.PSNR(sBuff, cBuff, offset));
+		double psnr = Calc.PSNR(sBuff, cBuff, offset);
+//		Util.println(psnr);
+		pw.print(psnr + ","	);
 		
 		int[] eMsg = extracting(sBuff, cBuff, offset, msgLength, codeLength);
-		Util.println( compMsg(msg, eMsg) ? "メッセージの取り出しに成功しました" : "メッセージの取り出しに失敗しました");
+		
+		if( !compMsg(msg, eMsg) )
+			Util.println("メッセージの取り出しに失敗しました");
 		
 		outputImg(file, sBuff, codeLength);
-		outputCsv(pw, file.getName(), codeLength, Calc.PSNR(sBuff, cBuff, offset));
 	}
+	
 	
 	/**
 	 * 誤りパターンをimgに埋め込む(1pix = 8bit)
@@ -202,6 +213,13 @@ public class Main {
 		return randByteArray;
     }
 
+	
+	/**
+	 * sBuff(bmpのバイナリ)を出力する
+	 * @param file
+	 * @param sBuff
+	 * @param codeLength
+	 */
 	private static void outputImg(File file, byte[] sBuff, int codeLength) {
 		// 画像を出力する
 		FileOutputStream output = null;
@@ -219,24 +237,35 @@ public class Main {
 		}
 	}
 	
+	/**
+	 * csvの1行目を出力する
+	 * @param pw
+	 * @param fileName
+	 * @param errorCodeLengths
+	 */
+	private static void outputCsvHead(PrintWriter pw, String fileName, int[] errorCodeLengths) {
+		pw.print(fileName + ",,");
+		for( int length : errorCodeLengths ) {
+			pw.print(length + ",");
+		}
+		pw.println();
+	}
+	
+	/**
+	 * PrinterWriterのインスタンスを取得する
+	 * @param fileName
+	 * @return
+	 */
+	
 	private static PrintWriter getPrintWriter(String fileName) {
 		PrintWriter pw = null;
 		try {
 			FileWriter fw = new FileWriter(fileName);
 			pw = new PrintWriter(new BufferedWriter(fw));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return pw;
 	}
 	
-	private static void outputCsv(PrintWriter pw, String fileName, int codeLength, double psnr) {
-		// csvにデータを出力する
-//		pw.print(fileName);
-//		pw.print(",");
-//		pw.print(codeLength);
-//		pw.print(",");
-		pw.print(psnr + ",");
-	}
 }
