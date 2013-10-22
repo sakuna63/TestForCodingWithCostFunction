@@ -1,7 +1,11 @@
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import my.util.Calc;
 import my.util.Util;
@@ -18,6 +22,7 @@ import my.util.Util;
 public class Main {
 	private static final String IMAGE_PATH = "./img/";
 	private static final String BURIED_IMAGE_PATH = "./embuded_img/";
+	private static final String CSV_FILE_NAME = "./data.csv";
 	private static final String CHARACTER_CODE = "US-ASCII";
 	
 	// CHARACTER_CODEのサイズ
@@ -33,49 +38,52 @@ public class Main {
 		int messageLenght;
 		int[] msg;
 		int[][] table;
-		for(int length : ERROR_CODE_LENGTHS) {
-			messageLenght = IMAGE_SIZE * IMAGE_SIZE / length;
+		PrintWriter pw = getPrintWriter(CSV_FILE_NAME);
+		
+		for(int codeLength : ERROR_CODE_LENGTHS) {
+			messageLenght = IMAGE_SIZE * IMAGE_SIZE / codeLength;
 			msg = getRandomTextByte(messageLenght);
-			table = Util.errorPatternTable(length, (int) Math.pow(2, CODE_SIZE));
+			table = Util.errorPatternTable(codeLength, (int) Math.pow(2, CODE_SIZE));
 			
 			File imgDir = new File(IMAGE_PATH);
 			for(File f : imgDir.listFiles()) {
-				execStegoProcess(f, msg, table, messageLenght, length);
+				execStegoProcess(f, pw, msg, table, messageLenght, CHARACTER_CODE, codeLength);
 			}
-			Util.print(length);
 		}
+		
+		pw.close();
     }
 	
 	@SuppressWarnings("resource")
-	private static void execStegoProcess(File f, int[] msg, int[][] table, int length, int n) {
-		FileInputStream stego = null;
-		FileInputStream cover = null;
-		FileOutputStream output = null;
-		File oFile = new File(BURIED_IMAGE_PATH + n + f.getName());
+	private static void execStegoProcess(File file, PrintWriter pw, int[] msg, int[][] table, int msgLength, String codeName, int codeLength) {
+		int offset = 0;
+		byte[] sBuff = null, cBuff = null,
+				sizeBuff = new byte[4], offsetBuff = new byte[4];
 		
-		int size = 0, offset = 0;
-		byte[] sBuff = null, cBuff = null, 
-			   sizeBuff = new byte[4], offsetBuff = new byte[4];
 		try {
-			// 出力用のファイルを生成
-			oFile.createNewFile();
 			// Streamクラスの初期化
-			stego = new FileInputStream(f);
-			cover = new FileInputStream(f);
-			output = new FileOutputStream(oFile);
-			// Bitmapのサイズを読み込む
+			FileInputStream stego = new FileInputStream(file);
+			FileInputStream cover = new FileInputStream(file);
+
+			// 画像のサイズを読み込む
 			stego.skip(2);
 			stego.read(sizeBuff);
+			int size = sizeBuff[3] << 24 | sizeBuff[2] << 16 | sizeBuff[1] << 8 | sizeBuff[0];
+			// 画像のオフセットを読み込む
 			stego.skip(4);
 			stego.read(offsetBuff);
-			stego = new FileInputStream(f);
-			size = sizeBuff[3] << 24 | sizeBuff[2] << 16 | sizeBuff[1] << 8 | sizeBuff[0];
 			offset = offsetBuff[3] << 24 | offsetBuff[2] << 16 | offsetBuff[1] << 8 | offsetBuff[0];
+			
+			// reset非対応なのでnewで読み込み位置を初期化
+			stego = new FileInputStream(file);
+			
 			// バッファにビットマップを読み込む
 			sBuff = new byte[size];
 			cBuff = new byte[size];
 			stego.read(sBuff);
 			cover.read(cBuff);
+			stego.close();
+			cover.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -85,23 +93,13 @@ public class Main {
 			return;
 		}
 		
-		embeding(sBuff, msg, table, n, offset);
+		embeding(sBuff, msg, table, codeLength, offset);
 
-//		Util.println("PSNR:"+Calc.PSNR(cBuff, cBuff, offset));
-		Util.println("PSNR:"+Calc.PSNR(sBuff, cBuff, offset));
-		
-		int[] msg2 = extracting(sBuff, cBuff, offset, n, length);
+		int[] msg2 = extracting(sBuff, cBuff, offset, msgLength, codeLength);
 		Util.println( compMsg(msg, msg2) ? "メッセージの取り出しに成功しました" : "メッセージの取り出しに失敗しました");
-
-		try {
-			output.write(sBuff);
-			stego.close();
-			cover.close();
-			output.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		
+		outputImg(file, sBuff, codeLength);
+		outputCsv(pw, file.getName(), codeName, codeLength, Calc.PSNR(sBuff, cBuff, offset));
 	}
 	
 	/**
@@ -111,7 +109,7 @@ public class Main {
 	 * @param table
 	 * @param n
 	 */
-	 private static void embeding(byte[] img, int[] msg, int[][] table, int n, int offset) {
+	private static void embeding(byte[] img, int[] msg, int[][] table, int n, int offset) {
         byte[] eppArray;
         int baseIndex = offset;
         
@@ -143,14 +141,14 @@ public class Main {
 	 * @param length: メッセージ長
 	 * @return
 	 */
-	private static int[] extracting(byte[] stego, byte[] cover, int offset, int n, int length) {
-		int[] msg = new int[length];
+	private static int[] extracting(byte[] stego, byte[] cover, int offset, int msgLength, int codeLength) {
+		int[] msg = new int[msgLength];
 		int[] ep = new int[8];
 		
-		for(int i=offset; i<stego.length; i+=n) {
-			ep = Util.extractErrorPattern(stego, cover, i, n);
+		for(int i=offset; i<stego.length; i+=codeLength) {
+			ep = Util.extractErrorPattern(stego, cover, i, codeLength);
 			// 誤りパターンから埋め込みデータを復元する
-			msg[(i-offset)/n] = Util.error2Message(n, ep);
+			msg[(i-offset)/codeLength] = Util.error2Message(codeLength, ep);
 		}
 		
 		return msg;
@@ -176,7 +174,6 @@ public class Main {
 		return flag;
 	}
 
-	
 	/**
 	 * 乱数列を生成する
 	 * @param textNum
@@ -191,4 +188,45 @@ public class Main {
 		
 		return randByteArray;
     }
+
+	private static void outputImg(File file, byte[] sBuff, int codeLength) {
+		// 画像を出力する
+		FileOutputStream output = null;
+		File stegoFile = new File(BURIED_IMAGE_PATH + codeLength + file.getName());
+		
+		try {
+			stegoFile.createNewFile();
+			output = new FileOutputStream(stegoFile);
+			output.write(sBuff);
+			output.close();
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static PrintWriter getPrintWriter(String fileName) {
+		PrintWriter pw = null;
+		try {
+			FileWriter fw = new FileWriter("./data.csv");
+			pw = new PrintWriter(new BufferedWriter(fw));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return pw;
+	}
+	
+	private static void outputCsv(PrintWriter pw, String fileName, String codeName, int codeLength, double psnr) {
+		// csvにデータを出力する
+		pw.print(fileName);
+		pw.print(",");
+		pw.print(codeName);
+		pw.print(",");
+		pw.print(codeLength);
+		pw.print(",");
+		pw.print(psnr);
+		pw.println();
+	}
 }
