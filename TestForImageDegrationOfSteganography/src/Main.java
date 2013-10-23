@@ -26,7 +26,7 @@ public class Main {
 	private static final String CHARACTER_CODE = "US-ASCII";
 	
 	// CHARACTER_CODEのサイズ
-	private static final int CODE_SIZE = 8;
+	private static final int CHARACTER_SIZE = 8;
 	// 画像の一辺のサイズ
 	private static final int IMAGE_SIZE = 256;
 	
@@ -37,7 +37,6 @@ public class Main {
 	public static void main(String[] args) {
 		int messageLenght;
 		int[] msg;
-		int[][] table;
 		File imgDir = new File(IMAGE_PATH);
 		PrintWriter pw;
 		
@@ -49,11 +48,11 @@ public class Main {
 				pw.print(CHARACTER_CODE + "," + seed + ",");
 				
 				msg = getRandomTextByte(seed, IMAGE_SIZE * IMAGE_SIZE / 8);
+				calcEntropy(msg, (int) Math.pow(2, CHARACTER_SIZE));
+				
 				for(int codeLength : ERROR_CODE_LENGTHS) {
 					messageLenght = IMAGE_SIZE * IMAGE_SIZE / codeLength;
-					table = Util.errorPatternTable(codeLength, (int) Math.pow(2, CODE_SIZE));
-					
-					execStegoProcess(f, pw, msg, table, messageLenght, codeLength);
+					execStegoProcess(f, pw, msg, messageLenght, codeLength);
 				}
 				pw.println();
 			}
@@ -73,7 +72,7 @@ public class Main {
 	 * @param codeLength
 	 */
 	@SuppressWarnings("resource")
-	private static void execStegoProcess(File file, PrintWriter pw, int[] msg, int[][] table, int msgLength, int codeLength) {
+	private static void execStegoProcess(File file, PrintWriter pw, int[] msg, int msgLength, int codeLength) {
 		int offset = 0;
 		byte[] sBuff = null, cBuff = null,
 				sizeBuff = new byte[4], offsetBuff = new byte[4];
@@ -113,7 +112,7 @@ public class Main {
 		}
 		
 		/** メッセージの埋め込み **/
-		embeding(sBuff, msg, table, msgLength, codeLength, offset);
+		embeding(sBuff, msg, msgLength, codeLength, offset);
 
 		double psnr = Calc.PSNR(sBuff, cBuff, offset);
 //		Util.println(psnr);
@@ -127,7 +126,6 @@ public class Main {
 		outputImg(file, sBuff, codeLength);
 	}
 	
-	
 	/**
 	 * 誤りパターンをimgに埋め込む(1pix = 8bit)
 	 * @param img
@@ -135,8 +133,9 @@ public class Main {
 	 * @param table
 	 * @param n
 	 */
-	private static void embeding(byte[] img, int[] msg, int[][] table, int msgLength, int codeLength, int offset) {
-        byte[] eppArray;
+	private static void embeding(byte[] img, int[] msg, int msgLength, int codeLength, int offset) {
+		int[] ep;
+		byte[] eppArray;
         int baseIndex = offset;
         
         if( msgLength * codeLength > img.length - offset) {
@@ -147,7 +146,8 @@ public class Main {
         // メッセージの数だけ繰り返す
         for(int i=0; i<msgLength; i++) {
         	// メッセージに対応する誤りパターンを取り出す
-        	eppArray = Util.extractErrorPutternPerPix(table[msg[i]], codeLength);
+        	ep = Util.message2Error(msg[i], codeLength);
+        	eppArray = Util.extractErrorPutternPerPix(ep, codeLength);
         	// １ピクセルでARGBの32ビットなのでそれぞれのLSBに対し、誤りパターンのMSBから順に排他的論理和をとる
         	for(int j=0; j<codeLength ; j++) {
         		img[baseIndex + j] = (byte) (img[baseIndex + j] ^ eppArray[codeLength-j-1]);
@@ -208,7 +208,7 @@ public class Main {
 		int[] randByteArray = new int[textNum];
 	
 		for( int i=0; i<textNum; i++)
-		    randByteArray[i] = s.NextInt((int) Math.pow(2, CODE_SIZE));
+		    randByteArray[i] = s.NextInt((int) Math.pow(2, CHARACTER_SIZE));
 		
 		return randByteArray;
     }
@@ -266,6 +266,41 @@ public class Main {
 			e.printStackTrace();
 		}
 		return pw;
+	}
+	
+	
+	private static void calcDispersion(int[] msg, int max) {
+		int[] count = new int[max];
+		int ave = msg.length / max;
+		for(int i=0; i<msg.length; i++) {
+			count[msg[i]]++;
+		}
+		
+		double dispersion = 0;
+		for(int j=0; j<max; j++) {
+			dispersion += Math.pow(ave - count[j], 2);
+		}
+		dispersion /= ave;
+		
+		Util.println("分散：" + dispersion);
+	}
+
+	private static void calcEntropy(int[] msg, int max) {
+		int[] count = new int[max];
+		double p;
+		
+		for(int i=0; i<msg.length; i++) {
+			count[msg[i]]++;
+		}
+		
+		
+		double dispersion = 0;
+		for(int j=0; j<max; j++) {
+			p = (double)count[j]/msg.length;
+			dispersion -= p * Calc.log2(p);
+		}
+		
+		Util.println("エントロピー：" + dispersion);
 	}
 	
 }

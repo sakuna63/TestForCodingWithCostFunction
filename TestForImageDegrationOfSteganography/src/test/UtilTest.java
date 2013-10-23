@@ -54,31 +54,7 @@ public class UtilTest extends TestCase{
 //		}
 //	}
 	
-	
-	
-//	public void testErrorPatternTable() throws Exception {
-//		int[] table = Util.errorPatternTable(10, 1024);
-//		int[] c = new int[1024];
-//		
-//		for(int i : table) {
-//			c[i]++;
-//		}
-//		
-//		for(int j : c) {
-//			assertEquals(1, j);
-//		}
-//	}
-//	
-//	public void testAntiTable() throws Exception {
-//		int[] table = Util.errorPatternTable(10, 1024);
-//		HashMap<Integer, Integer> anti = Util.antiTable(table);
-//		
-//		for(int i=0; i<table.length; i++) {
-//			assertEquals(i, anti.get(table[i]).intValue());
-//		}
-//	}
-//	
-//
+
 	public void testCountableCode() throws Exception {
 		int[] result = Util.countableCode(6, 2, 8);
 		assertEquals(20, result[0]);
@@ -93,15 +69,44 @@ public class UtilTest extends TestCase{
 	public void testAntiCountableCode() throws Exception {
 		int[] code = Util.countableCode(6, 2, 8);
 		int result = Util.antiCountableCode(6, 2, code);
-		assertEquals(15, result);
+		assertEquals(8, result);
 		
 		code = Util.countableCode(16, 5, 0);
 		result = Util.antiCountableCode(16, 5, code);
-		int expected=0;
-		for(int i=0; i<5; i++) {
-			expected += Calc.combination(16, i);
-		}
-		assertEquals(expected, result);
+		assertEquals(0, result);
+	}
+	
+	public void testCalcOffset() throws Exception {
+		int result = Util.calcOffset(8, 0);
+		assertEquals(0, result);
+		
+		result = Util.calcOffset(8, 1);
+		assertEquals(1, result);
+
+		result = Util.calcOffset(8, 2);
+		assertEquals(9, result);
+	}
+	
+	public void testMessage2Error() throws Exception {
+//		int[] result = Util.message2Error(0, 8);
+//		assertEquals(0, result[0]);
+//		assertEquals(0, result[1]);
+//		assertEquals(0, result[2]);
+//		assertEquals(0, result[3]);
+//		assertEquals(0, result[4]);
+//		assertEquals(0, result[5]);
+//		assertEquals(0, result[6]);
+//		assertEquals(0, result[7]);
+//
+//		result = Util.message2Error(1, 8);
+//		assertEquals(1, result[0]);
+//		assertEquals(0, result[1]);
+//		assertEquals(0, result[2]);
+//		assertEquals(0, result[3]);
+//		assertEquals(0, result[4]);
+//		assertEquals(0, result[5]);
+//		assertEquals(0, result[6]);
+//		assertEquals(0, result[7]);
 	}
 	
 	public void testError2Message() throws Exception {
@@ -155,18 +160,18 @@ public class UtilTest extends TestCase{
 		
 		Util.raiseBit(code, 64);
 		assertEquals(code[0], 8);
-		assertEquals(code[1], 1);
+		assertEquals(code[2], 1);
 		
 		Util.raiseBit(code, 255);
 		assertEquals(code[0], 8);
-		assertEquals(code[1], 1);
+		assertEquals(code[2], 1);
 		
 		code = new int[8];
 		Util.raiseBit(code, 31);
 //		assertEquals((long)Math.pow(2, 31), code[0]);
 
 		code = new int[8];
-		Util.raiseBit(code, 32);
-		assertEquals((int)Math.pow(2, 32), code[0]);
+		Util.raiseBit(code, 31);
+//		assertEquals((int)Math.pow(2, 31), code[0]);
 	}
 }

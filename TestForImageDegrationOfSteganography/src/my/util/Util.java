@@ -2,6 +2,7 @@ package my.util;
 
 public class Util {
 
+	private static final int MASK = 0x0000000000000000000000000000000000000000000000000000000000000001;
 	/**
 	 * System.out.print
 	 * @param text
@@ -37,65 +38,71 @@ public class Util {
 	/**
 	 * エラーパターンをメッセージに変換する
 	 * @param n
-	 * @param ep
+	 * @param code
 	 * @return
 	 */
-	public static int error2Message(int n, int[] ep) {
+	public static int error2Message(int n, int[] code) {
 		// ハミングウェイトを計算
-		int weight = hamingWeight(ep[0]) + hamingWeight(ep[1])
-				+ hamingWeight(ep[2]) + hamingWeight(ep[3]);
-		return antiCountableCode(n, weight, ep);
+		int weight = hamingWeight(code[0]) + hamingWeight(code[1])
+				+ hamingWeight(code[2]) + hamingWeight(code[3]),
+			offset = calcOffset(n, weight);
+		
+		return antiCountableCode(n, weight, code) + offset;
+	}
+	
+	
+	/**
+	 * メッセージをエラーパターンに変換する
+	 * @param msg
+	 * @param n
+	 * @return
+	 */
+	public static int[] message2Error(int msg, int n) {
+		int[] info = calcErrorWeightAndNum(msg, n);
+		return countableCode(n, info[0], info[1]);
+	}
+	
+	
+	public static int[] calcErrorWeightAndNum(int num, int n) {
+		int i, combNum;
+		for(i=0; i<=n; i++) {
+			combNum = (int) Calc.combination(n, i);
+			if( num < combNum ) break;
+			num -= Calc.combination(n, i);
+		}
+		return new int[]{i, num};
 	}
 	
 	/**
-	 * 0~maxまでの数値に対応したnビット誤りパターンテーブルを返す
+	 * nC0 〜 nCk-1までの合計値（数え上げ符号のoffset）を計算する
 	 * @param n
-	 * @param max
+	 * @param k
 	 * @return
 	 */
-	public static int[][] errorPatternTable(int n, int max) {
-		int[][] table = new int[max][8];
-		int index = 0;
-		long combNum;
-		
-		// ハミングウェイトを変化させる
-		for(int i=0; i<=n; i++) {
-			// nCiを計算	
-			combNum = Calc.combination(n, i);
-			// 0~nCiまでに対応するnビットでハミングウェイとiのパターンを決定する
-			for(long j=0; j<combNum; j++) {
-				table[index] = countableCode(n, i, j);
-				index++;
-				if(index >= max) break;
-			}
-			if(index >= max) break;
+	public static int calcOffset(int n, int k) {
+		int offset = 0;
+		for(int i=0; i<k; i++) {
+			offset += Calc.combination(n, i);
 		}
-		return table;
+		return offset;
 	}
+	
+	
 	
 	/**
 	 * nビットの誤りパターンepから各ビットを取り出して配列として返す
-	 * @param ep
+	 * @param code
 	 * @param n
 	 * @return
 	 */
-	public static byte[] extractErrorPutternPerPix(int[] ep, int n) {
+	public static byte[] extractErrorPutternPerPix(int[] code, int n) {
 		byte[] eppArray = new byte[n];
 		for(int i=0; i<n; i++) {
-			eppArray[i] = extractByte(ep, i);
+			eppArray[i] = extractByte(code, i);
 		}
 		return eppArray;
 	}
 	
-	/**
-	 * n番目のbitをLSBにし他を0にして返す
-	 * @param epp
-	 * @param n
-	 * @return
-	 */
-	public static byte extractByte(int epp, int n) {
-		return (byte) ((epp >>> n) & 0x0000000000000000000000000000000000000000000000000000000000000001);
-	}
 	
 	/**
 	 * n番目のbitをLSBにし他を0にして返す
@@ -103,11 +110,23 @@ public class Util {
 	 * @param n
 	 * @return
 	 */
-	public static byte extractByte(int[] epp, int n) {
+	public static byte extractByte(int code, int n) {
+		return (byte) ((code >>> n) & MASK);
+	}
+	
+	
+	/**
+	 * n番目のbitをLSBにし他を0にして返す
+	 * @param epp
+	 * @param n
+	 * @return
+	 */
+	public static byte extractByte(int[] code, int n) {
 		int index = n/32;
 		int shiftBit = n%32;
-		return (byte) ((epp[index] >>> shiftBit) & 0x0000000000000000000000000000000000000000000000000000000000000001);
+		return (byte) ((code[index] >>> shiftBit) & MASK);
 	}
+	
 	
 	/**
 	 * ステゴデータから埋め込みデータを抽出して返す
@@ -128,6 +147,7 @@ public class Util {
 		}
 		return code;
 	}
+	
 	
 	/**
 	 * パスカルの三角形を逆算して、番号numに対応する長さn, ハミングウェイトkの２進数を返す(byte形式)
@@ -155,12 +175,16 @@ public class Util {
 		return code;
 	}
 	
+	
+	/**
+	 * パスカルの三角形を利用して数え上げ符号を対応する値に変換する
+	 * @param n
+	 * @param k
+	 * @param code
+	 * @return
+	 */
 	public static int antiCountableCode(int n, int k, int[] code) {
-		int num = 0, offset = 0;
-		
-		for(int i=0; i<k; i++) {
-			offset += Calc.combination(n, i);
-		}
+		int num = 0;
 		
 		byte bit;
 		for(int j=n-1; j>=0; j--) {
@@ -173,8 +197,14 @@ public class Util {
 				k--;
 			} 
 		}
-		return num + offset;
+		return num;
 	}
+	
+	/**
+	 * codeのn番目のビットを1にする
+	 * @param code
+	 * @param n
+	 */
 	
 	// codeのnビット目を１にする
 	public static void raiseBit(int[] code, int n) {
@@ -182,9 +212,10 @@ public class Util {
 		int index = n/32;
 		// code[index]中で何ビットずらすのかを計算
 		int shiftNum = n%32;
-		int mask = (0x0000000000000000000000000000000000000000000000000000000000000001 << shiftNum);
+		int mask = (MASK << shiftNum);
 		code[index] = code[index] | mask;
 	}
+	
 	
 	/**
 	 * numのハミングウェイトを計算する

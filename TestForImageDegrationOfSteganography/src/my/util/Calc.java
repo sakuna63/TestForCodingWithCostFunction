@@ -54,6 +54,35 @@ public class Calc {
 	}
 	
 	/**
+	 * start~endまでが当確率（probability)の場合の平均を計算する
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+//	public static double average(int start, int end, double probability) {
+//		int ave = 0;
+//		
+//		for(int i=start; i<end; i++) {
+//			ave += i * probability;
+//		}
+//		return ave/(end-start+1);
+//	}
+//	
+//	/**
+//	 * startからendまでの分散を計算する
+//	 * @param start
+//	 * @param end
+//	 * @return
+//	 */
+//	public static double dispersion(int start, int end) {
+//		double num = 0, ave = average(start, end);
+//		for(int i=start; i<end; i++) {
+//			num += Math.pow(i-ave, 2);
+//		}
+//		return num/(end-start+1);
+//	}
+//	
+	/**
 	 * PSNR値を計算する
 	 * @param img1
 	 * @param img2
