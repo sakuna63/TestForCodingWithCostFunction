@@ -71,7 +71,6 @@ public class Main {
 	 * @param msgLength
 	 * @param codeLength
 	 */
-	@SuppressWarnings("resource")
 	private static void execStegoProcess(File file, PrintWriter pw, int[] msg, int msgLength, int codeLength) {
 		int offset = 0;
 		byte[] sBuff = null, cBuff = null,
@@ -80,28 +79,27 @@ public class Main {
 		/** 画像の読み込み **/
 		try {
 			// Streamクラスの初期化
-			FileInputStream stego = new FileInputStream(file);
-			FileInputStream cover = new FileInputStream(file);
-
+			FileInputStream fis = new FileInputStream(file);
+			
 			// 画像のサイズを読み込む
-			stego.skip(2);
-			stego.read(sizeBuff);
+			fis.skip(2);
+			fis.read(sizeBuff);
 			int size = sizeBuff[3] << 24 | sizeBuff[2] << 16 | sizeBuff[1] << 8 | sizeBuff[0];
 			// 画像のオフセットを読み込む
-			stego.skip(4);
-			stego.read(offsetBuff);
+			fis.skip(4);
+			fis.read(offsetBuff);
 			offset = offsetBuff[3] << 24 | offsetBuff[2] << 16 | offsetBuff[1] << 8 | offsetBuff[0];
-			
-			// reset非対応なのでnewで読み込み位置を初期化
-			stego = new FileInputStream(file);
 			
 			// バッファにビットマップを読み込む
 			sBuff = new byte[size];
-			cBuff = new byte[size];
-			stego.read(sBuff);
-			cover.read(cBuff);
-			stego.close();
-			cover.close();
+			
+			fis.close();
+			fis = new FileInputStream(file);
+			
+			fis.read(sBuff);
+			fis.close();
+			
+			cBuff = sBuff.clone();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -113,9 +111,9 @@ public class Main {
 		
 		/** メッセージの埋め込み **/
 		embeding(sBuff, msg, msgLength, codeLength, offset);
+		outputImg(file, sBuff, codeLength);
 
 		double psnr = Calc.PSNR(sBuff, cBuff, offset);
-//		Util.println(psnr);
 		pw.print(psnr + ","	);
 		
 		int[] eMsg = extracting(sBuff, cBuff, offset, msgLength, codeLength);
@@ -123,7 +121,6 @@ public class Main {
 		if( !compMsg(msg, eMsg) )
 			Util.println("メッセージの取り出しに失敗しました");
 		
-		outputImg(file, sBuff, codeLength);
 	}
 	
 	/**
@@ -179,6 +176,21 @@ public class Main {
 		return msg;
 	}
 	
+	private static boolean compBuff(byte[] sBuff, byte[] cBuff, int offset) {
+		boolean flag = false;
+		
+		for(int i=offset; i<sBuff.length; i++) {
+//			Util.println(String.format("i: %d, s:%d, c:%d",i, sBuff[i], cBuff[i]));
+			if( sBuff[i] != cBuff[i]) {
+//				Util.println(String.format("i: %d, s:%d, c:%d",i, sBuff[i], cBuff[i]));
+				flag = true;
+				break;
+			}
+		}
+		return flag;
+		
+	}
+	
 	/**
 	 * ２つのメッセージを比較する
 	 * @param msg1
@@ -220,10 +232,14 @@ public class Main {
 	 * @param sBuff
 	 * @param codeLength
 	 */
-	private static void outputImg(File file, byte[] sBuff, int codeLength) {
+	private static String outputImg(File file, byte[] sBuff, int codeLength) {
 		// 画像を出力する
 		FileOutputStream output = null;
-		File stegoFile = new File(BURIED_IMAGE_PATH + codeLength + file.getName());
+		String name = BURIED_IMAGE_PATH + codeLength + file.getName();
+		File stegoFile = new File(name);
+		
+		if( stegoFile.exists() ) 
+			stegoFile.delete();
 		
 		try {
 			stegoFile.createNewFile();
@@ -235,6 +251,8 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		return name;
 	}
 	
 	/**
