@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
 import my.util.Calc;
@@ -42,12 +43,12 @@ public class Main {
 		
 		for(File f : imgDir.listFiles()) {
 //			for(int seed=0; seed<=32; seed++) {
-				pw = getPrintWriter(CSV_FILE_PATH + f.getName() + ".csv" );
-				outputCsvHead(pw, f.getName(), ERROR_CODE_LENGTHS);
-//				pw.print(CHARACTER_CODE + "," + seed + ",");
+				pw = getPrintWriter(CSV_FILE_PATH + f.getName().replace(".bmp", "") + ".csv" );
+				pw.println("誤りパターン長[bit],埋め込み率[%],PSNR[db],誤り率[%]");		
 				
 				msg = getRandomTextByte(0, IMAGE_SIZE * IMAGE_SIZE / 8);
-				calcEntropy(msg, (int) Math.pow(2, CHARACTER_SIZE));
+//				msg = getRandomTextByte(seed, IMAGE_SIZE * IMAGE_SIZE / 8);
+//				calcEntropy(msg, (int) Math.pow(2, CHARACTER_SIZE));
 				
 				for(int codeLength : ERROR_CODE_LENGTHS) {
 					messageLenght = IMAGE_SIZE * IMAGE_SIZE / codeLength;
@@ -109,11 +110,11 @@ public class Main {
 		}
 		
 		/** メッセージの埋め込み **/
-		embeding(sBuff, msg, msgLength, codeLength, offset);
+		long errorRate = embeding(sBuff, msg, msgLength, codeLength, offset);
 		outputImg(file, sBuff, codeLength);
 
 		double psnr = Calc.PSNR(sBuff, cBuff, offset);
-		pw.println(codeLength + "," + psnr + "," + ((double)8/codeLength) * 100 + ",");
+		pw.println(codeLength + "," + ((double)8/codeLength) * 100 + "," + psnr + "," + (double)errorRate/msgLength);
 		
 		int[] eMsg = extracting(sBuff, cBuff, offset, msgLength, codeLength);
 		
@@ -123,26 +124,29 @@ public class Main {
 	}
 	
 	/**
-	 * 誤りパターンをimgに埋め込む(1pix = 8bit)
+	 * 誤りパターンをimgに埋め込む(1pix = 8bit),同時に誤り率（平均）を計算して返す
 	 * @param img
 	 * @param msg
 	 * @param table
 	 * @param n
 	 */
-	private static void embeding(byte[] img, int[] msg, int msgLength, int codeLength, int offset) {
+	private static long embeding(byte[] img, int[] msg, int msgLength, int codeLength, int offset) {
 		int[] ep;
 		byte[] eppArray;
         int baseIndex = offset;
+        long errorRate = 0;
         
         if( msgLength * codeLength > img.length - offset) {
         	Util.println("メッセージが長過ぎます");
-        	return;
+        	return -1;
         }
         
         // メッセージの数だけ繰り返す
         for(int i=0; i<msgLength; i++) {
         	// メッセージに対応する誤りパターンを取り出す
         	ep = Util.message2Error(msg[i], codeLength);
+        	for(int e : ep)
+        		errorRate += Util.hamingWeight(e);
         	eppArray = Util.extractErrorPutternPerPix(ep, codeLength);
         	// １ピクセルでARGBの32ビットなのでそれぞれのLSBに対し、誤りパターンのMSBから順に排他的論理和をとる
         	for(int j=0; j<codeLength ; j++) {
@@ -150,6 +154,8 @@ public class Main {
         	}
         	baseIndex += codeLength;
         }
+        
+        return errorRate;
 	}
 	
 	/**
@@ -255,20 +261,6 @@ public class Main {
 	}
 	
 	/**
-	 * csvの1行目を出力する
-	 * @param pw
-	 * @param fileName
-	 * @param errorCodeLengths
-	 */
-	private static void outputCsvHead(PrintWriter pw, String fileName, int[] errorCodeLengths) {
-//		pw.print(fileName + ",,");
-//		for( int length : errorCodeLengths ) {
-//			pw.print(length + ",");
-//		}
-		pw.println("errorLength[bit],PSNR[db], embedPer[%]");
-	}
-	
-	/**
 	 * PrinterWriterのインスタンスを取得する
 	 * @param fileName
 	 * @return
@@ -277,8 +269,7 @@ public class Main {
 	private static PrintWriter getPrintWriter(String fileName) {
 		PrintWriter pw = null;
 		try {
-			FileWriter fw = new FileWriter(fileName);
-			pw = new PrintWriter(new BufferedWriter(fw));
+			pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(new File(fileName)),"Shift_JIS"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
