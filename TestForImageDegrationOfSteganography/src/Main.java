@@ -41,27 +41,26 @@ public class Main {
 		PrintWriter pw;
 		
 		for(File f : imgDir.listFiles()) {
-			pw = getPrintWriter(CSV_FILE_PATH + f.getName() + ".csv" );
-			outputCsvHead(pw, f.getName(), ERROR_CODE_LENGTHS);
-			
-			for(int seed=0; seed<=32; seed++) {
-				pw.print(CHARACTER_CODE + "," + seed + ",");
+//			for(int seed=0; seed<=32; seed++) {
+				pw = getPrintWriter(CSV_FILE_PATH + f.getName() + ".csv" );
+				outputCsvHead(pw, f.getName(), ERROR_CODE_LENGTHS);
+//				pw.print(CHARACTER_CODE + "," + seed + ",");
 				
-				msg = getRandomTextByte(seed, IMAGE_SIZE * IMAGE_SIZE / 8);
+				msg = getRandomTextByte(0, IMAGE_SIZE * IMAGE_SIZE / 8);
 				calcEntropy(msg, (int) Math.pow(2, CHARACTER_SIZE));
 				
 				for(int codeLength : ERROR_CODE_LENGTHS) {
 					messageLenght = IMAGE_SIZE * IMAGE_SIZE / codeLength;
 					execStegoProcess(f, pw, msg, messageLenght, codeLength);
 				}
-				pw.println();
-			}
-			pw.close();
+				
+				pw.close();
+//			}
 		}
 		
 		Util.print("埋め込み終了");
     }
-	
+
 	/**
 	 * ステゴデータの生成プロセスを実行する
 	 * @param file
@@ -114,13 +113,13 @@ public class Main {
 		outputImg(file, sBuff, codeLength);
 
 		double psnr = Calc.PSNR(sBuff, cBuff, offset);
-		pw.print(psnr + ","	);
+		pw.println(codeLength + "," + psnr + "," + ((double)8/codeLength) * 100 + ",");
 		
 		int[] eMsg = extracting(sBuff, cBuff, offset, msgLength, codeLength);
 		
 		if( !compMsg(msg, eMsg) )
 			Util.println("メッセージの取り出しに失敗しました");
-		
+
 	}
 	
 	/**
@@ -262,11 +261,11 @@ public class Main {
 	 * @param errorCodeLengths
 	 */
 	private static void outputCsvHead(PrintWriter pw, String fileName, int[] errorCodeLengths) {
-		pw.print(fileName + ",,");
-		for( int length : errorCodeLengths ) {
-			pw.print(length + ",");
-		}
-		pw.println();
+//		pw.print(fileName + ",,");
+//		for( int length : errorCodeLengths ) {
+//			pw.print(length + ",");
+//		}
+		pw.println("errorLength[bit],PSNR[db], embedPer[%]");
 	}
 	
 	/**
@@ -284,23 +283,6 @@ public class Main {
 			e.printStackTrace();
 		}
 		return pw;
-	}
-	
-	
-	private static void calcDispersion(int[] msg, int max) {
-		int[] count = new int[max];
-		int ave = msg.length / max;
-		for(int i=0; i<msg.length; i++) {
-			count[msg[i]]++;
-		}
-		
-		double dispersion = 0;
-		for(int j=0; j<max; j++) {
-			dispersion += Math.pow(ave - count[j], 2);
-		}
-		dispersion /= ave;
-		
-		Util.println("分散：" + dispersion);
 	}
 
 	private static void calcEntropy(int[] msg, int max) {
