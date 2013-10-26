@@ -30,9 +30,18 @@ public class UtilTest extends TestCase{
 		"testCountableCode",
 		"testAntiCountableCode",
 		"testError2Message",
-		"testExtractErrorPattern"
-		
+		"testExtractErrorPattern",
+		"testA"
 	};
+	
+	public void testA() throws Exception {
+		int[] ep = Util.message2Error(138, 136);
+		assertEquals(5, ep[0]);
+		byte[] eppArray = Util.extractErrorPutternPerPix(ep, 136);
+		
+		int msg = Util.error2Message(136, ep);
+		assertEquals(138, msg);
+	}
 	
 	public void testExtractByte() throws Exception {
 		assertEquals(0, Util.extractByte(4, 0));

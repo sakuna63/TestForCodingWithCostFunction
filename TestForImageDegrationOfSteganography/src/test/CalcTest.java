@@ -1,5 +1,7 @@
 package test;
 
+import java.math.BigInteger;
+
 import my.util.Calc;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -23,23 +25,27 @@ public class CalcTest extends TestCase{
 	
 	static final String[] testOrder = new String[]{
 		"testFactorial",
-		"testFactorial2",
 		"testCombination",
 		"testPSNR"
 	};
 	
 	public void testFactorial() throws Exception {
-		long num = Calc.factorial(5);
-		assertEquals(120, num);
-	}
-	
-	public void testFactorial2() throws Exception {
-		long num = Calc.factorial(5, 2);
-		assertEquals(60, num);
+		BigInteger num = Calc.factorial(5);
+		assertEquals(120, num.longValue());
+		
+		num = Calc.factorial(144);
+		assertTrue(num.longValue() > 0);
 	}
 	
 	public void testCombination() throws Exception{
 		long num = Calc.combination(5, 2);
+		assertEquals(10, num);
+		
+		num = Calc.combination(144, 144);
+		assertEquals(1, num);
+
+		num = Calc.combination(144, 1);
+		assertEquals(144, num);
 	}
 	
 	public void testPSNR() throws Exception {

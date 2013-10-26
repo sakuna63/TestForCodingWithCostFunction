@@ -1,5 +1,7 @@
 package my.util;
 
+import java.math.BigInteger;
+
 public class Calc {
 	
 	/**
@@ -16,8 +18,8 @@ public class Calc {
 	 * @param n
 	 * @return
 	 */
-	public static long factorial(int n) {
-		return n <= 1 ? 1 : n * factorial(n-1);
+	public static BigInteger factorial(int n) {
+		return n <= 1 ? new BigInteger("1") : BigInteger.valueOf(n).multiply(factorial(n-1));
 	}
 	
 	/**
@@ -25,8 +27,8 @@ public class Calc {
 	 * @param n
 	 * @return
 	 */
-	public static long factorial(int n, int k) {
-		return n == k ? 1 : n * factorial(n-1,k);
+	public static BigInteger factorial(int n, int k) {
+		return n == k ? new BigInteger("1") : BigInteger.valueOf(n).multiply(factorial(n-1,k));
 	}
 	
 	/**
@@ -39,8 +41,7 @@ public class Calc {
 		if( n < k ) return 0;
 		else if( k==0 ) return 1;
 
-		long num1, num2;
-		num1 = num2 = 1;
+		BigInteger num1, num2;
 		
 		if( n/k > 2 ) {
 			num1 = factorial(n, n-k);
@@ -50,7 +51,7 @@ public class Calc {
 			num2 = factorial(n-k);
 		}
 		
-		return num1/num2;
+		return num1.divide(num2).longValue();
 	}
 	
 	/**

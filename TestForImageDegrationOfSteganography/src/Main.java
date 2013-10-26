@@ -32,7 +32,9 @@ public class Main {
 	private static final int IMAGE_SIZE = 256;
 	
 	private static final int[] ERROR_CODE_LENGTHS = new int[]{
-		8, 16, 32, 64, 128//, 256
+		8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 
+		104, 112, 120, 128//, 136, 144, 152, 160, 168, 176,
+//		184, 192, 200, 208, 216, 224, 232, 240, 248, 256
 	};
 	
 	public static void main(String[] args) {
@@ -44,7 +46,7 @@ public class Main {
 		for(File f : imgDir.listFiles()) {
 //			for(int seed=0; seed<=32; seed++) {
 				pw = getPrintWriter(CSV_FILE_PATH + f.getName().replace(".bmp", "") + ".csv" );
-				pw.println("誤りパターン長[bit],埋め込み率[%],PSNR[db],誤り率[%]");		
+				pw.println("誤りパターン長,埋め込み率,PSNR,誤り率");		
 				
 				msg = getRandomTextByte(0, IMAGE_SIZE * IMAGE_SIZE / 8);
 //				msg = getRandomTextByte(seed, IMAGE_SIZE * IMAGE_SIZE / 8);
@@ -114,11 +116,11 @@ public class Main {
 		outputImg(file, sBuff, codeLength);
 
 		double psnr = Calc.PSNR(sBuff, cBuff, offset);
-		pw.println(codeLength + "," + ((double)8/codeLength) * 100 + "," + psnr + "," + (double)errorRate/msgLength);
+		pw.println(codeLength + "," + ((double)8/codeLength) * 100 + "," + psnr + "," + (double)errorRate/(msgLength * codeLength) * 100);
 		
 		int[] eMsg = extracting(sBuff, cBuff, offset, msgLength, codeLength);
 		
-		if( !compMsg(msg, eMsg) )
+		if( !compMsg(msg, eMsg, codeLength) )
 			Util.println("メッセージの取り出しに失敗しました");
 
 	}
@@ -172,9 +174,11 @@ public class Main {
 		int[] msg = new int[msgLength];
 		int[] ep = new int[8];
 		
-		for(int i=offset; i<stego.length; i+=codeLength) {
+		for(int i=offset; i+codeLength <= stego.length; i+=codeLength) {
 			ep = Util.extractErrorPattern(stego, cover, i, codeLength);
 			// 誤りパターンから埋め込みデータを復元する
+			if( codeLength >= 136 && i == 41)
+				Util.print(1);
 			msg[(i-offset)/codeLength] = Util.error2Message(codeLength, ep);
 		}
 		
@@ -202,14 +206,14 @@ public class Main {
 	 * @param msg2
 	 * @return
 	 */
-	private static boolean compMsg(int[] origin, int[] embuded) {
+	private static boolean compMsg(int[] origin, int[] embuded, int codeLength) {
 		boolean flag = true;
 		
 		for(int i=0; i<embuded.length; i++) {
 			if( origin[i] != embuded[i]) {
-				Util.println(String.format("i: %d, origin:%d, embuded:%d",i, origin[i], embuded[i]));
+				Util.println(String.format("length:%d, i: %d, origin:%d, embuded:%d",codeLength, i, origin[i], embuded[i]));
 				flag = false;
-				break;
+//				break;
 			}
 		}
 		return flag;
