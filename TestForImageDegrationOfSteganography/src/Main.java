@@ -116,7 +116,7 @@ public class Main {
 		outputImg(file, sBuff, codeLength);
 
 		double psnr = Calc.PSNR(sBuff, cBuff, offset);
-		pw.println(codeLength + "," + ((double)8/codeLength) * 100 + "," + psnr + "," + (double)errorRate/(msgLength * codeLength) * 100);
+		pw.println(codeLength + "," + ((double)8/codeLength) * 100 + "," + psnr + "," + (double)errorRate/(sBuff.length-offset) * 100);
 		
 		int[] eMsg = extracting(sBuff, cBuff, offset, msgLength, codeLength);
 		
