@@ -45,8 +45,8 @@ public class UtilTest extends TestCase{
 	}
 	
 	public void testB() throws Exception {
-		for(int i=0; i<Calc.combination(8, 2); i++)
-			Util.println(i + ":" + Util.countableCode(8, 2, i)[0]);
+		for(int i=0; i<Calc.combination(4, 2); i++)
+			Util.println(i + ":" + Util.countableCode(4, 2, i)[0]);
 	}
 	
 	public void testExtractByte() throws Exception {
