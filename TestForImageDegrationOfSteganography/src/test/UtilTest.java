@@ -31,7 +31,8 @@ public class UtilTest extends TestCase{
 		"testAntiCountableCode",
 		"testError2Message",
 		"testExtractErrorPattern",
-		"testA"
+		"testA",
+		"testB"
 	};
 	
 	public void testA() throws Exception {
@@ -41,6 +42,11 @@ public class UtilTest extends TestCase{
 		
 		int msg = Util.error2Message(136, ep);
 		assertEquals(138, msg);
+	}
+	
+	public void testB() throws Exception {
+		for(int i=0; i<Calc.combination(8, 2); i++)
+			Util.println(i + ":" + Util.countableCode(8, 2, i)[0]);
 	}
 	
 	public void testExtractByte() throws Exception {
