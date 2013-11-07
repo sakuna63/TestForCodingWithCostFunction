@@ -18,8 +18,8 @@ public class Calc {
 	 * @param n
 	 * @return
 	 */
-	public static BigInteger factorial(int n) {
-		return n <= 1 ? new BigInteger("1") : BigInteger.valueOf(n).multiply(factorial(n-1));
+	public static long factorial(int n) {
+		return n <= 1 ? 1 : n%2 == 0 ? n/2 * factorial(n-1) : n * factorial(n-1);
 	}
 	
 	/**
@@ -27,8 +27,17 @@ public class Calc {
 	 * @param n
 	 * @return
 	 */
-	public static BigInteger factorial(int n, int k) {
-		return n == k ? new BigInteger("1") : BigInteger.valueOf(n).multiply(factorial(n-1,k));
+	public static long factorial(int n, int k, int evNum) {
+		if(n==k) 
+			return 1;
+		else {
+			if( n%2 == 0 && evNum > 0) {
+				return n/2 * factorial(n-1, k, evNum-1);
+			}
+			else {
+				return n * factorial(n-1, k, evNum);
+			}
+		}
 	}
 	
 	/**
@@ -40,18 +49,23 @@ public class Calc {
 	public static long combination(int n, int k) {
 		if( n < k ) return 0;
 		else if( k==0 ) return 1;
-
-		BigInteger num1, num2;
+		
+		boolean nf = n%2 == 0,
+				kf = k%2 == 0;
+		
+		long num1, num2;
 		
 		if( n/k > 2 ) {
-			num1 = factorial(n, n-k);
+			int evNum = k/2;
+			num1 = factorial(n, n-k, evNum);
 			num2 = factorial(k);
 		} else {
-			num1 = factorial(n, k);
+			int evNum = (n-k)/2;
+			num1 = factorial(n, k, evNum);
 			num2 = factorial(n-k);
 		}
 		
-		return num1.divide(num2).longValue();
+		return num1/num2;
 	}
 	
 	/**
