@@ -107,5 +107,5 @@ def getRandomTextByte(seed, textNum) {
 def getPrintWriter(fileName) {
 	def name = "$CSV_FILE_PATH$fileName" +".csv"
 	return new PrintWriter(new OutputStreamWriter(
-			new FileOutputStream(new File(fileName)),"Shift_JIS"))
+			new FileOutputStream(new File(name)),"Shift_JIS"))
 }
