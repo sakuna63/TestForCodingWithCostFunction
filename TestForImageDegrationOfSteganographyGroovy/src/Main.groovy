@@ -20,7 +20,7 @@ IMAGE_SIZE = 256
 
 ERROR_CODE_LENGTHS = [
 	8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 
-	104, 112, 120, 128//, 136, 144, 152, 160, 168, 176,
+	104, 112, 120, 128, 136, 144, 152, 160, 168, 176,
 //		184, 192, 200, 208, 216, 224, 232, 240, 248, 256
 ]
 
@@ -35,9 +35,9 @@ def f = imgDir.listFiles()[0];
 	
 	msg = getRandomTextByte(0, IMAGE_SIZE * IMAGE_SIZE / 8)
 	
-//	ERROR_CODE_LENGTHS.each {length ->
-		execEmbedingProcess(cover, pw, msg, 8)
-//	}
+	ERROR_CODE_LENGTHS.each {length ->
+		execEmbedingProcess(cover, pw, msg, length)
+	}
 
 	pw.close()
 //	throw new Exception();
@@ -75,7 +75,7 @@ def execEmbedingProcess(CoverData cover, pw, msg, codeLength) {
 def compMsg(origin, embuded, codeLength) {
 	def flag = true
 	
-	for(i in 0..embuded.size())
+	for(i in 0..embuded.size()-1)
 		if( origin[i] != embuded[i]) {
 			println String.format("length:%d, i: %d, origin:%d, embuded:%d",codeLength, i, origin[i], embuded[i])
 			flag = false

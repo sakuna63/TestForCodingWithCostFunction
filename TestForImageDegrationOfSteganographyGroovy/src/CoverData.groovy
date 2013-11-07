@@ -21,7 +21,7 @@ class CoverData {
 			eppArray.eachWithIndex {e, j->
 				stego.errorRate += e
 				stego.imgBuff[(i+1) * codeLength + offset - j - 1] = stego.imgBuff[(i+1) * codeLength + offset - j - 1] ^ e
-				if(!imgBuff[i * codeLength + j + offset].is(stego.imgBuff[i * codeLength + j + offset])) println "before:" + imgBuff[i + j + offset] + " after:" + stego.imgBuff[i + j + offset]
+//				if(!imgBuff[i * codeLength + j + offset].is(stego.imgBuff[i * codeLength + j + offset])) println "before:" + imgBuff[i + j + offset] + " after:" + stego.imgBuff[i + j + offset]
 			}
 		}
 		
