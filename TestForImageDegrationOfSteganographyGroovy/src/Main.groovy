@@ -26,20 +26,22 @@ ERROR_CODE_LENGTHS = [
 
 def imgDir = new File(IMAGE_PATH)
 def pw, cover, msg, msgLength
+def f = imgDir.listFiles()[0];
+//imgDir.listFiles().each {f->
 
-imgDir.listFiles().each {f->
 	cover = new CoverData(f)
 	pw = getPrintWriter(cover.name)
 	pw.println("誤りパターン長,埋め込み率,PSNR,誤り率");
 	
 	msg = getRandomTextByte(0, IMAGE_SIZE * IMAGE_SIZE / 8)
 	
-	ERROR_CODE_LENGTHS.each {length ->
-		execEmbedingProcess(cover, pw, msg, length)
-	}
-	
+//	ERROR_CODE_LENGTHS.each {length ->
+		execEmbedingProcess(cover, pw, msg, 8)
+//	}
+
 	pw.close()
-}
+//	throw new Exception();
+//}
 
 println "success"
 /**
@@ -60,8 +62,8 @@ def execEmbedingProcess(CoverData cover, pw, msg, codeLength) {
 	
 	def eMsg = stego.extracting(cover)
 	
-//	if( !compMsg(msg, eMsg, codeLength) )
-//		println "メッセージの取り出しに失敗しました"
+	if( !compMsg(msg, eMsg, codeLength) )
+		println "メッセージの取り出しに失敗しました"
 }
 
 /**

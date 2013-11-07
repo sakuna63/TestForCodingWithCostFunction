@@ -11,17 +11,17 @@ class CoverData {
 	}
 	
 	def embeding(msg, codeLength) {
-		def ep, eppArray, max = (imgBuff.size() - offset)/codeLength -1
+		def ep, eppArray, msgLength = (imgBuff.size() - offset)/codeLength -1
 		def stego = new StegoData(this, codeLength)
 		
-		for(i in 0..max) {
+		for(i in 0..msgLength) {
 			ep = Util.message2Error(msg[i], codeLength)
 			
 			eppArray = Util.extractErrorPutternPerPix(ep, codeLength)
 			eppArray.eachWithIndex {e, j->
-				stego.errorRate += Util.hamingWeight(e)
-				stego.imgBuff[i * codeLength + j + offset] = stego.imgBuff[i * codeLength + j + offset] ^ e
-//				if(!imgBuff[i * codeLength + j + offset].is(stego.imgBuff[i * codeLength + j + offset])) println "before:" + imgBuff[i + j + offset] + " after:" + stego.imgBuff[i + j + offset]
+				stego.errorRate += e
+				stego.imgBuff[(i+1) * codeLength + offset - j - 1] = stego.imgBuff[(i+1) * codeLength + offset - j - 1] ^ e
+				if(!imgBuff[i * codeLength + j + offset].is(stego.imgBuff[i * codeLength + j + offset])) println "before:" + imgBuff[i + j + offset] + " after:" + stego.imgBuff[i + j + offset]
 			}
 		}
 		

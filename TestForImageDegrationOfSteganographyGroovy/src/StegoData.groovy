@@ -36,11 +36,13 @@ class StegoData {
 	}
 	
 	def extracting(CoverData cover) {
-		def msg = [], ep, max = (imgBuff.size() - offset)/codeLength -1
+		def msg = [], ep, msgLength = (imgBuff.size() - offset)/codeLength -1
 		
-		for(i in 0..max) {
+		for(i in 0..msgLength) {
 			ep = Util.extractErrorPattern(imgBuff, cover.imgBuff, i * codeLength + offset, codeLength);
 			// 誤りパターンから埋め込みデータを復元する
+			def m = Util.error2Message(codeLength, ep);
+//			println "ep:$ep[0] msg:$m"
 			msg.add(Util.error2Message(codeLength, ep));
 		}
 		
