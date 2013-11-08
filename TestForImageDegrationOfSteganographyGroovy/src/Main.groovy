@@ -18,23 +18,34 @@ CHARACTER_SIZE = 8
 // 画像の一辺のサイズ
 IMAGE_SIZE = 256
 
+ERROR_CODE_LENGTHS = [
+	8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 
+	104, 112, 120, 128, 136, 144, 152, 160, 168, 176,
+	184, 192, 200, 208, 216, 224, 232, 240, 248, 256
+]
+
+println "start"
+
 def imgDir = new File(IMAGE_PATH)
-def pw, cover, msg, msgLength
-//def f = imgDir.listFiles()[0];
-imgDir.listFiles().each {f->
+def pw, cover
+def f = imgDir.listFiles()[0];
+def	msg = getRandomTextByte(0, IMAGE_SIZE * IMAGE_SIZE)
+//imgDir.listFiles().each {f->
 
 	cover = new CoverData(f)
 	pw = getPrintWriter(cover.name)
 	pw.println("誤りパターン長, 埋め込み範囲, 埋め込み率,PSNR,誤り率");
 	
-	msg = getRandomTextByte(0, IMAGE_SIZE * IMAGE_SIZE)
 	
-	for(i in 8..256)
-		for(j in 1..8)
+//	for(i in 8..256)
+	ERROR_CODE_LENGTHS.each { i->
+		for(j in 1..8) {
 			execEmbedingProcess(cover, pw, msg, i, j)
-
+		}
+	}
+	
 	pw.close()
-}
+//}
 
 println "success"
 /**
@@ -46,11 +57,13 @@ println "success"
  * @param range
  */
 def execEmbedingProcess(CoverData cover, pw, msg, codeLength, range) {
+	println "run $codeLength $range"
 	StegoData stego = cover.embeding(msg, codeLength, range)
 	stego.output("$BURIED_IMAGE_PATH$codeLength" + "_" + range + "_" + cover.name + ".bmp")
 
 	def psnr = stego.calcPSNR(cover)
-	pw.println("$codeLength,$range," + ((double)8/codeLength) * 100 + ",$psnr,$stego.errorRate")
+	pw.println("$codeLength,$range," + ((double)8/codeLength) * 100 + ",$psnr," + stego.getErrorRate())
+//	println "$codeLength,$range," + ((double)8/codeLength) * 100 + ",$psnr," + stego.getErrorRate()
 	
 	def eMsg = stego.extracting(cover)
 	

@@ -38,7 +38,7 @@ public class UtilTest extends TestCase{
 	public void testA() throws Exception {
 		int[] ep = Util.message2Error(138, 136);
 		assertEquals(5, ep[0]);
-		byte[] eppArray = Util.extractErrorPutternPerPix(ep, 136);
+//		byte[] eppArray = Util.extractErrorPutternPerPix(ep, 136);
 		
 		int msg = Util.error2Message(136, ep);
 		assertEquals(138, msg);
@@ -143,19 +143,19 @@ public class UtilTest extends TestCase{
 		byte[] stego = new byte[100];
 		byte[] cover = stego.clone();
 		
-		int[] result = Util.extractErrorPattern(stego, cover, 0, 10);
-		assertEquals(result[0], 0);
-		assertEquals(result[1], 0);
-		assertEquals(result[2], 0);
-		assertEquals(result[3], 0);
-		
-		stego[0] = 0x01;
-		result = Util.extractErrorPattern(stego, cover, 0, 10);
-		assertEquals(result[0], 512);
-		assertEquals(result[1], 0);
-		assertEquals(result[2], 0);
-		assertEquals(result[3], 0);
-		
+//		int[] result = Util.extractErrorPattern(stego, cover, 0, 10);
+//		assertEquals(result[0], 0);
+//		assertEquals(result[1], 0);
+//		assertEquals(result[2], 0);
+//		assertEquals(result[3], 0);
+//		
+//		stego[0] = 0x01;
+//		result = Util.extractErrorPattern(stego, cover, 0, 10);
+//		assertEquals(result[0], 512);
+//		assertEquals(result[1], 0);
+//		assertEquals(result[2], 0);
+//		assertEquals(result[3], 0);
+//		
 	}
 	
 	public void testHamingWeight() throws Exception {

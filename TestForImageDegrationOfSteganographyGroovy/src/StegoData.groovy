@@ -53,4 +53,8 @@ class StegoData {
 		
 		return msg;
 	}
+
+	def getErrorRate() {
+		return errorRate / ((imgBuff.size() - offset) * range) * 100
+	}
 }

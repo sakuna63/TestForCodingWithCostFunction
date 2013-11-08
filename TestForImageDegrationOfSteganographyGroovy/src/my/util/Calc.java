@@ -1,7 +1,5 @@
 package my.util;
 
-import java.math.BigInteger;
-
 public class Calc {
 	
 	/**
@@ -49,10 +47,7 @@ public class Calc {
 	public static long combination(int n, int k) {
 		if( n < k ) return 0;
 		else if( k==0 ) return 1;
-		
-		boolean nf = n%2 == 0,
-				kf = k%2 == 0;
-		
+
 		long num1, num2;
 		
 		if( n/k > 2 ) {

@@ -46,8 +46,8 @@ public class Util {
 		int weight = hamingWeight(code[0]) + hamingWeight(code[1])
 				+ hamingWeight(code[2]) + hamingWeight(code[3])
 				+ hamingWeight(code[4]) + hamingWeight(code[5])
-				+ hamingWeight(code[6]) + hamingWeight(code[7]),
-			offset = calcOffset(n, weight);
+				+ hamingWeight(code[6]) + hamingWeight(code[7]);
+		int	offset = calcOffset(n, weight);
 		
 		return antiCountableCode(n, weight, code) + offset;
 	}

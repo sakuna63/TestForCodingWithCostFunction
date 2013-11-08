@@ -31,13 +31,8 @@ class CoverData {
 				pos = msgPos % (msgLengthPerBit * codeLength) + offset as Integer
 				bit = msgPos / (msgLengthPerBit * codeLength) as Integer
 				stego.imgBuff[pos] = stego.imgBuff[pos] ^ ( e << bit)
-//				if(!imgBuff[pos].is(stego.imgBuff[pos])) {
-//					println "before:" + imgBuff[pos] + " after:" + stego.imgBuff[pos] + " bit:" + bit
-//					println "msgPos:$msgPos pos:$pos" 
-//				}
 			}
 		}
-		
 		return stego;
 	}
 	

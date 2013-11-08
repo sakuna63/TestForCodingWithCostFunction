@@ -44,8 +44,10 @@ public class Util {
 	public static int error2Message(int n, int[] code) {
 		// ハミングウェイトを計算
 		int weight = hamingWeight(code[0]) + hamingWeight(code[1])
-				+ hamingWeight(code[2]) + hamingWeight(code[3]),
-			offset = calcOffset(n, weight);
+				+ hamingWeight(code[2]) + hamingWeight(code[3])
+				+ hamingWeight(code[4]) + hamingWeight(code[5])
+				+ hamingWeight(code[6]) + hamingWeight(code[7]);
+		int	offset = calcOffset(n, weight);
 		
 		return antiCountableCode(n, weight, code) + offset;
 	}
@@ -87,22 +89,19 @@ public class Util {
 		return offset;
 	}
 	
-	
-	
 	/**
 	 * nビットの誤りパターンepから各ビットを取り出して配列として返す
 	 * @param code
 	 * @param n
 	 * @return
 	 */
-	public static byte[] extractErrorPutternPerPix(int[] code, int n) {
+	public static byte[] extractErrorPatternPerPix(int[] code, int n) {
 		byte[] eppArray = new byte[n];
 		for(int i=0; i<n; i++) {
 			eppArray[i] = extractByte(code, i);
 		}
 		return eppArray;
 	}
-	
 	
 	/**
 	 * n番目のbitをLSBにし他を0にして返す
@@ -113,7 +112,6 @@ public class Util {
 	public static byte extractByte(int code, int n) {
 		return (byte) ((code >>> n) & MASK);
 	}
-	
 	
 	/**
 	 * n番目のbitをLSBにし他を0にして返す
@@ -127,25 +125,43 @@ public class Util {
 		return (byte) ((code[index] >>> shiftBit) & MASK);
 	}
 	
-	
 	/**
 	 * ステゴデータから埋め込みデータを抽出して返す
 	 * @param stego
 	 * @param cover
-	 * @param start
+	 * @param basePos
+	 * @param msgLengthPerBit
+	 * @param offset
 	 * @param n
 	 * @return
 	 */
-	public static int[] extractErrorPattern(byte[] stego, byte[] cover, int start, int n) { 
+	public static int[] extractErrorPattern(byte[] stego, byte[] cover, int basePos, int msgLengthPerBit, int offset, int n) { 
 		byte eBit;
+		int pos, bit;
 		int[] code = new int[8];
-		for(int i=start; i<start+n; i++) {
+		for(int i=0; i<n; i++) {
+			pos = (basePos + i) % (msgLengthPerBit * n) + offset;
+			bit = (basePos + i) / (msgLengthPerBit * n);
 			// 誤りビットを抽出する
-			eBit = (byte) ((stego[i] ^ cover[i]) & 0x01);
+			eBit = extractErrorBit(stego[pos], cover[pos], bit);
 			// とりだしたビットが1だったときに対応するビットを立てる
-			if( eBit == 0x01) Util.raiseBit(code, n - 1 - (i - start));
+			if( eBit == 0x01) Util.raiseBit(code, n-i-1);
 		}
 		return code;
+	}
+	
+	/**
+	 * bitビット目を対象に誤りビットを取り出す
+	 * @param s
+	 * @param c
+	 * @param bit
+	 * @return
+	 */
+	public static byte extractErrorBit(byte s, byte c, int bit) {
+		// 誤りビットを抽出する
+		byte sBit = (byte) ((s & (0x01 << bit)) >>> bit);
+		byte cBit = (byte) ((c & (0x01 << bit)) >>> bit);
+		return (byte) ((sBit ^ cBit) & 0x01);
 	}
 	
 	
