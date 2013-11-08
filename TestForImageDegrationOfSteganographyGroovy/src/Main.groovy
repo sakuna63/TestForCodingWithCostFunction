@@ -18,30 +18,23 @@ CHARACTER_SIZE = 8
 // 画像の一辺のサイズ
 IMAGE_SIZE = 256
 
-ERROR_CODE_LENGTHS = [
-	8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 
-	104, 112, 120, 128, 136, 144, 152, 160, 168, 176,
-	184, 192, 200, 208, 216, 224, 232, 240, 248, 256
-]
-
 def imgDir = new File(IMAGE_PATH)
 def pw, cover, msg, msgLength
-def f = imgDir.listFiles()[0];
-//imgDir.listFiles().each {f->
+//def f = imgDir.listFiles()[0];
+imgDir.listFiles().each {f->
 
 	cover = new CoverData(f)
 	pw = getPrintWriter(cover.name)
-	pw.println("誤りパターン長,埋め込み率,PSNR,誤り率");
+	pw.println("誤りパターン長, 埋め込み範囲, 埋め込み率,PSNR,誤り率");
 	
-	msg = getRandomTextByte(0, IMAGE_SIZE * IMAGE_SIZE / 8)
+	msg = getRandomTextByte(0, IMAGE_SIZE * IMAGE_SIZE)
 	
-	ERROR_CODE_LENGTHS.each {length ->
-		execEmbedingProcess(cover, pw, msg, length)
-	}
+	for(i in 8..256)
+		for(j in 1..8)
+			execEmbedingProcess(cover, pw, msg, i, j)
 
 	pw.close()
-//	throw new Exception();
-//}
+}
 
 println "success"
 /**
@@ -49,20 +42,19 @@ println "success"
  * @param file
  * @param pw
  * @param msg
- * @param table
- * @param msgLength
  * @param codeLength
+ * @param range
  */
-def execEmbedingProcess(CoverData cover, pw, msg, codeLength) {
-	StegoData stego = cover.embeding(msg, codeLength)
-	stego.output("$BURIED_IMAGE_PATH$codeLength$cover.name" + ".bmp")
+def execEmbedingProcess(CoverData cover, pw, msg, codeLength, range) {
+	StegoData stego = cover.embeding(msg, codeLength, range)
+	stego.output("$BURIED_IMAGE_PATH$codeLength" + "_" + range + "_" + cover.name + ".bmp")
 
 	def psnr = stego.calcPSNR(cover)
-	pw.println(codeLength + "," + ((double)8/codeLength) * 100 + "," + psnr + "," + stego.errorRate)
+	pw.println("$codeLength,$range," + ((double)8/codeLength) * 100 + ",$psnr,$stego.errorRate")
 	
 	def eMsg = stego.extracting(cover)
 	
-	if( !compMsg(msg, eMsg, codeLength) )
+	if( !compMsg(msg, eMsg, codeLength, range) )
 		println "メッセージの取り出しに失敗しました"
 }
 
@@ -72,12 +64,12 @@ def execEmbedingProcess(CoverData cover, pw, msg, codeLength) {
  * @param msg2
  * @return
  */
-def compMsg(origin, embuded, codeLength) {
+def compMsg(origin, embuded, codeLength, range) {
 	def flag = true
 	
 	for(i in 0..embuded.size()-1)
 		if( origin[i] != embuded[i]) {
-			println String.format("length:%d, i: %d, origin:%d, embuded:%d",codeLength, i, origin[i], embuded[i])
+			println String.format("length:%d, range:%d i: %d, origin:%d, embuded:%d",codeLength, range, i, origin[i], embuded[i])
 			flag = false
 			break;
 		}

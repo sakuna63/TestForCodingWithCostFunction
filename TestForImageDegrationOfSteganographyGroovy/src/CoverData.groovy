@@ -10,18 +10,31 @@ class CoverData {
 		this.name = file.name.replace(".bmp", "")
 	}
 	
-	def embeding(msg, codeLength) {
-		def ep, eppArray, msgLength = (imgBuff.size() - offset)/codeLength -1
-		def stego = new StegoData(this, codeLength)
+	def embeding(msg, codeLength, range) {
+		def stego = new StegoData(this, codeLength, range)
+		def ep, eppArray, pos, msgPos, bit
+		// bit空間ごとの埋め込み可能な文字数
+		def msgLengthPerBit = (imgBuff.size() - offset) / codeLength as Integer
+		// LSB~rangeビット列空間全体で見たときに埋め込み可能な文字数-1
+		def msgLength = msgLengthPerBit * range -1
 		
 		for(i in 0..msgLength) {
+			// 誤りパターンを生成
 			ep = Util.message2Error(msg[i], codeLength)
-			
-			eppArray = Util.extractErrorPutternPerPix(ep, codeLength)
+			// 誤りパターンを1ビットごとに8ビット列に分解する、eppArray[0]が誤りパターンのLSB
+			eppArray = Util.extractErrorPatternPerPix(ep, codeLength)
 			eppArray.eachWithIndex {e, j->
 				stego.errorRate += e
-				stego.imgBuff[(i+1) * codeLength + offset - j - 1] = stego.imgBuff[(i+1) * codeLength + offset - j - 1] ^ e
-//				if(!imgBuff[i * codeLength + j + offset].is(stego.imgBuff[i * codeLength + j + offset])) println "before:" + imgBuff[i + j + offset] + " after:" + stego.imgBuff[i + j + offset]
+				// メッセージバイナリを1次元的に見た時の座標
+				msgPos = (i+1) * codeLength - j - 1 as Integer
+				// 埋め込み対象となる画像ビット列空間の座標
+				pos = msgPos % (msgLengthPerBit * codeLength) + offset as Integer
+				bit = msgPos / (msgLengthPerBit * codeLength) as Integer
+				stego.imgBuff[pos] = stego.imgBuff[pos] ^ ( e << bit)
+//				if(!imgBuff[pos].is(stego.imgBuff[pos])) {
+//					println "before:" + imgBuff[pos] + " after:" + stego.imgBuff[pos] + " bit:" + bit
+//					println "msgPos:$msgPos pos:$pos" 
+//				}
 			}
 		}
 		

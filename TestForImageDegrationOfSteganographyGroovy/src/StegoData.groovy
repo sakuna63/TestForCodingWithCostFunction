@@ -9,12 +9,13 @@ import my.util.Util;
 
 class StegoData {
 
-	def imgBuff, errorRate = 0, offset, codeLength
+	def imgBuff, errorRate = 0, offset, codeLength, range
 	
-	public StegoData(CoverData cover, codeLength) {
+	public StegoData(CoverData cover, codeLength, range) {
 		this.imgBuff = cover.imgBuff.clone()
 		this.offset = cover.offset
-		this.codeLength = codeLength;
+		this.codeLength = codeLength
+		this.range = range
 	}
 	
 	def output(name) {
@@ -36,12 +37,16 @@ class StegoData {
 	}
 	
 	def extracting(CoverData cover) {
-		def msg = [], ep, msgLength = (imgBuff.size() - offset)/codeLength -1
+		def msg = [], ep
+		// bit空間ごとの埋め込み可能な文字数
+		def msgLengthPerBit = (imgBuff.size() - offset) / codeLength as Integer
+		// LSB~rangeビット列空間に埋め込み可能な文字数-1
+		def msgLength = msgLengthPerBit * range - 1
 		
 		for(i in 0..msgLength) {
-			ep = Util.extractErrorPattern(imgBuff, cover.imgBuff, i * codeLength + offset, codeLength);
+			ep = Util.extractErrorPattern(imgBuff, cover.imgBuff, i * codeLength, msgLengthPerBit, offset, codeLength);
 			// 誤りパターンから埋め込みデータを復元する
-			def m = Util.error2Message(codeLength, ep);
+//			def m = Util.error2Message(codeLength, ep);
 //			println "ep:$ep[0] msg:$m"
 			msg.add(Util.error2Message(codeLength, ep));
 		}
