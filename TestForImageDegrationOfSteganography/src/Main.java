@@ -45,11 +45,13 @@ public class Main {
 				pw.println("誤りパターン長, 埋め込み範囲, 埋め込み率,PSNR,誤り率");
 				
 				
-				for(int i : ERROR_CODE_LENGTHS) {
+//				for(int i : ERROR_CODE_LENGTHS) {
+				for(int i=8; i<=256; i++) {
 					for(int j=1; j<=8; j++) {
 						execEmbedingProcess(cover, pw, msg, i, j);
 					}
 				}
+//				}
 				
 				pw.close();
 //			}
