@@ -1,5 +1,4 @@
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -37,8 +36,12 @@ class StegoData {
 		}
 	}
 	
-	public double calcPSNR(CoverData cover) {
+	public double psnr(CoverData cover) {
 		return Calc.PSNR(imgBuff, cover.imgBuff, offset);
+	}
+	
+	public double ssim(CoverData cover) {
+		return Calc.SSIM(new Calc.SOption(), imgBuff, cover.imgBuff, offset);
 	}
 	
 	public int[] extracting(CoverData cover) {

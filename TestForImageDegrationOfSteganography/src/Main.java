@@ -5,57 +5,39 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import my.util.Util;
 
-/**
- * 前提条件
- * ・US-ASCII
- * ・GrayScale
- * ・256 * 256
- * ・WindowsフォーマットのBitmap
- * @author sakuna63
- */
-
 public class Main {
 	private static final String IMAGE_PATH = "./img/";
 	private static final String BURIED_IMAGE_PATH = "./embeded_img/";
 	private static final String CSV_FILE_PATH = "./csv/";
-	private static final String CHARACTER_CODE = "US-ASCII";
 	
 	// CHARACTER_CODEのサイズ
 	private static final int CHARACTER_SIZE = 8;
 	// 画像の一辺のサイズ
 	private static final int IMAGE_SIZE = 256;
 	
-	private static final int[] ERROR_CODE_LENGTHS = new int[]{
-		8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 
-		104, 112, 120, 128, 136, 144, 152, 160, 168, 176,
-		184, 192, 200, 208, 216, 224, 232, 240, 248, 256
-	};
-	
 	public static void main(String[] args) {
 		int[] msg = getRandomTextByte(0, IMAGE_SIZE * IMAGE_SIZE);
 		File imgDir = new File(IMAGE_PATH);
-		File f = imgDir.listFiles()[0];
 		CoverData cover;
 		PrintWriter pw;
 		
-//		for(File f : imgDir.listFiles()) {
+		for(File f : imgDir.listFiles()) {
 //			for(int seed=0; seed<=32; seed++) {
 				cover = new CoverData(f);
 				pw = getPrintWriter(cover.name);
-				pw.println("誤りパターン長, 埋め込み範囲, 埋め込み率,PSNR,誤り率");
+				pw.println("誤りパターン長, 埋め込み範囲, 埋め込み率,PSNR,SSIM,誤り率");
 				
 				
-//				for(int i : ERROR_CODE_LENGTHS) {
-				for(int i=8; i<=256; i++) {
-					for(int j=1; j<=8; j++) {
-						execEmbedingProcess(cover, pw, msg, i, j);
-					}
-				}
+//				for(int i=8; i<=256; i++) {
+//					for(int j=1; j<=8; j++) {
+				int i=8, j=1;
+					execEmbedingProcess(cover, pw, msg, i, j);
+//					}
 //				}
 				
 				pw.close();
 //			}
-//		}
+		}
 		
 		Util.print("埋め込み終了");
     }
@@ -75,8 +57,8 @@ public class Main {
 		StegoData stego = cover.embeding(msg, codeLength, range);
 		stego.output(BURIED_IMAGE_PATH + codeLength + "_" + range + "_" + cover.name + ".bmp");
 		
-		double psnr = stego.calcPSNR(cover);
-		pw.println(codeLength + "," + range + "," + ((double)8/codeLength) * 100 + "," + psnr + "," + stego.getErrorRate());
+		pw.println(codeLength + "," + range + "," + ((double)8/codeLength) * 100 + ","
+						+ stego.psnr(cover) + "," + stego.ssim(cover) + "," + stego.getErrorRate());
 		
 		int[] eMsg = stego.extracting(cover);
 		

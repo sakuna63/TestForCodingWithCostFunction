@@ -83,13 +83,10 @@ public class Calc {
 		
 		for(int i=offset; i<img1.length; i++) {
 			mse += Math.pow(img1[i] - img2[i], 2);
-//			Util.print(mse);
 		}
 		
 		mse /= (img1.length - offset);
 		psnr = mse == 0.0 ? -1 : 10 * Math.log10( Math.pow(255, 2) / mse );
-		
-//		Util.println("mse:%f psnr:%f", mse, psnr);
 		
 		return psnr;
 	}
@@ -99,7 +96,7 @@ public class Calc {
 	 * @author sakuna63
 	 * 参考：http://pendientedemigracion.ucm.es/info/fismed/SSIM_family/SSIM_archivos/frame.htm
 	 */
-	public class SOption {
+	public static class SOption {
 		private static final int BITS_PER_PIX = 8;
 		private static final double K1 = 0.01; 			/** SSIMindexの計算時の不安定さを避けるための定数C1のこと **/
 		private static final double K2 = 0.03;			/** SSIMindexの計算時の不安定さを避けるための定数C2のこと **/
@@ -126,20 +123,6 @@ public class Calc {
 			C2 = (Math.pow(2, BITS_PER_PIX) - 1)*K2;
 			C2=C2*C2;
 		}
-
-//		public int filter_scale = 20;		/** ガシアンフィルタを見せるためのうんたらかんたら、多分使わない **/
-		// 256*256なので結果的に１
-//		double downsampled = (int) image_height / 256;
-//		double downsampled_backup = downsampled;
-		// ガウシアンで固定
-//		boolean gaussian_window = true;
-//		String[] window_type = {"Gaussian","Same weight"};  // WE CAN WEIGHTS THE WINDOW WITH A GAUSSIAN WEIGHTING FUNCTION OR GIVING THE SAME WEIGHT TO ALL THE PIXELS IN THE WINDOW
-//		String window_selection = "Gaussian";
-		// GUIじゃないので不要
-//		boolean out=false;
-//		boolean show_downsampled_images= false;
-//		boolean show_gaussian_filter= false;
-//		boolean show_ssim_map= false;
 	}
 	
 	public static double SSIM(SOption opt, byte[] stego, byte[] cover, int offset) {
@@ -151,7 +134,7 @@ public class Calc {
 		/**
 		 * フィルター作成処理
 		 */
-		double value, distance = 0;
+		double distance = 0;
 		int center = (opt.filter_width/2);
   		double total = 0;
 		double sigma_sq=opt.sigma_gauss*opt.sigma_gauss;
@@ -190,8 +173,8 @@ public class Calc {
 			a = (0xff & cover[pointer]);
 			b = (0xff & stego[pointer]);
 
-			array_mu1_ip [pointer] = array_mu1_ip_copy [pointer] = a; // Float.intBitsToFloat(a);
-			array_mu2_ip [pointer] = array_mu2_ip_copy [pointer] = b; //Float.intBitsToFloat(b);
+			array_mu1_ip [pointer - offset] = array_mu1_ip_copy [pointer - offset] = a; // Float.intBitsToFloat(a);
+			array_mu2_ip [pointer - offset] = array_mu2_ip_copy [pointer - offset] = b; //Float.intBitsToFloat(b);
 		}
 		mu1_ip.convolve (window_weights, opt.filter_width, opt.filter_width);
 		mu2_ip.convolve (window_weights, opt.filter_width, opt.filter_width);
