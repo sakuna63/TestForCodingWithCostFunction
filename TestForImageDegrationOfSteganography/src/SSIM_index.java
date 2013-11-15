@@ -13,8 +13,7 @@ public class SSIM_index  implements PlugIn {
 	public void run (String arg) {
 
 		String title_1, title_2;
-		int  pointer, filter_length, image_height, image_width, image_dimension, bits_per_pixel_1, bits_per_pixel_2, a, b, c;
-		float filter_weights [];
+		int  pointer, filter_length, image_height, image_width, image_dimension, bits_per_pixel_1, bits_per_pixel_2, a, b;
 		double [] ssim_map;
 		double ssim_index;
 	//
@@ -139,7 +138,7 @@ public class SSIM_index  implements PlugIn {
 	
 		if (gaussian_window) {	
 	
-			double value, distance = 0;
+			double distance = 0;
 			int center = (filter_width/2);
 	  		double total = 0;
 			double sigma_sq=sigma_gauss*sigma_gauss;

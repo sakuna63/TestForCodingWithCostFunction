@@ -3,12 +3,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.LinkedList;
+
 import my.util.Util;
 
 public class Main {
 	private static final String IMAGE_PATH = "./img/";
 	private static final String BURIED_IMAGE_PATH = "./embeded_img/";
-	private static final String CSV_FILE_PATH = "./csv/";
+	private static final String CSV_FILE_PATH1 = "./csv_base_emebding_area/";
+	private static final String CSV_FILE_PATH2 = "./csv_base_errorlength/";
+	private static final String CSV_FILE_PATH3 = "./csv_base_image/";
 	
 	// CHARACTER_CODEのサイズ
 	private static final int CHARACTER_SIZE = 8;
@@ -18,30 +22,73 @@ public class Main {
 	public static void main(String[] args) {
 		int[] msg = getRandomTextByte(0, IMAGE_SIZE * IMAGE_SIZE);
 		File imgDir = new File(IMAGE_PATH);
-		CoverData cover;
-		PrintWriter pw;
 		
-		for(File f : imgDir.listFiles()) {
-//			for(int seed=0; seed<=32; seed++) {
-				cover = new CoverData(f);
-				pw = getPrintWriter(cover.name);
-				pw.println("誤りパターン長, 埋め込み範囲, 埋め込み率,PSNR,SSIM,誤り率");
-				
-				
-//				for(int i=8; i<=256; i++) {
-//					for(int j=1; j<=8; j++) {
-				int i=8, j=1;
-					execEmbedingProcess(cover, pw, msg, i, j);
-//					}
-//				}
-				
-				pw.close();
-//			}
-		}
+//		exec1(msg, imgDir);
+//		exec2(msg, imgDir);
+		exec3(msg, imgDir);
 		
 		Util.print("埋め込み終了");
     }
+	
+	private static void exec1(int[] msg, File imgDir) {
+		PrintWriter pw;
+		CoverData cover;
+		File f = imgDir.listFiles()[0];
+//		for(File f : imgDir.listFiles()) {
+			cover = new CoverData(f);
+			pw = getPrintWriter(CSV_FILE_PATH1, cover.name);
+			pw.println("埋め込み範囲, 埋め込み率,PSNR,SSIM,誤り率");
+			
 
+			for(int j=1; j<=8; j++) {
+				for(int i=8; i<=256; i++) {
+					execEmbedingProcess(cover, pw, msg, i, j);
+				}
+			}
+			
+			pw.close();
+//		}
+	}
+
+	private static void exec2(int[] msg, File imgDir) {
+		PrintWriter pw;
+		CoverData cover;
+		File f = imgDir.listFiles()[0];
+//		for(File f : imgDir.listFiles()) {
+			cover = new CoverData(f);
+			pw = getPrintWriter(CSV_FILE_PATH2, cover.name);
+			pw.println("埋め込み範囲, 埋め込み率,PSNR,SSIM,誤り率");
+
+			for(int i=8; i<=256; i++) {
+				for(int j=1; j<=8; j++) {
+					execEmbedingProcess(cover, pw, msg, i, j);
+				}
+			}
+			
+			pw.close();
+//		}
+	}
+	
+	private static void exec3(int[] msg, File imgDir) {
+		PrintWriter pw;
+		LinkedList<CoverData> covers = new LinkedList<>();
+		
+		for(File f : imgDir.listFiles()) {
+			covers.add(new CoverData(f));
+		}
+
+		for(int j=1; j<=1; j++) {
+			pw = getPrintWriter(CSV_FILE_PATH3, "" + j);
+			pw.println("ファイル名, 埋め込み率,PSNR,SSIM,誤り率");
+			for(int i=8; i<=256; i++) {
+				for(CoverData cover : covers) {
+					execEmbedingProcess(cover, pw, msg, i, j);
+				}
+			}
+			pw.close();
+		}
+	}
+	
 	/**
 	 * ステゴデータの生成プロセスを実行する
 	 * @param file
@@ -57,16 +104,17 @@ public class Main {
 		StegoData stego = cover.embeding(msg, codeLength, range);
 		stego.output(BURIED_IMAGE_PATH + codeLength + "_" + range + "_" + cover.name + ".bmp");
 		
-		pw.println(codeLength + "," + range + "," + ((double)8/codeLength) * 100 + ","
+//		pw.println(codeLength + "," + range + "," + ((double)8/codeLength) * 100 + ","
+//						+ stego.psnr(cover) + "," + stego.ssim(cover) + "," + stego.getErrorRate());
+		pw.println(range + "," + ((double)8/codeLength) * 100 + ","
 						+ stego.psnr(cover) + "," + stego.ssim(cover) + "," + stego.getErrorRate());
 		
 		int[] eMsg = stego.extracting(cover);
 		
 		if( !compMsg(msg, eMsg, codeLength, range) )
 			Util.println("メッセージの取り出しに失敗しました");
-
 	}
-
+	
 	/**
 	 * ２つのメッセージを比較する
 	 * @param msg1
@@ -107,8 +155,8 @@ public class Main {
 	 * @return
 	 */
 	
-	private static PrintWriter getPrintWriter(String fileName) {
-		String name = CSV_FILE_PATH + fileName + ".csv";
+	private static PrintWriter getPrintWriter(String filePath, String fileName) {
+		String name = filePath + fileName + ".csv";
 		PrintWriter pw = null;
 		try {
 			pw = new PrintWriter(new OutputStreamWriter
