@@ -7,41 +7,24 @@ import my.util.Util;
 
 public class CoverData {
 	
-	public byte[] imgBuff;
-	public int offset;
-	public String name;
+	public byte[] buff;
+	public int buff_offset;
+	public String file_name;
 
 	public CoverData(File file) {
 		File2Buff(file);
-		this.name = file.getName().replace(".bmp", "");
+		this.file_name = file.getName();
 	}
 
-	public StegoData embeding(int[] msg, int codeLength, int range) {
-		StegoData stego = new StegoData(this, codeLength, range);
-		int[] ep = null;
-		byte[] eppArray;
-		int pos, msgPos, bit;
-		// bit空間ごとの埋め込み可能な文字数
-		int msgLengthPerBit = (imgBuff.length - offset) / codeLength;
-		// LSB~rangeビット列空間全体で見たときに埋め込み可能な文字数-1
-		int msgLength = msgLengthPerBit * range;
+	public StegoData embeding(int[] msg, int code_length, int range) {
+		StegoData stego = new StegoData(this, code_length, range);
+		int enable_length = (buff.length - buff_offset) * range / code_length;
 		
-		for(int i=0; i<msgLength; i++) {
-			// 誤りパターンを生成
-			ep = Util.message2Error(msg[i], codeLength);
-			// 誤りパターンを1ビットごとに8ビット列に分解する、eppArray[0]が誤りパターンのLSB
-			eppArray = Util.extractErrorPatternPerPix(ep, codeLength);
-			int j = 0;
-			for(int e: eppArray) {
-				stego.errorRate += e;
-				// メッセージバイナリを1次元的に見た時の座標
-				msgPos = (i+1) * codeLength - j - 1;
-				// 埋め込み対象となる画像ビット列空間の座標
-				pos = msgPos % (msgLengthPerBit * codeLength) + offset;
-				bit = msgPos / (msgLengthPerBit * codeLength);
-				stego.imgBuff[pos] = (byte) (stego.imgBuff[pos] ^ ( e << bit));
-				j++;
-			}
+		for (int i=0; i<enable_length; i++) {
+			int[] error = Util.message2Error(msg[i], code_length);
+			byte[] error_arr = Util.splitError(error, code_length);
+			
+			embedingError(stego, error_arr, i, code_length);
 		}
 		return stego;
 	}
@@ -56,21 +39,35 @@ public class CoverData {
 			fis.skip(2);
 			fis.read(sizeBuff);
 			int size = sizeBuff[3] << 24 | sizeBuff[2] << 16 | sizeBuff[1] << 8 | sizeBuff[0];
+			
 			// 画像のオフセットを読み込む
 			fis.skip(4);
 			fis.read(offsetBuff);
-			offset = offsetBuff[3] << 24 | offsetBuff[2] << 16 | offsetBuff[1] << 8 | offsetBuff[0];
+			buff_offset = offsetBuff[3] << 24 | offsetBuff[2] << 16 | offsetBuff[1] << 8 | offsetBuff[0];
 			
 			// バッファにビットマップを読み込む
-			imgBuff = new byte[size];
+			buff = new byte[size];
 			
 			fis.close();
 			fis = new FileInputStream(file);
 			
-			fis.read(imgBuff);
+			fis.read(buff);
 			fis.close();
 		}catch(IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void embedingError(StegoData stego, byte[] error_arr, int msg_index, int code_length) {
+		int start = msg_index * code_length;
+		int enable_length_per_bit_space = buff.length - buff_offset;
+		int i = 0;
+		for(byte e: error_arr) {
+			int pos = (start + i) % enable_length_per_bit_space + buff_offset;
+			int shift = (start + i) / enable_length_per_bit_space;
+			stego.buff[pos] = (byte) (stego.buff[pos] ^ ( e << shift));
+			stego.error_rate += e;
+			i++;
 		}
 	}
 }
