@@ -28,7 +28,13 @@ public class CoverData {
 		}
 		return stego;
 	}
-	
+
+    public byte[] buffWithoutOffset() {
+        byte[] buff_wo = new byte[buff.length - buff_offset];
+        System.arraycopy(buff, buff_offset, buff_wo, 0, buff_wo.length);
+        return buff_wo;
+    }
+    
 	private void File2Buff(File file) {
 		byte[] sizeBuff = new byte[4], offsetBuff = new byte[4];
 
