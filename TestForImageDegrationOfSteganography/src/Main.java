@@ -25,7 +25,8 @@ public class Main {
 		
 //		exec1(msg, img_dir);
 //		exec2(msg, img_dir);
-		exec3(msg, img_dir);
+//		exec3(msg, img_dir);
+		Main2.run();
 		
 		IO.print("埋め込み終了");
     }

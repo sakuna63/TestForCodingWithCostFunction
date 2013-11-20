@@ -66,6 +66,33 @@ public class Calc {
 		return num1/num2;
 	}
 	
+	public static double average(byte[] nums) {
+	    double sum = 0.0;
+	    
+	    for(byte num : nums) {
+	        // byteだと-128~128なのでintにキャストして合計を計算する
+	        sum += num & 0x000000ff; 
+	    }
+	    
+	    return sum / nums.length;
+	}
+	
+	public static double despersion(byte[] nums) {
+	    double sum_m2 = 0.0;
+	    double ave = average(nums);
+	    
+	    for(byte num : nums) {
+	        sum_m2 += Math.pow(num & 0x000000ff, 2);
+	    }
+	    
+	    
+	    return sum_m2 / nums.length - ave * ave;
+	}
+	
+	public static double standardDivision(byte[] nums) {
+        return Math.sqrt(despersion(nums));
+    }
+	
 	/**
 	 * PSNR値を計算する
 	 * @param img1
