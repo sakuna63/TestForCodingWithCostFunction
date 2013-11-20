@@ -76,6 +76,14 @@ public class Calc {
         
         return sum / nums.length;
     }
+
+    public static double average(double[] nums) {
+        double sum = 0.0;
+        for (double num : nums) {
+            sum += num;
+        }
+        return sum / nums.length;
+    }
     
     public static double despersion(byte[] nums) {
         double sum_m2 = 0.0;
@@ -88,7 +96,7 @@ public class Calc {
         
         return sum_m2 / nums.length - ave * ave;
     }
-    
+
     public static double standardDivision(byte[] nums) {
         return Math.sqrt(despersion(nums));
     }
@@ -111,7 +119,32 @@ public class Calc {
     public static double correlationCoefficient(byte[] nums1, byte[] nums2) {
         return convariance(nums1, nums2) / (standardDivision(nums1) * standardDivision(nums2));
     }
-    
+
+    public static double splitedAreaDespersion(byte[] img_buff, int img_size, int area_size) {
+        if (img_buff.length % (area_size * area_size) != 0 && img_size % area_size != 0) return -1;
+
+        int area_num = nums.length / (area_size * area_size);
+        byte[][] areas = new byte[area_num][area_size * area_size];
+        int pos_ver, pos_hor, pos_img;
+        for (int i=0; i < area_num; i++) {
+            pos_ver = i * area_size / img_size;
+            pos_hor = i * area_size % img_size;
+            for(int j=0; j < area_size; j++) {
+                for(int k=0; k < area_size; k++) {
+                    pos_img = pos_ver * img_size + pos_hor + j * img_size + k;
+                    areas[i][j * area_size + k] = img_buff[pos_img];
+                }
+            }
+        }
+
+        double[] area_despersion = new double[area_num];
+        for (int i=0; i < area_num; i++) {
+            area_despersion[i] = despersion(areas[i]);
+        }
+
+        return average(area_despersion);
+    }
+
     /**
      * PSNR値を計算する
      * @param img1

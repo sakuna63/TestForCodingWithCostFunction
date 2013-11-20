@@ -32,10 +32,10 @@ public class Main {
             covers[i] = new CoverData(files[i]);
         }
         
-        outputRangeCSV(msg, covers);
+//        outputRangeCSV(msg, covers);
 //        outputLengthCSV(msg, covers);
-//        outputImgCSV(msg, covers);
-//        outputAceDesCSV(covers);
+        outputImgCSV(msg, covers);
+        outputAceDesCSV(covers);
         
         IO.print("埋め込み終了");
     }
