@@ -121,13 +121,15 @@ public class Calc {
     }
 
     public static double splitedAreaDespersion(byte[] img_buff, int img_size, int area_size) {
-        if (img_buff.length % (area_size * area_size) != 0 && img_size % area_size != 0) return -1;
+        boolean isAvailableCalculating = img_buff.length % (area_size * area_size) != 0 && img_size % area_size != 0;
+        if (isAvailableCalculating) return -1;
 
-        int area_num = nums.length / (area_size * area_size);
+
+        int area_num = img_buff.length / (area_size * area_size);
         byte[][] areas = new byte[area_num][area_size * area_size];
         int pos_ver, pos_hor, pos_img;
         for (int i=0; i < area_num; i++) {
-            pos_ver = i * area_size / img_size;
+            pos_ver = (i * area_size / img_size) * area_size;
             pos_hor = i * area_size % img_size;
             for(int j=0; j < area_size; j++) {
                 for(int k=0; k < area_size; k++) {

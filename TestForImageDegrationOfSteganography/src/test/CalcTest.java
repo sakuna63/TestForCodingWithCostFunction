@@ -1,7 +1,5 @@
 package test;
 
-import java.math.BigInteger;
-
 import my.util.Calc;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -24,38 +22,16 @@ public class CalcTest extends TestCase{
 	}
 	
 	static final String[] testOrder = new String[]{
-		"testFactorial",
-		"testCombination",
-		"testPSNR"
+	    "testSplitedAreaDespersion"
 	};
 	
-	public void testFactorial() throws Exception {
-//		BigInteger num = Calc.factorial(5);
-//		assertEquals(120, num.longValue());
-//		
-//		num = Calc.factorial(144);
-//		assertTrue(num.longValue() > 0);
-	}
-	
-	public void testCombination() throws Exception{
-		long num = Calc.combination(5, 2);
-		assertEquals(10, num);
-		
-		num = Calc.combination(144, 144);
-		assertEquals(1, num);
-
-		num = Calc.combination(144, 1);
-		assertEquals(144, num);
-	}
-	
-	public void testPSNR() throws Exception {
-		byte[] data = new byte[]{1,4,4,23,124};
-		byte[] data2 = data.clone();
-		
-		assertEquals(-1.0, Calc.PSNR(data, data2, 0));
-		
-		data2[0] = -128;
-		
-		assertFalse(-1.0 == Calc.PSNR(data, data2, 0));
-	}
+	@org.junit.Test
+    public void testSplitedAreaDespersion() throws Exception {
+        byte[] buff = new byte[100];
+        for(int i = 0; i<50; i++) {
+            buff[i] = -128;
+        }
+        double result = Calc.splitedAreaDespersion(buff, 10, 5);
+        assertEquals(0.0, result);
+    }
 }

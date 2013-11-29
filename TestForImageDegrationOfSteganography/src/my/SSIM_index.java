@@ -1,3 +1,4 @@
+package my;
 
 import ij.*;
 import ij.plugin.*;

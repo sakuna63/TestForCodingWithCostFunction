@@ -1,11 +1,9 @@
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+package my;
 
 import my.util.Calc;
 import my.util.IO;
+
+import java.io.*;
 
 public class Main {
     private static final String IMG_PATH = "./img/";
@@ -16,6 +14,7 @@ public class Main {
     private static final String BASE_LENGTH_CSV_PATH = CSV_PATH + "base_length/";
     private static final String BASE_IMG_CSV_PATH = CSV_PATH + "base_image/";
     private static final String AVE_DES_CSV_PATH = CSV_PATH + "ave_despersion/";
+    private static final String BASE_BIT_CSV_PATH = CSV_PATH + "base_bit/";
     
     // CHARACTER_CODEのサイズ
     private static final int CHARACTER_SIZE = 8;
@@ -34,8 +33,9 @@ public class Main {
         
 //        outputRangeCSV(msg, covers);
 //        outputLengthCSV(msg, covers);
-        outputImgCSV(msg, covers);
-        outputAceDesCSV(covers);
+//        outputImgCSV(msg, covers);
+//        outputAceDesCSV(covers);
+        outputBitCSV(msg, covers);
         
         IO.print("埋め込み終了");
     }
@@ -50,7 +50,7 @@ public class Main {
 
             for(int range=1; range<=8; range++) {
                 for(int length=8; length<=256; length++) {
-                    stego = createStegoData(c, pw, msg, length, range);
+                    stego = createStegoData(c, msg, length, range);
 
                     pw.print(range + ",");
                     pw.print(((double)8/length) * 100 + ",");  // 埋め込み率
@@ -74,7 +74,7 @@ public class Main {
 
             for(int length=8; length<=256; length++) {
                 for(int range=1; range<=8; range++) {
-                    stego = createStegoData(c, pw, msg, length, range);
+                    stego = createStegoData(c, msg, length, range);
 
                     pw.print(((double)8/length) * 100 + ",");  // 埋め込み率
                     pw.print(range + ",");
@@ -91,7 +91,7 @@ public class Main {
     private static void outputImgCSV(int[] msg, CoverData[] covers) {
         PrintWriter pw;
         StegoData stego;
-        for(int range=1; range<=8; range++) {
+        for(int range=3; range<=4; range++) {
             pw = getPrintWriter(BASE_IMG_CSV_PATH, "" + range);
             pw.print(",");   // 左上のマスを開ける
             for(CoverData cover : covers) {
@@ -102,7 +102,7 @@ public class Main {
             for(int length=8; length<=256; length++) {
                 pw.print(((double)8/length) * 100 + ",");
                 for(CoverData cover : covers) {
-                    stego = createStegoData(cover, pw, msg, length, range);
+                    stego = createStegoData(cover, msg, length, range);
                     pw.print(stego.ssim(cover) + ",");
                 }
                 pw.println();
@@ -114,21 +114,51 @@ public class Main {
     
     private static void outputAceDesCSV(CoverData[] covers) {
         PrintWriter pw = getPrintWriter(AVE_DES_CSV_PATH, "img_status");
-        pw.println("ファイル名,平均,分散,標準偏差");
+        pw.println("ファイル名,平均,分散,標準偏差,ブロック分散平均2,ブロック分散平均4,ブロック分散平均8,ブロック分散平均16,ブロック分散平均32,ブロック分散平均64");
         
         for (CoverData c : covers) {
-            byte[] buff = c.buffWithoutOffset();
+            byte[] buff = c.calcBuffWithoutOffset();
             pw.print(c.file_name + ",");
             pw.print(Calc.average(buff) + ",");
             pw.print(Calc.despersion(buff) + ",");
-            pw.println(Calc.standardDivision(buff));
+            pw.print(Calc.standardDivision(buff) + ",");
+            pw.print(Calc.splitedAreaDespersion(buff, IMAGE_SIZE, 2) + ",");
+            pw.print(Calc.splitedAreaDespersion(buff, IMAGE_SIZE, 4) + ",");
+            pw.print(Calc.splitedAreaDespersion(buff, IMAGE_SIZE, 8) + ",");
+            pw.print(Calc.splitedAreaDespersion(buff, IMAGE_SIZE, 16) + ",");
+            pw.print(Calc.splitedAreaDespersion(buff, IMAGE_SIZE, 32) + ",");
+            pw.println(Calc.splitedAreaDespersion(buff, IMAGE_SIZE, 64));
         }
         pw.close();
         
         IO.println("finish");
     }
-    
-    private static StegoData createStegoData(CoverData cover, PrintWriter pw, int[] msg, int code_length, int range) {
+
+    private static void outputBitCSV(int[] msg, CoverData[] covers) {
+        PrintWriter pw;
+        StegoData stego;
+//        covers = new CoverData[]{covers[0]};
+        for(CoverData cover : covers) {
+            pw = getPrintWriter(BASE_BIT_CSV_PATH, "" + cover.file_name.replace(".bmp", ""));
+            pw.print(",");
+            for(int range=0; range<=7; range++) {
+                pw.print(range + "bit PSNR,SSIM,");
+            }
+            pw.println();
+
+            for(int length=8; length<=256; length++) {
+                pw.print(((double)8/length) * 100 + ",");
+                for(int range = 0; range < 8; range++) {
+                    stego = createStegoData(cover, msg, length, (int)Math.pow(2, range));
+                    pw.print(stego.psnr(cover) + "," + stego.ssim(cover) + ",");
+                }
+                pw.println();
+            }
+            pw.close();
+        }
+    }
+
+    private static StegoData createStegoData(CoverData cover, int[] msg, int code_length, int range) {
         
         IO.println("run %s codeLength:%d range:%d", cover.file_name, code_length, range);
         
@@ -144,8 +174,10 @@ public class Main {
     
     /**
      * ２つのメッセージを比較する
-     * @param msg1
-     * @param msg2
+     * @param origin
+     * @param embuded
+     * @param code_length
+     * @param range
      * @return
      */
     private static boolean compMsg(int[] origin, int[] embuded, int code_length, int range) {
@@ -175,7 +207,8 @@ public class Main {
 
     /**
      * PrinterWriterのインスタンスを取得する
-     * @param fileName
+     * @param file_path
+     * @param file_name
      * @return
      */
     

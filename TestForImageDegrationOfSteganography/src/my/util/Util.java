@@ -15,8 +15,7 @@ public class Util {
 		int[] info = message2WeightAndNum(msg, error_length);
 		return countableCode(error_length, info[0], info[1]);
 	}
-	
-	
+
 	public static int[] message2WeightAndNum(int msg, int error_length) {
 		int i, combNum;
 		for(i=0; i<=error_length; i++) {
@@ -118,8 +117,7 @@ public class Util {
 		}
 		return code;
 	}
-	
-	
+
 	/**
 	 * パスカルの三角形を利用して数え上げ符号を対応する値に変換する
 	 * @param length
@@ -181,4 +179,26 @@ public class Util {
 		}
 		return weight;
 	}
+
+    public static int[] calcTargetBits(int num) {
+        char[] binary = Integer.toBinaryString(num).toCharArray();
+        int count_target = countItemNumInTraget(binary, '1');
+        int[] targets = new int[count_target];
+        int index_t = 0;
+        for (int i=binary.length-1; i >=0; i--) {
+            if(binary[i] == '1'){
+                targets[index_t] = binary.length - i - 1;
+                index_t++;
+            }
+        }
+        return targets;
+    }
+
+    private static int countItemNumInTraget(char[] target, char item) {
+        int count = 0;
+        for(char c : target) {
+            count += c == item ? 1 : 0;
+        }
+        return count;
+    }
 }

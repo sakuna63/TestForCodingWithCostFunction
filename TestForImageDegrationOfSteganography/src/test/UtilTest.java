@@ -1,12 +1,11 @@
 package test;
 
-import java.util.HashMap;
-
-import my.util.Calc;
-import my.util.Util;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import my.util.Calc;
+import my.util.IO;
+import my.util.Util;
 
 public class UtilTest extends TestCase{
 	
@@ -25,35 +24,66 @@ public class UtilTest extends TestCase{
 	}
 	
 	static final String[] testOrder = new String[]{
-		"testHamingWeight",
-		"testRaiseBit",
-		"testCountableCode",
-		"testAntiCountableCode",
-		"testError2Message",
-		"testExtractErrorPattern",
-		"testA",
-		"testB"
+        "testCalcTargetBits"
+//		"testHamingWeight",
+//		"testRaiseBit",
+//		"testCountableCode",
+//		"testAntiCountableCode",
+//		"testError2Message",
+//		"testExtractErrorPattern",
+//		"testA",
+//		"testB"
 	};
-	
+
+    public void testCalcTargetBits() throws Exception {
+        int[] array = Util.calcTargetBits(0);
+        assertEquals(0,array.length);
+
+        array = Util.calcTargetBits(1);
+        assertEquals(1, array.length);
+        assertEquals(0, array[0]);
+
+        array = Util.calcTargetBits(2);
+        assertEquals(1, array.length);
+        assertEquals(1, array[0]);
+
+        array = Util.calcTargetBits(5);
+        assertEquals(2, array.length);
+        assertEquals(0, array[0]);
+        assertEquals(2, array[1]);
+
+        array = Util.calcTargetBits(255);
+        assertEquals(8, array.length);
+        assertEquals(0, array[0]);
+        assertEquals(1, array[1]);
+        assertEquals(2, array[2]);
+        assertEquals(3, array[3]);
+        assertEquals(4, array[4]);
+        assertEquals(5, array[5]);
+        assertEquals(6, array[6]);
+        assertEquals(7, array[7]);
+
+    }
+
 	public void testA() throws Exception {
 		int[] ep = Util.message2Error(138, 136);
 		assertEquals(5, ep[0]);
 //		byte[] eppArray = Util.extractErrorPutternPerPix(ep, 136);
 		
-		int msg = Util.error2Message(136, ep);
-		assertEquals(138, msg);
+//		int msg = Util.error2Message(136, ep);
+//		assertEquals(138, msg);
 	}
 	
 	public void testB() throws Exception {
 		int n=5;
 		for(int i=0; i<Calc.combination(n, 2); i++)
-			Util.println(i + ":" + Util.countableCode(n, 2, i)[0]);
+			IO.println(i + ":" + Util.countableCode(n, 2, i)[0]);
 	}
 	
 	public void testExtractByte() throws Exception {
-		assertEquals(0, Util.extractByte(4, 0));
-		assertEquals(0, Util.extractByte(4, 1));
-		assertEquals(1, Util.extractByte(4, 2));
+		assertEquals(0, Util.extractBit(4, 0));
+		assertEquals(0, Util.extractBit(4, 1));
+		assertEquals(1, Util.extractBit(4, 2));
 	}
 	
 //	public void testExtractPutternPerPix() throws Exception {
@@ -126,17 +156,17 @@ public class UtilTest extends TestCase{
 	}
 	
 	public void testError2Message() throws Exception {
-		int[] code = Util.countableCode(6, 2, 8);
-		int result = Util.error2Message(6, code);
-		assertEquals(15, result);
-		
-		code = Util.countableCode(16, 5, 0);
-		result = Util.error2Message(16, code);
-		int expected=0;
-		for(int i=0; i<5; i++) {
-			expected += Calc.combination(16, i);
-		}
-		assertEquals(expected, result);
+//		int[] code = Util.countableCode(6, 2, 8);
+//		int result = Util.error2Message(6, code);
+//		assertEquals(15, result);
+//
+//		code = Util.countableCode(16, 5, 0);
+//		result = Util.error2Message(16, code);
+//		int expected=0;
+//		for(int i=0; i<5; i++) {
+//			expected += Calc.combination(16, i);
+//		}
+//		assertEquals(expected, result);
 	}
 	
 	public void testExtractErrorPattern() throws Exception {
