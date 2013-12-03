@@ -31,11 +31,11 @@ public class Main {
             covers[i] = new CoverData(files[i]);
         }
         
-//        outputRangeCSV(msg, covers);
-//        outputLengthCSV(msg, covers);
-//        outputImgCSV(msg, covers);
-//        outputAceDesCSV(covers);
-        outputBitCSV(msg, covers);
+        outputRangeCSV(msg, covers);
+        outputLengthCSV(msg, covers);
+        outputImgCSV(msg, covers);
+        outputAceDesCSV(covers);
+//        outputBitCSV(msg, covers);
         
         IO.print("埋め込み終了");
     }
@@ -48,7 +48,7 @@ public class Main {
             pw = getPrintWriter(BASE_RANGE_CSV_PATH, c.file_name.replace(".bmp", ""));
             pw.println("埋め込み範囲,埋め込み率,PSNR,SSIM,誤り率");
 
-            for(int range=1; range<=8; range++) {
+            for(int range=0; range<=255; range++) {
                 for(int length=8; length<=256; length++) {
                     stego = createStegoData(c, msg, length, range);
 
@@ -73,7 +73,7 @@ public class Main {
             pw.println("埋め込み率,埋め込み範囲,PSNR,SSIM,誤り率");
 
             for(int length=8; length<=256; length++) {
-                for(int range=1; range<=8; range++) {
+                for(int range=0; range<=255; range++) {
                     stego = createStegoData(c, msg, length, range);
 
                     pw.print(((double)8/length) * 100 + ",");  // 埋め込み率
@@ -91,7 +91,7 @@ public class Main {
     private static void outputImgCSV(int[] msg, CoverData[] covers) {
         PrintWriter pw;
         StegoData stego;
-        for(int range=3; range<=4; range++) {
+        for(int range=0; range<=255; range++) {
             pw = getPrintWriter(BASE_IMG_CSV_PATH, "" + range);
             pw.print(",");   // 左上のマスを開ける
             for(CoverData cover : covers) {
@@ -141,7 +141,7 @@ public class Main {
         for(CoverData cover : covers) {
             pw = getPrintWriter(BASE_BIT_CSV_PATH, "" + cover.file_name.replace(".bmp", ""));
             pw.print(",");
-            for(int range=0; range<=7; range++) {
+            for(int range=0; range<=255; range++) {
                 pw.print(range + "bit PSNR,SSIM,");
             }
             pw.println();
@@ -163,7 +163,7 @@ public class Main {
         IO.println("run %s codeLength:%d range:%d", cover.file_name, code_length, range);
         
         StegoData stego = cover.embeding(msg, code_length, range);
-        stego.output(EMBEDED_IMG_PATH + code_length + "_" + range + "_" + cover.file_name);
+        stego.output(EMBEDED_IMG_PATH + cover.file_name.replace(".bmp", "") + "/" +  code_length + "_" + range + "_" + cover.file_name);
         
         int[] embededMsg = stego.extracting(cover);
         if( !compMsg(msg, embededMsg, code_length, range) )
