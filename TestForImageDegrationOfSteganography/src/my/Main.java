@@ -2,6 +2,7 @@ package my;
 
 import my.util.Calc;
 import my.util.IO;
+import sun.tools.asm.Cover;
 
 import java.io.*;
 
@@ -21,66 +22,87 @@ public class Main {
     
     // 画像の一辺のサイズ
     private static final int IMAGE_SIZE = 256;
-    
+
+
     public static void main(String[] args) {
         int[] msg = createMsg(0, IMAGE_SIZE * IMAGE_SIZE);
         File[] files = new File(ORIGIN_IMG_PATH).listFiles();
         CoverData[] covers = new CoverData[files.length];
+        private Data[][][] data = new Data[covers.length][256][248];
         
         for(int i=0; i<files.length; i++) {
             covers[i] = new CoverData(files[i]);
         }
-        
-        outputRangeCSV(msg, covers);
-        outputLengthCSV(msg, covers);
-        outputImgCSV(msg, covers);
-        outputAceDesCSV(covers);
-//        outputBitCSV(msg, covers);
+
+        calcData(msg, covers, data);
+        outputRangeCSV(covers, data);
+//        outputLengthCSV(covers, data);
+//        outputImgCSV(covers, data);
+//        outputAceDesCSV(covers, data);
+//        outputBitCSV(covers, data);
         
         IO.print("埋め込み終了");
     }
-    
-    private static void outputRangeCSV(int[] msg, CoverData[] covers) {
-        PrintWriter pw;
+
+    private static void calcData(int[] msg, CoverData[] covers, Data[][][] data) {
         StegoData stego;
-//      File f = files[0];
+        int i = 0;
         for(CoverData c : covers) {
-            pw = getPrintWriter(BASE_RANGE_CSV_PATH, c.file_name.replace(".bmp", ""));
+            for(int range=0; range<=255; range++) {
+                for(int length=8; length<=256; length++) {
+                    stego = createStegoData(c, msg, length, range);
+                    data[i][range][length - 8] = new Data(
+                        range,
+                        length,
+                        stego.psnr(c),
+                        stego.ssim(c),
+                        stego.getErrorRate(),
+                        stego.buff.length - stego.buff_offset
+                    );
+                }
+            }
+            i++;
+        }
+    }
+
+    private static void outputRangeCSV(CoverData[] covers, Data[][][] data) {
+        PrintWriter pw;
+        Data d;
+        for(int i = 0; i < covers.length; i++) {
+            pw = getPrintWriter(BASE_RANGE_CSV_PATH, covers[i].file_name.replace(".bmp", ""));
             pw.println("埋め込み範囲,埋め込み率,PSNR,SSIM,誤り率");
 
             for(int range=0; range<=255; range++) {
                 for(int length=8; length<=256; length++) {
-                    stego = createStegoData(c, msg, length, range);
+                    d = data[i][range][length - 8];
 
                     pw.print(range + ",");
-                    pw.print(((double)8/length) * 100 + ",");  // 埋め込み率
-                    pw.print(stego.psnr(c) + ",");
-                    pw.print(stego.ssim(c) + ",");
-                    pw.println(stego.getErrorRate());
+                    pw.print(d.embeding_rate + ",");
+                    pw.print(d.psnr + ",");
+                    pw.print(d.ssim + ",");
+                    pw.println(d.error_rate);
                 }
             }
-            
             pw.close();
         }
     }
 
-    private static void outputLengthCSV(int[] msg, CoverData[] covers) {
+    private static void outputLengthCSV(CoverData[] covers, Data[][][] data) {
         PrintWriter pw;
-        StegoData stego;
-//      File f = files[0];
-        for(CoverData c : covers) {
-            pw = getPrintWriter(BASE_LENGTH_CSV_PATH, c.file_name.replace(".bmp", ""));
+        Data d;
+        for (int i = 0; i < covers.length; i++) {
+            pw = getPrintWriter(BASE_LENGTH_CSV_PATH, covers[i].file_name.replace(".bmp", ""));
             pw.println("埋め込み率,埋め込み範囲,PSNR,SSIM,誤り率");
 
             for(int length=8; length<=256; length++) {
                 for(int range=0; range<=255; range++) {
-                    stego = createStegoData(c, msg, length, range);
+                    d = data[i][range][length - 8];
 
-                    pw.print(((double)8/length) * 100 + ",");  // 埋め込み率
+                    pw.print(d.embeding_rate + ",");  // 埋め込み率
                     pw.print(range + ",");
-                    pw.print(stego.psnr(c) + ",");
-                    pw.print(stego.ssim(c) + ",");
-                    pw.println(stego.getErrorRate());
+                    pw.print(d.psnr + ",");
+                    pw.print(d.ssim + ",");
+                    pw.println(d.error_rate);
                 }
             }
             
@@ -88,9 +110,8 @@ public class Main {
         }
     }
     
-    private static void outputImgCSV(int[] msg, CoverData[] covers) {
+    private static void outputImgCSV(CoverData[] covers, Data[][][] data) {
         PrintWriter pw;
-        StegoData stego;
         for(int range=0; range<=255; range++) {
             pw = getPrintWriter(BASE_IMG_CSV_PATH, "" + range);
             pw.print(",");   // 左上のマスを開ける
@@ -101,9 +122,8 @@ public class Main {
             
             for(int length=8; length<=256; length++) {
                 pw.print(((double)8/length) * 100 + ",");
-                for(CoverData cover : covers) {
-                    stego = createStegoData(cover, msg, length, range);
-                    pw.print(stego.ssim(cover) + ",");
+                for(int i = 0; i < covers.length; i++) {
+                    pw.print(data[i][range][length-8].ssim + ",");
                 }
                 pw.println();
             }
@@ -111,35 +131,12 @@ public class Main {
             pw.close();
         }
     }
-    
-    private static void outputAceDesCSV(CoverData[] covers) {
-        PrintWriter pw = getPrintWriter(AVE_DES_CSV_PATH, "img_status");
-        pw.println("ファイル名,平均,分散,標準偏差,ブロック分散平均2,ブロック分散平均4,ブロック分散平均8,ブロック分散平均16,ブロック分散平均32,ブロック分散平均64");
-        
-        for (CoverData c : covers) {
-            byte[] buff = c.calcBuffWithoutOffset();
-            pw.print(c.file_name + ",");
-            pw.print(Calc.average(buff) + ",");
-            pw.print(Calc.despersion(buff) + ",");
-            pw.print(Calc.standardDivision(buff) + ",");
-            pw.print(Calc.splitedAreaDespersion(buff, IMAGE_SIZE, 2) + ",");
-            pw.print(Calc.splitedAreaDespersion(buff, IMAGE_SIZE, 4) + ",");
-            pw.print(Calc.splitedAreaDespersion(buff, IMAGE_SIZE, 8) + ",");
-            pw.print(Calc.splitedAreaDespersion(buff, IMAGE_SIZE, 16) + ",");
-            pw.print(Calc.splitedAreaDespersion(buff, IMAGE_SIZE, 32) + ",");
-            pw.println(Calc.splitedAreaDespersion(buff, IMAGE_SIZE, 64));
-        }
-        pw.close();
-        
-        IO.println("finish");
-    }
 
-    private static void outputBitCSV(int[] msg, CoverData[] covers) {
+    private static void outputBitCSV(CoverData[] covers, Data[][][] data) {
         PrintWriter pw;
-        StegoData stego;
-//        covers = new CoverData[]{covers[0]};
-        for(CoverData cover : covers) {
-            pw = getPrintWriter(BASE_BIT_CSV_PATH, "" + cover.file_name.replace(".bmp", ""));
+        Data d;
+        for(int i = 0; i < covers.length; i++) {
+            pw = getPrintWriter(BASE_BIT_CSV_PATH, "" + covers[i].file_name.replace(".bmp", ""));
             pw.print(",");
             for(int range=0; range<=255; range++) {
                 pw.print(range + "bit PSNR,SSIM,");
@@ -149,8 +146,8 @@ public class Main {
             for(int length=8; length<=256; length++) {
                 pw.print(((double)8/length) * 100 + ",");
                 for(int range = 0; range < 8; range++) {
-                    stego = createStegoData(cover, msg, length, (int)Math.pow(2, range));
-                    pw.print(stego.psnr(cover) + "," + stego.ssim(cover) + ",");
+                    d = data[i][range][length - 8];
+                    pw.print(d.psnr + "," + d.ssim + ",");
                 }
                 pw.println();
             }
