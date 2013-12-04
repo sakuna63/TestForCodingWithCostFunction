@@ -1,8 +1,6 @@
 package my;
 
-import my.util.Calc;
 import my.util.IO;
-import sun.tools.asm.Cover;
 
 import java.io.*;
 
@@ -28,7 +26,7 @@ public class Main {
         int[] msg = createMsg(0, IMAGE_SIZE * IMAGE_SIZE);
         File[] files = new File(ORIGIN_IMG_PATH).listFiles();
         CoverData[] covers = new CoverData[files.length];
-        private Data[][][] data = new Data[covers.length][256][248];
+        Data[][][] data = new Data[covers.length][256][248];
         
         for(int i=0; i<files.length; i++) {
             covers[i] = new CoverData(files[i]);
