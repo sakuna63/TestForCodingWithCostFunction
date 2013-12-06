@@ -8,6 +8,7 @@
 */*/*/.DS_Store
 
 */img/embeded_img/*/*.bmp
+*/img/embeded_img_msg/*/*.bmp
 */csv/*/*.csv
 */csv/*/*.xlsm
 */csv/*/*.xlsx
