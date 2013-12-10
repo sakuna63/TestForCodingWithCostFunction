@@ -33,14 +33,14 @@ public class Main {
     public static void main(String[] args) {
         int[] msg = createMsg(0, IMAGE_SIZE * IMAGE_SIZE);
         File[] files = new File(ORIGIN_IMG_PATH).listFiles();
-        CoverData[] covers = new CoverData[files.length];
-        int num = files.length;
+        int num = 1;//files.length;
+        CoverData[] covers = new CoverData[num];
         Data[][][] data = new Data[num][256][256];
         for (int i = 0; i < data.length; i++) {
             covers[i] = new CoverData(files[i]);
         }
 
-        calcData(msg, covers, data);
+        calcData(msg, covers);
 //        data = readData(covers);
 //        outputRangeCSV(covers, data);
 //        outputLengthCSV(covers, data);
@@ -158,16 +158,16 @@ public class Main {
         }
     }
 
-    private static void calcData(int[] msg, CoverData[] covers, Data[][][] data) {
+    private static void calcData(int[] msg, CoverData[] covers) {
         StegoData stego;
         int msg_length, embeding_limit_per_bit = covers[0].calcBuffWithoutOffset().length;
         double embeding_rate;
 
         for (CoverData c : covers) {
             PrintWriter pw = getPrintWriter("./csv/data/", c.file_name.replace(".bmp", ""), UTF_8);
-            int range = 1, length = 8;
-//            for (int range = 1; range <= 255; range++) {
-//                for (int length = 8; length <= 256; length++) {
+//            int range = 1, length = 8;
+            for (int range = 1; range <= 255; range++) {
+                for (int length = 8; length <= 256; length++) {
             stego = createStegoData(c, msg, length, range);
             pw.print(range + ",");
             pw.print(length + ",");
@@ -182,8 +182,8 @@ public class Main {
             pw.print(embeding_limit_per_bit + ",");
             pw.print(msg_length + ",");
             pw.println(embeding_rate);
-//                }
-//            }
+                }
+            }
             pw.close();
         }
     }
@@ -259,7 +259,7 @@ public class Main {
         PrintWriter pw;
         Data d;
         for (int i = 0; i < covers.length; i++) {
-            pw = getPrintWriter(BASE_BIT_CSV_PATH, "" + covers[i].file_name.replace(".bmp", ""), SHIFT_JIS);
+            pw = getPrintWriter(BASE_BIT_CSV_PATH, covers[i].file_name.replace(".bmp", ""), SHIFT_JIS);
             pw.print(",");
             for (int range = 0; range <= 255; range++) {
                 pw.print(range + "bit PSNR,SSIM,");
