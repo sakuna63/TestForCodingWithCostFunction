@@ -9,9 +9,12 @@
 
 */img/embeded_img/*/*.bmp
 */img/embeded_img_msg/*/*.bmp
-*/csv/*/*.csv
-*/csv/*/*.xlsm
-*/csv/*/*.xlsx
+*/csv/ave*/*csv
+*/csv/base*/*.csv
+*/csv/ave*/*xlsm
+*/csv/base*/*.xlsm
+*/csv/ave*/*xlsx
+*/csv/base*/*.xlsx
 */_csv/*
 
 #*

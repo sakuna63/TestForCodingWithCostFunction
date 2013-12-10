@@ -35,13 +35,14 @@ public class Main {
         File[] files = new File(ORIGIN_IMG_PATH).listFiles();
         int num = 1;//files.length;
         CoverData[] covers = new CoverData[num];
+        // [cover][range][length]
         Data[][][] data = new Data[num][256][256];
         for (int i = 0; i < data.length; i++) {
             covers[i] = new CoverData(files[i]);
         }
 
-        calcData(msg, covers);
-//        data = readData(covers);
+//        calcData(msg, covers);
+        data = readData(covers);
 //        outputRangeCSV(covers, data);
 //        outputLengthCSV(covers, data);
 //        outputImgCSV(covers, data);
@@ -59,6 +60,10 @@ public class Main {
         try {
             for (CoverData c : covers) {
                 file = new File("./csv/data/" + c.file_name.replace(".bmp", "") + ".csv");
+                if(!file.exists()) {
+                    IO.println("not exist:" + file.getName());
+                    continue;
+                }
                 BufferedReader br = null;
                 br = new BufferedReader(new FileReader(file));
 
@@ -91,27 +96,35 @@ public class Main {
         return data;
     }
 
-    private static void outputMsgLenghCSV(CoverData[] covers, int[] msg) {
+    private static void outputMsgLenghCSV(CoverData[] covers, Data[][][] data) {
         int[] lengths = new int[]{
                 8, 16, 32, 64
         };
+        int msg_length, index = 0;
+        PrintWriter pw;
+        Data d1,d2;
 
-//        for (int length : lengths) {
         for (int length = 8; length <= 128; length++) {
-            int msg_length = covers[0].calcBuffWithoutOffset().length / length;
-            PrintWriter pw = getPrintWriter(BASE_MSG_LENGTH_CSV_PATH, "" + msg_length, SHIFT_JIS);
+            msg_length = covers[0].calcBuffWithoutOffset().length / length;
+            pw = getPrintWriter(BASE_MSG_LENGTH_CSV_PATH, "" + msg_length, SHIFT_JIS);
             pw.println("メッセージ長, ファイル名, 誤り率(1bit), PSNR(1bit), SSIM(1bit), 誤り率(2bit), PSNR(2bit), SSIM(2bit), 誤り率(3bit), PSNR(3bit), SSIM(3bit)");
+            index = 0;
             for (CoverData c : covers) {
+                d1 = data[index][1][length-1];
+                d2 = data[index][3][length-1];
+
                 pw.print(msg_length + ",");
                 pw.print(c.file_name + ",");
-                for (int i = 1; i <= 2; i++) {
-                    StegoData stego = createStegoData(c, msg, msg_length, length * i, (int) Math.pow(2, i) - 1);
 
-                    pw.print(stego.getErrorRate() + ",");
-                    pw.print(stego.psnr(c) + ",");
-                    pw.print(stego.ssim(c) + ",");
-                }
+                pw.print(d1.error_rate + ",");
+                pw.print(d1.psnr + ",");
+                pw.print(d1.ssim + ",");
+                pw.print(d2.error_rate + ",");
+                pw.print(d2.psnr + ",");
+                pw.print(d2.ssim + ",");
+
                 pw.println();
+                index++;
             }
             pw.close();
         }
@@ -165,23 +178,22 @@ public class Main {
 
         for (CoverData c : covers) {
             PrintWriter pw = getPrintWriter("./csv/data/", c.file_name.replace(".bmp", ""), UTF_8);
-//            int range = 1, length = 8;
             for (int range = 1; range <= 255; range++) {
                 for (int length = 8; length <= 256; length++) {
-            stego = createStegoData(c, msg, length, range);
-            pw.print(range + ",");
-            pw.print(length + ",");
-            pw.print(stego.psnr(c) + ",");
-            pw.print(stego.ssim(c) + ",");
-            pw.print(stego.getErrorRate() + ",");
-            pw.print(embeding_limit_per_bit + ",");
+                    stego = createStegoData(c, msg, length, range);
+                    pw.print(range + ",");
+                    pw.print(length + ",");
+                    pw.print(stego.psnr(c) + ",");
+                    pw.print(stego.ssim(c) + ",");
+                    pw.print(stego.getErrorRate() + ",");
+                    pw.print(embeding_limit_per_bit + ",");
 
-            embeding_rate = (double) 8 / length * 100;
-            msg_length = embeding_limit_per_bit * Util.calcTargetBits(range).length / length;
+                    embeding_rate = (double) 8 / length * 100;
+                    msg_length = embeding_limit_per_bit * Util.calcTargetBits(range).length / length;
 
-            pw.print(embeding_limit_per_bit + ",");
-            pw.print(msg_length + ",");
-            pw.println(embeding_rate);
+                    pw.print(embeding_limit_per_bit + ",");
+                    pw.print(msg_length + ",");
+                    pw.println(embeding_rate);
                 }
             }
             pw.close();
