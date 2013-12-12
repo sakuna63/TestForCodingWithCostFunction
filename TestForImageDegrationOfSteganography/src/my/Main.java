@@ -4,6 +4,7 @@ import my.util.IO;
 import my.util.Util;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -29,20 +30,24 @@ public class Main {
     // 画像の一辺のサイズ
     private static final int IMAGE_SIZE = 256;
 
-
     public static void main(String[] args) {
         int[] msg = createMsg(0, IMAGE_SIZE * IMAGE_SIZE);
         File[] files = new File(ORIGIN_IMG_PATH).listFiles();
-        int num = 1;//files.length;
-        CoverData[] covers = new CoverData[num];
+        Arrays.sort(files);
+
+        int begin = 0;
+        int end = files.length;
+        int length = end - begin;
+
+        CoverData[] covers = new CoverData[length];
         // [cover][range][length]
-        Data[][][] data = new Data[num][256][256];
-        for (int i = 0; i < data.length; i++) {
-            covers[i] = new CoverData(files[i]);
+        Data[][][] data = new Data[length][256][256];
+        for (int i = begin; i < end; i++) {
+            covers[i - begin] = new CoverData(files[i]);
         }
 
 //        calcData(msg, covers);
-        data = readData(covers);
+//        data = readData(covers);
 //        outputRangeCSV(covers, data);
 //        outputLengthCSV(covers, data);
 //        outputImgCSV(covers, data);
@@ -52,6 +57,7 @@ public class Main {
 //        outputMsgLenghImgCSV(covers, msg);
         IO.print("埋め込み終了");
     }
+
 
     private static Data[][][] readData(CoverData[] covers) {
         File file;
