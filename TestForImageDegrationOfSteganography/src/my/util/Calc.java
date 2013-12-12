@@ -255,32 +255,34 @@ public class Calc {
             b = (0xff & stego[pointer]);
 
             array_mu1_ip [pointer - offset] = array_mu1_ip_copy [pointer - offset] = a; // Float.intBitsToFloat(a);
-            array_mu2_ip [pointer - offset] = array_mu2_ip_copy [pointer - offset] = b; //Float.intBitsToFloat(b);
+            array_mu2_ip [pointer - offset] = array_mu2_ip_copy [pointer - offset] = b; // Float.intBitsToFloat(b);
         }
-        mu1_ip.convolve (window_weights, opt.filter_width, opt.filter_width);
-        mu2_ip.convolve (window_weights, opt.filter_width, opt.filter_width);
-    
-        double [] mu1_sq = new double [image_dimension];
-        double [] mu2_sq = new double [image_dimension];
-        double [] mu1_mu2 = new double [image_dimension];
+        // 周辺の画素との平均をとるという処理をフィルタリングによって行っている
+        mu1_ip.convolve (window_weights, opt.filter_width, opt.filter_width); // convert array_mu1_ip to μ x
+        mu2_ip.convolve (window_weights, opt.filter_width, opt.filter_width); // convert array_mu2_ip to μ y
+        
+        double [] mu1_sq = new double [image_dimension];  // μ x^2
+        double [] mu2_sq = new double [image_dimension];  // μ y^2
+        double [] mu1_mu2 = new double [image_dimension]; // μ x * μ y
     
         for (pointer =0; pointer<image_dimension; pointer++) {
             mu1_sq[pointer] = (double) (array_mu1_ip [pointer]*array_mu1_ip [pointer]);
             mu2_sq[pointer] = (double) (array_mu2_ip[pointer]*array_mu2_ip[pointer]);
             mu1_mu2 [pointer]= (double) (array_mu1_ip [pointer]*array_mu2_ip[pointer]);
         }
-    
-        double [] sigma1_sq = new double [image_dimension];
-        double [] sigma2_sq = new double [image_dimension];
-        double [] sigma12 = new double [image_dimension];
-    
+
+        double [] sigma1_sq = new double [image_dimension]; // σ x^2
+        double [] sigma2_sq = new double [image_dimension]; // σ y^2
+        double [] sigma12 = new double [image_dimension];   // σ x * σ y
+
+        // この時点でsigma配列に入っているのはただの各画素の２乗値
         for (pointer =0; pointer<image_dimension; pointer++) {
                 
             sigma1_sq[pointer] =(double) (array_mu1_ip_copy [pointer]*array_mu1_ip_copy [pointer]);
             sigma2_sq[pointer] =(double) (array_mu2_ip_copy [pointer]*array_mu2_ip_copy [pointer]);
             sigma12 [pointer] =(double) (array_mu1_ip_copy [pointer]*array_mu2_ip_copy [pointer]);
         }
-        
+    
         ImageProcessor soporte_1_ip = new FloatProcessor (image_width, image_height);
         ImageProcessor soporte_2_ip = new FloatProcessor (image_width, image_height);
         ImageProcessor soporte_3_ip = new FloatProcessor (image_width, image_height);
@@ -293,17 +295,18 @@ public class Calc {
             array_soporte_2[pointer] = (float) sigma2_sq[pointer];
             array_soporte_3[pointer] = (float) sigma12[pointer];
         }
-        soporte_1_ip.convolve (window_weights, opt.filter_width,  opt.filter_width);
-        soporte_2_ip.convolve (window_weights, opt.filter_width,  opt.filter_width); 
+        soporte_1_ip.convolve (window_weights, opt.filter_width,  opt.filter_width); // convert array_soporte to 
+        soporte_2_ip.convolve (window_weights, opt.filter_width,  opt.filter_width); // 
         soporte_3_ip.convolve (window_weights, opt.filter_width,  opt.filter_width);
-    
+
+        // ここで分散と共分散を計算する
         for (pointer =0; pointer<image_dimension; pointer++) {
-            sigma1_sq[pointer] =  array_soporte_1[pointer] - mu1_sq[pointer];
-            sigma2_sq[pointer] =  array_soporte_2[pointer ]- mu2_sq[pointer];
+            sigma1_sq[pointer] =  array_soporte_1[pointer] - mu1_sq[pointer]; //  x^2 - ave(x)^2
+            sigma2_sq[pointer] =  array_soporte_2[pointer ]- mu2_sq[pointer]; 
             sigma12[pointer] =  array_soporte_3[pointer] - mu1_mu2[pointer];
         }
         
-        double[] ssim_map = new double [image_dimension];
+        double ssim, l, c, s; // ssim, 輝度の比較式(l), コントラスト(c), 構造(s)
         double suma=0;
         for (pointer =0; pointer<image_dimension; pointer++) {
             ssim_map[pointer] = (double) (( 2*mu1_mu2[pointer] + opt.C1)* (2*sigma12[pointer] + opt.C2)) / ((mu1_sq[pointer]+mu2_sq[pointer] + opt.C1) * (sigma1_sq[pointer] + sigma2_sq[pointer] + opt.C2));

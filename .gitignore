@@ -1,27 +1,17 @@
-.metadata/*
+.metadata/
 .project
 .classpath
 
+*.class
+
 .DS_Store
-*/.DS_Store
-*/*/.DS_Store
-*/*/*/.DS_Store
+*.bmp
+*.csv
+*.xlsm
+*.xlsx
 
-*/img/embeded_img/*/*.bmp
-*/img/embeded_img_msg/*/*.bmp
-*/csv/ave*/*csv
-*/csv/base*/*.csv
-*/csv/ave*/*xlsm
-*/csv/base*/*.xlsm
-*/csv/ave*/*xlsx
-*/csv/base*/*.xlsx
-*/_csv/*
-
-#*
-.#*
 
 .idea/
 out/
 *.iml
-*/*.iml
 *.log
