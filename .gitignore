@@ -1,17 +1,1 @@
 .metadata/
-.project
-.classpath
-
-*.class
-
-.DS_Store
-*.bmp
-*.csv
-*.xlsm
-*.xlsx
-
-
-.idea/
-out/
-*.iml
-*.log
