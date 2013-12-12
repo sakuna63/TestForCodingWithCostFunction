@@ -306,11 +306,11 @@ public class Calc {
             sigma12[pointer] =  array_soporte_3[pointer] - mu1_mu2[pointer];
         }
         
-        double ssim, l, c, s; // ssim, 輝度の比較式(l), コントラスト(c), 構造(s)
+        double[] ssim = new double[image_dimension];
         double suma=0;
         for (pointer =0; pointer<image_dimension; pointer++) {
-            ssim_map[pointer] = (double) (( 2*mu1_mu2[pointer] + opt.C1)* (2*sigma12[pointer] + opt.C2)) / ((mu1_sq[pointer]+mu2_sq[pointer] + opt.C1) * (sigma1_sq[pointer] + sigma2_sq[pointer] + opt.C2));
-            suma = suma + ssim_map[pointer];
+            ssim[pointer] = (double) (( 2*mu1_mu2[pointer] + opt.C1)* (2*sigma12[pointer] + opt.C2)) / ((mu1_sq[pointer]+mu2_sq[pointer] + opt.C1) * (sigma1_sq[pointer] + sigma2_sq[pointer] + opt.C2));
+            suma = suma + ssim[pointer];
         }   
         
         return (double) suma / image_dimension;
