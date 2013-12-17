@@ -1,5 +1,8 @@
 package my;
 
+import my.img.CoverData;
+import my.img.StegoData;
+import my.util.Excel;
 import my.util.IO;
 import my.util.Util;
 import org.apache.poi.ss.usermodel.Row;
@@ -21,30 +24,52 @@ public class Main {
 
     public static void main(String[] args) {
         int[] msg = createMsg(0, IMAGE_SIZE * IMAGE_SIZE);
-        File[] files = new File(Path.ORIGIN_IMG_PATH).listFiles();
+        File[] files_img = new File(Path.ORIGIN_IMG_PATH).listFiles();
+        File[] files = new File(Path.ROW_DATA_PATH).listFiles();
         Arrays.sort(files);
 
         int begin = 0;
         int end = files.length;
-        int length = end - begin;
+//        int length = end - begin;
 
-        CoverData[] covers = new CoverData[length];
-        for (int i = begin; i < end; i++) {
-            covers[i - begin] = new CoverData(files[i]);
+        CoverData c = new CoverData(new File("./img/18.bmp"));
+        int embeding_limit_per_bit = c.calcBuffWithoutOffset().length;
+        StegoData stego;
+        PrintWriter pw = getPrintWriter("./", c.file_name.replace(".bmp", ""), UTF_8);
+        for (int range = 1; range <= 255; range++) {
+            for (int length = 8; length <= 256; length++) {
+                stego = createStegoData(c, msg, length, range);
+                pw.print(range + ",");
+                pw.print(length + ",");
+                pw.print(stego.psnr(c) + ",");
+                pw.print(stego.ssim(c) + ",");
+                pw.print(stego.getErrorRate() + ",");
+                pw.print(embeding_limit_per_bit + ",");
+
+                double embeding_rate = (double) 8 / length * 100;
+                double msg_length = embeding_limit_per_bit * Util.calcTargetBits(range).length / length;
+
+                pw.print(embeding_limit_per_bit + ",");
+                pw.print(msg_length + ",");
+                pw.println(embeding_rate);
+            }
         }
+        pw.close();
 
-//        calcData(msg, covers);
-// [cover][range][length]
-        Data[][][] data = readData();
-//        outputRangeCSV(covers, data);
-//        outputLengthCSV(covers, data);
-//        outputImgCSV(covers, data);
-//        outputAceDesCSV(covers, data);
-//        outputBitCSV(covers, data);
-//        outputMsgLenghCSV(covers, msg);
-//        outputMsgLenghImgCSV(covers, msg);
 
-        xlsx_based_enb_rate(covers, data);
+
+
+//        files = new File("./img/img_b/").listFiles();
+//        ImgUtil.labeling(files);
+
+//        ImgUtil.labeling1(files);
+
+
+//        xlsx_based_enb_rate(files);
+//        xlsx_based_range(files);
+//        xlsx_based_img(files);
+//        xlsx_base_msg_length(files);
+
         IO.print("埋め込み終了");
     }
 
@@ -119,23 +144,67 @@ public class Main {
         return data;
     }
 
+    private static Data[][] readData(String fileName) {
+        Data[][] data = new Data[256][256];
+        int range, length;
+        try {
+            BufferedReader br = null;
+            br = new BufferedReader(new FileReader(new File(Path.ROW_DATA_PATH + fileName)));
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                StringTokenizer st = new StringTokenizer(line, ",");
+
+                // 空行チェック
+                if (st.countTokens() <= 1) {
+                    continue;
+                }
+
+                range = Integer.parseInt(st.nextToken());
+                length = Integer.parseInt(st.nextToken());
+                data[range][length - 1] = new Data(
+                        range,
+                        length,
+                        Double.parseDouble(st.nextToken()),
+                        Double.parseDouble(st.nextToken()),
+                        Double.parseDouble(st.nextToken()),
+                        Integer.parseInt(st.nextToken())
+                );
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
+
+    private static CoverData[] createCovers(File[] files, int begin, int end, int length) {
+        CoverData[] covers = new CoverData[length];
+        for (int i = begin; i < end; i++) {
+            covers[i - begin] = new CoverData(files[i]);
+        }
+
+        return covers;
+    }
+
     // Format : 埋め込み率, 埋め込み範囲, PSNR, SSIM, 誤り率
-    private static void xlsx_based_enb_rate(CoverData[] covers, Data[][][] data) {
+    private static void xlsx_based_enb_rate(File[] files) {
         XSSFWorkbook wb = new XSSFWorkbook();
         XSSFSheet sheet = null;
+        Data[][] data;
         Data d;
         int rowNum;
-        for (int i = 0; i < data.length; i++) {
+        for (int i = 0; i < files.length; i++) {
             rowNum = 0;
-            sheet = wb.createSheet(chopExt(covers[i].file_name));
-            setCellsString(sheet.createRow(rowNum), "埋め込み率,埋め込み範囲,PSNR,SSIM,誤り率");
+            data = readData(files[i].getName());
+            sheet = wb.createSheet(chopExt(files[i].getName()));
+            Excel.setCellsString(sheet.createRow(rowNum), "埋め込み率,埋め込み範囲,PSNR,SSIM,誤り率");
 
             for (int length = 8; length <= 256; length++) {
                 for (int range = 1; range <= 255; range++) {
-                    d = data[i][range][length-1];
+                    d = data[range][length-1];
 
-                    rowNum++;
-                    setCellsDouble(sheet.createRow(rowNum), new double[]{
+                    Excel.setCellsDouble(sheet.createRow(++rowNum), new double[]{
                             d.embeding_rate,
                             range,
                             d.psnr,
@@ -145,74 +214,80 @@ public class Main {
                 }
 
             }
-            IO.println(covers[i].file_name);
-            if(i%6 == 5 || i == data.length - 1) {
-                outputWorkbook(wb, Path.BASE_LENGTH_DATA_PATH, i/6 + ".xlsx");
+            IO.println(files[i].getName());
+            if(i%6 == 5 || i == files.length - 1) {
+                Excel.outputWorkbook(wb, Path.BASE_LENGTH_DATA_PATH, i + ".xlsx");
                 wb = new XSSFWorkbook();
             }
         }
     }
 
-    private static void setCellsString(Row row, String params) {
-        String[] paramsArr = params.split(",");
-        for(int i=0; i < paramsArr.length; i++) {
-            row.createCell(i).setCellValue(paramsArr[i]);
-        }
-    }
+    // Format : 埋め込み範囲, 埋め込み率, PSNR, SSIM, 誤り率
+    private static void xlsx_based_range(File[] files){
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet = null;
+        Data[][] data;
+        Data d;
+        int rowNum;
+        for (int i = 0; i < files.length; i++) {
+            rowNum = 0;
+            data = readData(files[i].getName());
+            sheet = wb.createSheet(chopExt(files[i].getName()));
+            Excel.setCellsString(sheet.createRow(rowNum), "埋め込み範囲,埋め込み率,PSNR,SSIM,誤り率");
 
-    private static void setCellsDouble(Row row, double[] nums) {
-        for(int i=0; i < nums.length; i++) {
-            row.createCell(i).setCellValue(nums[i]);
-        }
-    }
+            for (int range = 1; range <= 255; range++) {
+                for (int length = 8; length <= 256; length++) {
+                    d = data[range][length - 1];
 
-    private static void outputWorkbook(XSSFWorkbook wb, String filePath, String fileName) {
-        String name = filePath + fileName;
-        File file = new File(filePath);
-        FileOutputStream fio = null;
-        try {
-            if(!file.exists()) file.createNewFile();
-            fio = new FileOutputStream(name);
-            wb.write(fio);
-            IO.println("出力しました");
-            fio.close();
-        }catch (IOException e) {
-
-        }
-    }
-
-    private static void outputMsgLenghCSV(CoverData[] covers, Data[][][] data) {
-        int[] lengths = new int[]{
-                8, 16, 32, 64
-        };
-        int msg_length, index = 0;
-        PrintWriter pw;
-        Data d1, d2;
-
-        for (int length = 8; length <= 128; length++) {
-            msg_length = covers[0].calcBuffWithoutOffset().length / length;
-            pw = getPrintWriter(Path.BASE_MSG_LENGTH_DATA_PATH, "" + msg_length, SHIFT_JIS);
-            pw.println("メッセージ長, ファイル名, 誤り率(1bit), PSNR(1bit), SSIM(1bit), 誤り率(2bit), PSNR(2bit), SSIM(2bit), 誤り率(3bit), PSNR(3bit), SSIM(3bit)");
-            index = 0;
-            for (CoverData c : covers) {
-                d1 = data[index][1][length - 1];
-                d2 = data[index][3][length - 1];
-
-                pw.print(msg_length + ",");
-                pw.print(c.file_name + ",");
-
-                pw.print(d1.error_rate + ",");
-                pw.print(d1.psnr + ",");
-                pw.print(d1.ssim + ",");
-                pw.print(d2.error_rate + ",");
-                pw.print(d2.psnr + ",");
-                pw.print(d2.ssim + ",");
-
-                pw.println();
-                index++;
+                    Excel.setCellsDouble(sheet.createRow(++rowNum), new double[]{
+                            range,
+                            d.embeding_rate,
+                            d.psnr,
+                            d.ssim,
+                            d.error_rate
+                    });
+                }
             }
-            pw.close();
+            IO.println(files[i].getName());
+            if(i%6 == 5 || i == files.length - 1) {
+                Excel.outputWorkbook(wb, Path.BASE_RANGE_DATA_PATH, i + ".xlsx");
+                wb = new XSSFWorkbook();
+            }
         }
+    }
+
+    // Format : 横軸：いろいろ, 縦軸：メッセージ長
+    private static void xlsx_base_msg_length(File[] files) {
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet;
+        Data[][] data;
+        Data d1,d2,d3;
+        int rowNum = 0;
+        for(File file : files) {
+            rowNum = 0;
+            sheet = wb.createSheet(chopExt(file.getName()));
+            data = readData(file.getName());
+            Excel.setCellsString(sheet.createRow(0), "メッセージ長, 誤り率(1bit),PSNR(1bit),SSIM(1bit),誤り率(2bit),PSNR(2bit),SSIM(2bit)");
+            for (int length = 8; length <= 80; length++) {
+                d1 = data[1][length-1];
+                d2 = data[3][length*2-1];
+                d3 = data[7][length*3-1];
+                Excel.setCellsDouble(sheet.createRow(++rowNum), new double[]{
+                        d1.msg_num,
+                        d1.error_rate,
+                        d1.psnr,
+                        d1.ssim,
+                        d2.error_rate,
+                        d2.psnr,
+                        d2.ssim,
+                        d3.error_rate,
+                        d3.psnr,
+                        d3.ssim
+
+                });
+            }
+        }
+        Excel.outputWorkbook(wb, Path.BASE_MSG_LENGTH_DATA_PATH, "msg_length2.xlsx");
     }
 
     private static void outputMsgLenghImgCSV(CoverData[] covers, int[] msg) {
@@ -256,48 +331,44 @@ public class Main {
         }
     }
 
-    private static void outputRangeCSV(CoverData[] covers, Data[][][] data) {
-        PrintWriter pw;
+    // Format : 横軸：画像,縦軸：埋め込み率,要素：SSIM
+    private static void xlsx_based_img(File[] files) {
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet = null;
+        Row row;
+        Data[][] data;
         Data d;
-        for (int i = 0; i < covers.length; i++) {
-            pw = getPrintWriter(Path.BASE_RANGE_DATA_PATH, covers[i].file_name.replace(".bmp", ""), SHIFT_JIS);
-            pw.println("埋め込み範囲,埋め込み率,PSNR,SSIM,誤り率");
+        int rowNum;
+        for (int range = 1; range <= 255; range++) {
+            rowNum = 0;
+            sheet = wb.createSheet(range + "");
 
-            for (int range = 0; range <= 255; range++) {
-                for (int length = 8; length <= 256; length++) {
-                    d = data[i][range][length - 8];
-
-                    pw.print(range + ",");
-                    pw.print(d.embeding_rate + ",");
-                    pw.print(d.psnr + ",");
-                    pw.print(d.ssim + ",");
-                    pw.println(d.error_rate);
-                }
+            row = sheet.createRow(rowNum);
+            for (int i=0; i<files.length; i++) {
+                row.createCell(i + 1).setCellValue(chopExt(files[i].getName()));
             }
-            pw.close();
-        }
-    }
 
-    private static void outputImgCSV(CoverData[] covers, Data[][][] data) {
-        PrintWriter pw;
-        for (int range = 0; range <= 255; range++) {
-            pw = getPrintWriter(Path.BASE_IMG_DATA_PATH, "" + range, SHIFT_JIS);
-            pw.print(",");   // 左上のマスを開ける
-            for (CoverData cover : covers) {
-                pw.print(cover.file_name + ",");
-            }
-            pw.println();
-
+            data = readData(files[0].getName());
             for (int length = 8; length <= 256; length++) {
-                pw.print(((double) 8 / length) * 100 + ",");
-                for (int i = 0; i < covers.length; i++) {
-                    pw.print(data[i][range][length - 8].ssim + ",");
-                }
-                pw.println();
+                d = data[range][length-1];
+                row = sheet.createRow(++rowNum);
+                row.createCell(0).setCellValue(d.embeding_rate);
+                row.createCell(1).setCellValue(d.ssim);
             }
 
-            pw.close();
+
+
+            for (int i = 1; i < files.length; i++) {
+                data = readData(files[i].getName());
+                rowNum = 0;
+                for(int length = 8; length <= 256; length ++) {
+                    d = data[range][length-1];
+                    sheet.getRow(++rowNum).createCell(i+1).setCellValue(d.ssim);
+                }
+            }
+            IO.println(range);
         }
+        Excel.outputWorkbook(wb, Path.BASE_IMG_DATA_PATH, "img.xlsx");
     }
 
     private static void outputBitCSV(CoverData[] covers, Data[][][] data) {

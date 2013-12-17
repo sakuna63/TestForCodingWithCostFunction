@@ -77,6 +77,17 @@ public class Calc {
         return sum / nums.length;
     }
 
+    public static double average(int[] nums) {
+        double sum = 0.0;
+
+        for(int num : nums) {
+            // byteだと-128~128なのでintにキャストして合計を計算する
+            sum += num;
+        }
+
+        return sum / nums.length;
+    }
+
     public static double average(double[] nums) {
         double sum = 0.0;
         for (double num : nums) {
@@ -94,6 +105,18 @@ public class Calc {
         }
         
         
+        return sum_m2 / nums.length - ave * ave;
+    }
+
+    public static double despersion(int[] nums) {
+        double sum_m2 = 0.0;
+        double ave = average(nums);
+
+        for(int num : nums) {
+            sum_m2 += Math.pow(num, 2);
+        }
+
+
         return sum_m2 / nums.length - ave * ave;
     }
 

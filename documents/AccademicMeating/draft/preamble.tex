@@ -1,0 +1,25 @@
+\usepackage{multicol}
+\usepackage{setspace}
+\usepackage[top=30truemm, bottom=25truemm, left=20truemm, right=20truemm]{geometry}
+
+% セクション、サブセクションのフォントサイズを更変
+\makeatletter
+
+\def\section{\@startsection {section}{1}{\z@}{-3.5ex plus -1ex minus 
+-.2ex}{2.3ex plus .2ex}{\normalsize\bf}}
+
+\def\subsection{\@startsection {subsection}{1}{\z@}{-3.5ex plus -1ex minus 
+-.2ex}{2.3ex plus .2ex}{\normalsize\bf}}
+
+\makeatother
+
+% ページ番号を非表示
+\pagestyle{empty}
+
+% footnoteを再定義する
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+%タイトル定義
+\title{\LARGE 誤りパターン埋込み型ステガノグラフィに関する一考察} 
+\author{索手一平 \footnotemark[2]}
+\date{松江工業高等専門学校 \footnotemark[2]}

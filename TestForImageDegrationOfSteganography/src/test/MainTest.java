@@ -3,9 +3,9 @@ package test;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import my.CoverData;
+import my.img.CoverData;
 import my.Main;
-import my.StegoData;
+import my.img.StegoData;
 
 import java.io.File;
 import java.lang.reflect.Method;
