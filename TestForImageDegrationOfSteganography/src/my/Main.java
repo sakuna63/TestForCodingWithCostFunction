@@ -26,19 +26,20 @@ public class Main {
         int[] msg = createMsg(0, IMAGE_SIZE * IMAGE_SIZE);
         File[] files_img = new File(Path.ORIGIN_IMG_PATH).listFiles();
         File[] files = new File(Path.ROW_DATA_PATH).listFiles();
-        Arrays.sort(files);
+        Arrays.sort(files_img);
 
 
         CoverData[] covers = new CoverData[files_img.length];
-        for(int i=0; i<files.length; i++) {
-            covers[i] = new CoverData(files_img[i]);
-            createStegoData(covers[i], msg, 8, 1);
+        CoverData cover;
+        StegoData stego;
+        PrintWriter pw = getPrintWriter("./", "100", SHIFT_JIS);
+        for(int i=0; i<files_img.length; i++) {
+            cover = new CoverData(files_img[i]);
+            stego = createStegoData(cover, msg, 8, 1);
+            pw.print(stego.ssim(cover) + ",");
         }
+        pw.close();
 
-
-        int begin = 0;
-        int end = files.length;
-//        int length = end - begin;
 
         files = new File("./img/img_b/").listFiles();
 //        ImgUtil.labeling(files);

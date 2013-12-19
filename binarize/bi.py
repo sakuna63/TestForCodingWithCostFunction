@@ -53,8 +53,7 @@ dir = "../TestForImageDegrationOfSteganography/img/img_b/"
 
 
 for img in imgs: 
-    name = img[0].name.split("\\.")[-1]
-    shutil.rmtree(dir + name + "/")
+    name = img[0].name.split("\\.")[-1].replace(".bmp","")
     os.mkdir(dir + name + "/")
     for i, im in enumerate(img):
         if(i <= 9) : 
