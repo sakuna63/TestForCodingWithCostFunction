@@ -28,38 +28,19 @@ public class Main {
         File[] files = new File(Path.ROW_DATA_PATH).listFiles();
         Arrays.sort(files);
 
+
+        CoverData[] covers = new CoverData[files_img.length];
+        for(int i=0; i<files.length; i++) {
+            covers[i] = new CoverData(files_img[i]);
+            createStegoData(covers[i], msg, 8, 1);
+        }
+
+
         int begin = 0;
         int end = files.length;
 //        int length = end - begin;
 
-        CoverData c = new CoverData(new File("./img/18.bmp"));
-        int embeding_limit_per_bit = c.calcBuffWithoutOffset().length;
-        StegoData stego;
-        PrintWriter pw = getPrintWriter("./", c.file_name.replace(".bmp", ""), UTF_8);
-        for (int range = 1; range <= 255; range++) {
-            for (int length = 8; length <= 256; length++) {
-                stego = createStegoData(c, msg, length, range);
-                pw.print(range + ",");
-                pw.print(length + ",");
-                pw.print(stego.psnr(c) + ",");
-                pw.print(stego.ssim(c) + ",");
-                pw.print(stego.getErrorRate() + ",");
-                pw.print(embeding_limit_per_bit + ",");
-
-                double embeding_rate = (double) 8 / length * 100;
-                double msg_length = embeding_limit_per_bit * Util.calcTargetBits(range).length / length;
-
-                pw.print(embeding_limit_per_bit + ",");
-                pw.print(msg_length + ",");
-                pw.println(embeding_rate);
-            }
-        }
-        pw.close();
-
-
-
-
-//        files = new File("./img/img_b/").listFiles();
+        files = new File("./img/img_b/").listFiles();
 //        ImgUtil.labeling(files);
 
 //        ImgUtil.labeling1(files);

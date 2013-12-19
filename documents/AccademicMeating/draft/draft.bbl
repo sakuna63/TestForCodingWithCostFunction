@@ -1,0 +1,14 @@
+\begin{thebibliography}{1}
+
+\bibitem{Paper01}
+合田翔, 渡辺峻, 松本和幸, 吉田稔, 北研二.
+\newblock コスト付き符号化を用いたステガノグラフィ.
+\newblock 信学技法IT, Vol. 113, No. 153, pp. 5--9, 7 2013.
+
+\bibitem{Paper02}
+J.PIETER M.SHALKWIJK.
+\newblock An algorithm for source coding.
+\newblock {\em IEEE TRANSACTIONS ON INFORMATION THEORY}, Vol. IT-18, No.~3, pp.
+  395--399, May 1972.
+
+\end{thebibliography}

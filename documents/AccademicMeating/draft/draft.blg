@@ -1,0 +1,47 @@
+This is JBibTeX, Version 0.99c-j0.33 (utf8.euc) (Web2C 7.5.4)
+The top-level auxiliary file: draft.aux
+The style file: junsrt.bst
+Reallocated wiz_functions (elt_size=4) to 3400 items from 0.
+Database file #1: draft.bib
+You've used 2 entries,
+            2270 wiz_defined-function locations,
+            555 strings with 4299 characters,
+and the built_in function-call counts, 780 in all, are:
+= -- 61
+> -- 20
+< -- 6
++ -- 8
+- -- 6
+* -- 52
+:= -- 97
+add.period$ -- 6
+call.type$ -- 2
+change.case$ -- 2
+chr.to.int$ -- 0
+cite$ -- 2
+duplicate$ -- 48
+empty$ -- 69
+format.name$ -- 12
+if$ -- 187
+int.to.chr$ -- 0
+int.to.str$ -- 2
+missing$ -- 2
+newline$ -- 13
+num.names$ -- 2
+pop$ -- 10
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 39
+stack$ -- 0
+substring$ -- 48
+swap$ -- 19
+text.length$ -- 6
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 8
+width$ -- 3
+write$ -- 24
+is.kanji.str$ -- 25

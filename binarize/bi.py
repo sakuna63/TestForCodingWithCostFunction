@@ -57,4 +57,8 @@ for img in imgs:
     shutil.rmtree(dir + name + "/")
     os.mkdir(dir + name + "/")
     for i, im in enumerate(img):
-        cv2.imwrite(dir + name + "/" + str(i) + ".bmp", im.img)
+        if(i <= 9) : 
+            off = "0"
+        else :
+            off = ""
+        cv2.imwrite(dir + name + "/" + off + str(i) + ".bmp", im.img)
