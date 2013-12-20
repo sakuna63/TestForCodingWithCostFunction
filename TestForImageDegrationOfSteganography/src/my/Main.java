@@ -4,6 +4,7 @@ import my.img.CoverData;
 import my.img.StegoData;
 import my.util.Excel;
 import my.util.IO;
+import my.util.ImgUtil;
 import my.util.Util;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -29,22 +30,23 @@ public class Main {
         Arrays.sort(files_img);
 
 
-        CoverData[] covers = new CoverData[files_img.length];
-        CoverData cover;
-        StegoData stego;
-        PrintWriter pw = getPrintWriter("./", "100", SHIFT_JIS);
-        for(int i=0; i<files_img.length; i++) {
-            cover = new CoverData(files_img[i]);
-            stego = createStegoData(cover, msg, 8, 1);
-            pw.print(stego.ssim(cover) + ",");
-        }
-        pw.close();
+//        CoverData[] covers = new CoverData[files_img.length];
+//        CoverData cover;
+//        StegoData stego;
+//        PrintWriter pw = getPrintWriter("./", "100", SHIFT_JIS);
+//        for(int i=0; i<files_img.length; i++) {
+//            cover = new CoverData(files_img[i]);
+//            stego = createStegoData(cover, msg, 8, 1);
+//            pw.print(stego.ssim(cover) + ",");
+//        }
+//        pw.close();
 
 
         files = new File("./img/img_b/").listFiles();
 //        ImgUtil.labeling(files);
 
-//        ImgUtil.labeling1(files);
+
+        ImgUtil.labeling1(files);
 
 
 //        xlsx_based_enb_rate(files);

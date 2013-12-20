@@ -3,113 +3,143 @@
 \usepackage{txfonts}
 \usepackage[symbol*,perpage]{footmisc}
 \usepackage[dvipdfm]{graphicx, color}
+%\usepackage[format=hang]{caption}
+\usepackage{hangcaption}
+\renewcommand{\caption}{\hangcaption}
 
 %-------------------------------------------jtitle and jauthors information
 \begin{document}
 
-\jtitle{誤りパターン埋込み型ステガノグラフィに関する一考察}
-\jcontact{松江工業高等専門学校\dag}
-\jauthor{索手 一平\dag}
+\jtitle{$B8m$j%Q%?!<%sKd9~$_7?%9%F%,%N%0%i%U%#$K4X$9$k0l9M;!(B}
+\jcontact{$B>>9>9)6H9bEy@lLg3X9;(B\dag}
+\jauthor{$B:w<j(B $B0lJ?(B\dag}
 
 \maketitle
 
-
 %-------------------------------------------document
-\section{はじめに}
-本研究はテキスト情報をグレースケール画像に埋め込むようなステガノグラフィ
-技術を対象とする．本研究では代表的な埋め込み方式であるLSB法の改良版であ
-る誤りパターン埋込み法における画質劣化と埋め込み率のトレードオフ関係を実
-験的に明らかにした．また，その実験結果をもとに画質劣化の起こりやすい画像
-の特性について実験し考察を行った．
+\section{$B$O$8$a$K(B}
+$BK\8&5f$O%F%-%9%H>pJs$r%0%l!<%9%1!<%k2hA|$KKd$a9~$`$h$&$J%9%F%,%N%0%i%U%#(B
+$B5;=Q$rBP>]$H$9$k!%K\8&5f$G$OBeI=E*$JKd$a9~$_J}<0$G$"$k(BLSB$BK!$N2~NIHG$G$"(B
+$B$k8m$j%Q%?!<%sKd9~$_K!$K$*$1$k2h<ANt2=$HKd$a9~$_N($N%H%l!<%I%*%U4X78$r<B(B
+$B83E*$KL@$i$+$K$7$?!%$^$?!$$=$N<B837k2L$r$b$H$K2h<ANt2=$N5/$3$j$d$9$$2hA|(B
+$B$NFC@-$K$D$$$F<B83$79M;!$r9T$C$?!%(B
 
-\section{ステガノグラフィ}
-ステガノグラフィとはある情報を他のデータに埋め込む技術・研究分野の総称
-であり，これによって情報が埋め込まれていること自体を隠すことができるため
-主に秘密情報の伝達において利用されている．ステガノグラフィ技術ではその特
-徴からなるべく多くの情報を埋め込めること，そして情報が隠蔽されていること
-を主観的・客観的に認知されないことが重要となる．
+\section{$B%9%F%,%N%0%i%U%#(B}
+$B%9%F%,%N%0%i%U%#$H$O$"$k>pJs$rB>$N%G!<%?$KKd$a9~$`5;=Q!&8&5fJ,Ln$NAm>N(B
+$B$G$"$j!$$3$l$K$h$C$F>pJs$,Kd$a9~$^$l$F$$$k$3$H<+BN$r1#$9$3$H$,$G$-$k$?$a(B
+$B<g$KHkL)>pJs$NEAC#$K$*$$$FMxMQ$5$l$F$$$k!%%9%F%,%N%0%i%U%#5;=Q$G$O$=$NFC(B
+$BD'$+$i$J$k$Y$/B?$/$N>pJs$rKd$a9~$a$k$3$H!$$=$7$F>pJs$,1#JC$5$l$F$$$k$3$H(B
+$B$r<g4QE*!&5R4QE*$KG'CN$5$l$J$$$3$H$,=EMW$H$J$k!%(B
 
-\section{LSB法}
-LSB法とはステガノグラフィ技術の最も代表的な埋め込み方式の一つである．こ
-の手法はカバーデータのLSB平面をテキスト情報のバイナリ表現とそのまま置き
-換えることによって，情報の埋め込みを行う．アルゴリズムが単純であり実装が
-容易であるがその一方で埋め込み時のビット誤りについての考慮がなされておら
-ず，画像の劣化を招きやすいという欠点がある．
+\section{LSB$BK!(B}
+LSB$BK!$H$O%9%F%,%N%0%i%U%#5;=Q$N:G$bBeI=E*$JKd$a9~$_J}<0$N0l$D$G$"$k!%$3(B
+$B$N<jK!$O%+%P!<%G!<%?$N(BLSB$BJ?LL$r%F%-%9%H>pJs$N%P%$%J%jI=8=$H$=$N$^$^CV$-(B
+$B49$($k$3$H$K$h$C$F!$>pJs$NKd$a9~$_$r9T$&!%%"%k%4%j%:%`$,C1=c$G$"$j<BAu$,(B
+$BMF0W$G$"$k$,$=$N0lJ}$GKd$a9~$_8e$KH/@8$9$k8m$j%S%C%H$KB?$/$J$j$d$9$/!$2hA|$NNt2=$r>7$-$d$9$$$H$$$&7gE@$,$"$k!%(B
 
-\section{誤りパターン埋め込み法}
-誤りパターン埋め込み法とはLSB法を元に考案された手法である．この手法では
-テキスト情報をより冗長でハミング重みの小さなビット列である誤りパターンに
-変換し，誤りパターンと画像のLSB平面との排他的論理和でLSB平面を置き換える
-ことによって，情報の埋め込みを行う．LSB法に比べ誤りビットが少なくなるた
-め画質の劣化を招きにくくなるが，より冗長なビット列に変換することから埋め
-込める情報量が少なくなるという欠点がある．
+\section{$B8m$j%Q%?!<%sKd$a9~$_K!(B}
+$B8m$j%Q%?!<%sKd$a9~$_K!$H$O(BLSB$BK!$r85$K9M0F$5$l$?<jK!$G$"$k!%$3$N<jK!$G$O(B
+$B%F%-%9%H>pJs$r$h$j>iD9$G%O%_%s%0=E$_$N>.$5$J%S%C%HNs$G$"$k8m$j%Q%?!<%s$K(B
+$BJQ49$7!$8m$j%Q%?!<%s$H2hA|$N%S%C%HNs$H$NGSB>E*O@M}OB$G%S%C%HNs$rCV$-49$($k(B
+$B$3$H$K$h$C$F!$>pJs$NKd$a9~$_$r9T$&!%(BLSB$BK!$KHf$Y8m$j%S%C%H$,>/$J$/$J$k$?(B
+$B$a2h<A$NNt2=$r>7$-$K$/$/$J$k$,!$$h$j>iD9$J%S%C%HNs$KJQ49$9$k$3$H$+$iKd$a(B
+$B9~$a$k>pJsNL$,>/$J$/$J$k$H$$$&7gE@$,$"$k!%(B
 
-\section{誤りパターンへの変換方法}
-誤りパターンへの変換方法の一つに埋め込みデータと誤りパターンを対応付けた
-テーブルを用意する方法が知られている．しかし，この方法の問題点として埋め
-込みデータの大きさに比例してテーブルが膨大となりメモリ制約の大きい環境で
-の実装が困難になるという点があげられる\cite{Paper01}．そこで本研究ではShalkwijkの数え
-上げ符号\cite{Paper02}を用いた埋め込みデータから誤りパターンを動的に背制する手法を提案
-する．
+\section{$B8m$j%Q%?!<%s$X$NJQ49J}K!(B}
+$B8m$j%Q%?!<%s$X$NJQ49J}K!$N0l$D$KKd$a9~$_%G!<%?$H8m$j%Q%?!<%s$rBP1~IU$1$?(B
+$B%F!<%V%k$rMQ0U$9$kJ}K!$,CN$i$l$F$$$k!%$7$+$7!$$3$NJ}K!$NLdBjE@$H$7$FKd$a(B
+$B9~$_%G!<%?$NBg$-$5$KHfNc$7$F%F!<%V%k$,KDBg$H$J$j%a%b%j@)Ls$NBg$-$$4D6-$G(B
+$B$N<BAu$,:$Fq$K$J$k$H$$$&E@$,$"$2$i$l$k(B\cite{Paper01}$B!%$=$3$GK\8&5f$G$O(BShalkwijk$B$N?t$((B
+$B>e$2Id9f(B\cite{Paper02}$B$rMQ$$$?Kd$a9~$_%G!<%?$+$i8m$j%Q%?!<%s$rF0E*$K@8@.(B
+$B$9$k<jK!$rDs0F$9$k!%(B
 
-\section{複数の画像を用いての画質劣化の検証実験}
-実験手順の概要を図１に示す．実験手順は以下のとおりである．また，埋め込み
-に使用するメッセージはほぼ当確率で発生する8bitコードの列とする．
+
+\section{$BKd$a9~$_N($H2h<ANt2=$N%H%l!<%I%*%U4X78$K$D$$$F(B}\label{sec:experiment1}
+$B<B83<j=g$N35MW$r?^(B\ref{fig:experiment_outline1}$B$K<($9!%<B83<j=g$O0J2<$N$H$*$j$G$"$k!%<B83$K$O(B
+256$\times$256px$B$N(B8bit$B%0%l%$%9%1!<%k(BBitmap$B$G$"$k<+A32hA|(B100$BKg$r;HMQ$7$?!%$^$?!$Kd$a9~$_(B
+$B$K;HMQ$9$k%a%C%;!<%8$O$[$\Ev3NN($GH/@8$9$k(B8bit$B%3!<%I$NNs$H$7$?!%(B
 \begin{enumerate}
 \renewcommand{\labelenumi}{(\arabic{enumi})}
- \item メッセージの各コードをShalkwijkの数え上げ符号を用いて誤りパターン
-       に変換し，画像のLSB平面との履いた低論理和をLSB平面に埋め込む．
- \item 埋め込み前後の画像を比較し，誤り率，PSNR値，SSIMを算出する．
- \item 誤りパターン長を増加させながら（１），（２）を繰り返す．
- \item 画像を入れ替えて（３）を繰り返す．
+ \item $B%a%C%;!<%8$N3F%3!<%I$r(BShalkwijk$B$N?t$(>e$2Id9f$rMQ$$$FF0E*$K8m$j%Q%?!<%s(B
+       $B$X$HJQ49$7!$2hA|$N%S%C%HNs$H$NGSB>E*O@M}OB$rKd$a9~$`!%(B
+ \item $BKd$a9~$_A08e$N2hA|$rHf3S$7!$8m$jN(!$(BPSNR$B!$(BSSIM$B$r;;=P$9$k!%(B
+ \item $B8m$j%Q%?!<%sD9$r(B8$B!A(B256bit$B!"Kd$a9~$_HO0O$r(BLSB$B$N$_$+$iA4%S%C%H$^$G$NHO(B
+       $B0O$GJQ2=$5$;$J$,$i!J#1!K!$!J#2!K$r7+$jJV$9!%(B
+ \item $B2hA|$rF~$lBX$($F!J#3!K$r7+$jJV$9!%(B
 \end{enumerate}
 
 \begin{figure}[htbp]
  \begin{center}
-  \includegraphics[width=8cm]{experiment1.png}
+  \includegraphics[width=8cm]{img/experiment1.png}
  \end{center}
- \caption{実験概要2}
+ \caption{$B<B8335MW(B1}
+ \label{fig:experiment_outline1}
 \end{figure}
 
-\section{実験結果}
-PSNRと誤り率，SSIMと誤り率のトレードオフについてのグラフをそれぞれ図１,
-２に，各画像事のSSIMの変化についてのグラフを図３に示す．今回の実験では
-web上で収集した256☓256pxの8bitグレイスケールBitmapである自然画像を20枚使
-用し実験を行った．
+\section{$B7k2L$H9M;!(B}
+$B3F2hA|$4$H$N(BSSIM$B$NJQ2=$K$D$$$F$N%0%i%U$r?^(B\ref{fig:graph_ssim}$B$K<($9!%?^(B\ref{fig:graph_ssim}$B$+$i3F2hA|$4$H$K(B
+$B%a%C%;!<%8$NKd$a9~$_NA$KBP$9$k2h<ANt2=$NB.EY$K:9$,$"$k$3$H$,$o$+$k!#$3$l(B
+$B$K$D$$$F<g4QE*$K4Q;!$r9T$C$?$H$3$m!$6a$7$$2hAGCM$,O"B3$7$F9=@.$5$l$kNN0h$,Bg$-$1(B
+$B$l$PBg$-$$$[$I2h<ANt2=$,Bg$-$/$J$k$3$H$,$o$+$C$?!%$=$NNc$r?^(B\ref{fig:degration-low}$B!$?^(B\ref{fig:degration-high}$B$K<($9!%(B
+$B?^(B\ref{fig:degration-low}$B$O$5$^$6$^$J2hAGCM$r;}$D%T%/%;%k$,:.$6$j9g$C$?2hA|$G$"$j!"0lJ}$G?^(B\ref{fig:degration-high}
+$B$O2hA|Cf$NLs#3J,$N#1$r9u$$I~$,@j$a$F$$$k!#$3$l$r5R4QE*$KI>2A$9$k$?$a$K<!$N<B83$r9T$C$?!%(B
 
-\section{考察}
-図3より画像ごとに画質劣化の傾向に差異があることがわかったため，それらの
-画像を並べ主観的に観察を行ったところ，近しい画素値を持つピクセルの大きい
-塊，つまりコントラストの小さい部分が大きい画像ほど画質劣化が大きくなる傾向がわかった．これを客観的に評価す
-るために次の実験を行った．
+\begin{figure}[htbp]
+ \begin{center}
+  \includegraphics[width=8cm]{img/img_ssim.png}
+ \end{center}
+ \caption{$B2hA|$4$H$N(BSSIM$B$NA+0\(B}
+ \label{fig:graph_ssim}
+\end{figure}
 
-\section{実験}
-実験手順の概要を図5に示す．実験手順は以下のとおりである．
+\begin{figure}[htbp]
+ \begin{center}
+  \includegraphics[width=4cm]{img/BRIDGE.png}
+  \includegraphics[width=4cm]{img/10_15_BRIDGE.png}
+ \end{center}
+ \caption{$BNt2=$N>/$J$$2hA|!J:8!'Kd$a9~$_A0!!1&!'Kd$a9~$_8e!K(B}
+ \label{fig:degration-low}
+\end{figure}
+
+\begin{figure}[htbp]
+ \begin{center}
+  \includegraphics[width=4cm]{img/milkdrop256.png}
+  \includegraphics[width=4cm]{img/10_15_milkdrop256.png}
+ \end{center}
+ \caption{$BNt2=$NBg$-$$2hA|!J:8!'Kd$a9~$_A0!!1&!'Kd$a9~$_8e!K(B}
+ \label{fig:degration-high}
+\end{figure}
+
+
+\section{$B2hAGCM$N=8Cf6q9g$N8!>Z<B83(B}
+$B<B83<j=g$N35MW$r?^(B\ref{fig:experiment_outline2}$B$K<($9!%<B83<j=g$O0J2<$N$H$*$j$G$"$k!%(B
 
 \begin{enumerate}
 \renewcommand{\labelenumi}{(\arabic{enumi})}
- \item 画素値を30の区間にわけ，各区間内の画素値とそれ以外の画素値で2値化
-       を行い，それらに対し4近傍でのラベリング処理を行い，最も大きい面積
-       部分を算出する．
- \item （１）をすべての画像に対し繰り返す．
- \item ５で算出したSSIMとのピアソンの相関係数を算出する．
+ \item $B%0%l!<%9%1!<%k$N2hA|$KBP$7!"2hAGCM#8$4$H$K2hAG$rCj=P$7!"Cj=P$7$?(B
+       $B2hAG$H$=$l0J30$N2hAG$H$GFsCM2=$r9T$&!#$3$l$K$h$j(B32$BKg$N(B2$BCM2hA|$r@8(B
+       $B@.$9$k!%(B
+ \item $BFsCM2=$7$?2hAG$KBP$7#46aK5$G%i%Y%j%s%0=hM}$r9T$$!"3F%i%Y%k$N$D$$(B
+       $B$?ND4q$NLL@Q$r7W;;$9$k!%(B
+ \item 32$BKgA4$F$NLL@Q$NCf$G:GBg$NLL@Q$r5a$a$k!%(B
+ \item (1)$B!A(B(3)$B$r$9$Y$F$N2hA|$KBP$77+$jJV$9!%(B
+ \item (4)$B$G;;=P$7$?:GBgLL@Q$HBh(B\ref{sec:experiment1}$B@a$G;;=P$7$?(BSSIM$B$H$N%T%"%=%s$NAj4X78?t$r;;=P$9$k!%(B
 \end{enumerate}
 
 \begin{figure}[htbp]
  \begin{center}
-  \includegraphics[width=8cm]{experiment2.png}
+  \includegraphics[width=8cm]{img/experiment2.png}
  \end{center}
- \caption{実験概要2}
+ \caption{$B<B8335MW(B2}
+ \label{fig:experiment_outline2}
 \end{figure}
 
-\section{実験結果}
-上記の実験を行った結果，約0.6という相関が得られた．
-
-\section{考察}
-これまでの実験から近しい画素値の大きい集合をもつ画像ほど画質の視覚的な画
-質劣化が大きくなるという結果が得られた．これは画素間のコントラストが大き
-いほどメッセージ埋め込み後の画素値変化が目立ちにくいため得られたのだと考
-えられる．
+\section{$B7k2L$H9M;!(B}
+$B>e5-$N<B83$r9T$C$?7k2L!$Ls(B0.6$B$H$$$&Aj4X$,F@$i$l$?!%(B
+$B$3$l$^$G$N<B83$+$i6a$7$$2hAGCM$NBg$-$$=89g$r$b$D2hA|$[$I2h<A$N;k3PE*$J2h(B
+$B<ANt2=$,Bg$-$/$J$k$H$$$&7k2L$,F@$i$l$?!%$3$l$O2hAG4V$N%3%s%H%i%9%H$,Bg$-(B
+$B$$$[$I%a%C%;!<%8Kd$a9~$_8e$N2hAGCMJQ2=$,L\N)$A$K$/$$$?$aF@$i$l$?$N$@$H9M(B
+$B$($i$l$k!%(B
 
 %-------------------------------------------etitle and eauthors information
 \footnotetext[0]{\hspace*{-5.2mm}A study on steganography based on embedding error patterns}

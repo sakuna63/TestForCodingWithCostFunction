@@ -13,7 +13,7 @@ from matplotlib import pyplot as plt
 # メインの処理
 num_times = int(sys.argv[1])
 # 切り上げ
-num_div = math.ceil(255/num_times)
+num_div = math.ceil(256/num_times)
 
 files = glob.glob("../TestForImageDegrationOfSteganography/img/origin/*.*")
 #file = files[0]
@@ -54,7 +54,7 @@ dir = "../TestForImageDegrationOfSteganography/img/img_b/"
 
 for img in imgs: 
     name = img[0].name.split("\\.")[-1].replace(".bmp","")
-    os.mkdir(dir + name + "/")
+#    os.mkdir(dir + name + "/")  
     for i, im in enumerate(img):
         if(i <= 9) : 
             off = "0"

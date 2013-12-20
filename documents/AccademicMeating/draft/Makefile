@@ -1,4 +1,6 @@
 all:
+	python convert.py
+	ebb img/*.png
 	platex     draft
 	jbibtex    draft
 	platex     draft

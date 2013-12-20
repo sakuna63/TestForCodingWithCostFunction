@@ -106,7 +106,9 @@ public class ImgUtil {
         
         for (int j =0; j < files.length; j++) {
             file = files[j].listFiles();
+            IO.println(files[j].getName());
             for(int i=0; i<file.length; i++) {
+                IO.println(file[i].getName());
 
 //                if(file[i].getName().equals("brickhouse256.bmp7.bmp")) continue;
 
