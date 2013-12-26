@@ -1,4 +1,4 @@
-This is pTeX, Version 3.141592-p3.1.11 (utf8.euc) (Web2C 7.5.4) (format=platex 2011.7.24)  24 DEC 2013 14:06
+This is pTeX, Version 3.141592-p3.1.11 (utf8.euc) (Web2C 7.5.4) (format=platex 2011.7.24)  26 DEC 2013 14:05
 **draft
 (./draft.tex
 pLaTeX2e <2006/11/10>+0 (based on LaTeX2e <2003/12/01> patch level 0)
@@ -290,9 +290,9 @@ File: img/experiment1.png Graphic file (type bmp)
 
 <img/experiment1.png>
 LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
-(Font)              scaled to size 8.64899pt on input line 67.
+(Font)              scaled to size 8.64899pt on input line 61.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 8.64899pt on input line 67.
+(Font)              scaled to size 8.64899pt on input line 61.
 File: img/img_ssim.png Graphic file (type bmp)
  <img/img_ssim.png>
 File: img/BRIDGE.png Graphic file (type bmp)
@@ -312,10 +312,10 @@ File: img/10_17_milkdrop256.png Graphic file (type bmp)
 File: img/experiment2.png Graphic file (type bmp)
  <img/experiment2.png>
 LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
-(Font)              scaled to size 5.76599pt on input line 162.
+(Font)              scaled to size 5.76599pt on input line 157.
 LaTeX Font Info:    Font shape `OMS/txr/m/n' in size <8> not available
-(Font)              Font shape `OMS/txsy/m/n' tried instead on input line 163.
- (./draft.bbl [2]
+(Font)              Font shape `OMS/txsy/m/n' tried instead on input line 158.
+ (./draft.bbl
 LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
 (Font)              scaled to size 9.60999pt on input line 11.
 LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
@@ -328,9 +328,8 @@ LaTeX Font Info:    Font shape `JY1/gt/m/it' in size <10> not available
 (Font)              Font shape `JY1/gt/m/n' tried instead on input line 11.
 LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
 (Font)              scaled to size 9.60999pt on input line 11.
-) [3
-
-] (./draft.aux) ) 
+) [2] (./draft.aux) )
+(\end occurred inside a group at level 1) 
 Here is how much of TeX's memory you used:
  1814 strings out of 94681
  23452 string characters out of 1174371
@@ -340,4 +339,4 @@ Here is how much of TeX's memory you used:
  571 hyphenation exceptions out of 8191
  25i,8n,24p,178b,434s stack positions out of 5000i,500n,6000p,200000b,5000s
 
-Output written on draft.dvi (3 pages, 13388 bytes).
+Output written on draft.dvi (2 pages, 12824 bytes).
