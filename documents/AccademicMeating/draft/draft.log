@@ -1,4 +1,4 @@
-This is pTeX, Version 3.141592-p3.1.11 (utf8.euc) (Web2C 7.5.4) (format=platex 2011.7.24)  31 DEC 2013 18:16
+This is pTeX, Version 3.141592-p3.1.11 (utf8.euc) (Web2C 7.5.4) (format=platex 2011.7.24)  31 DEC 2013 18:24
 **draft
 (./draft.tex
 pLaTeX2e <2006/11/10>+0 (based on LaTeX2e <2003/12/01> patch level 0)
@@ -286,6 +286,12 @@ LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <12> not available
 (Font)              Font shape `JY1/gt/m/n' tried instead on input line 17.
 LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
 (Font)              scaled to size 11.53198pt on input line 17.
+LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
+(Font)              scaled to size 6.72699pt on input line 37.
+LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
+(Font)              scaled to size 5.76599pt on input line 38.
+LaTeX Font Info:    Font shape `OMS/txr/m/n' in size <8> not available
+(Font)              Font shape `OMS/txsy/m/n' tried instead on input line 39.
 
 [1
 
@@ -295,18 +301,13 @@ LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
 File: img/experiment1.png Graphic file (type bmp)
  <img/experiment1.png>
 LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
-(Font)              scaled to size 8.64899pt on input line 98.
+(Font)              scaled to size 8.64899pt on input line 105.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 8.64899pt on input line 98.
+(Font)              scaled to size 8.64899pt on input line 105.
 File: img/graph_error_rate2.png Graphic file (type bmp)
  <img/graph_error_rate2.png>
 File: img/img_ssim.png Graphic file (type bmp)
  <img/img_ssim.png>
-LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
-(Font)              scaled to size 5.76599pt on input line 150.
-LaTeX Font Info:    Font shape `OMS/txr/m/n' in size <8> not available
-(Font)              Font shape `OMS/txsy/m/n' tried instead on input line 151.
-
 (./draft.bbl
 LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
 (Font)              scaled to size 9.60999pt on input line 11.
@@ -331,8 +332,8 @@ Here is how much of TeX's memory you used:
  23274 string characters out of 1174371
  66349 words of memory out of 1500000
  5070 multiletter control sequences out of 10000+50000
- 32711 words of font info for 116 fonts, out of 1200000 for 2000
+ 32900 words of font info for 117 fonts, out of 1200000 for 2000
  571 hyphenation exceptions out of 8191
  25i,8n,24p,178b,434s stack positions out of 5000i,500n,6000p,200000b,5000s
 
-Output written on draft.dvi (2 pages, 13436 bytes).
+Output written on draft.dvi (2 pages, 13444 bytes).
