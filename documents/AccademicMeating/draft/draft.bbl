@@ -11,4 +11,11 @@ J.PIETER M.SHALKWIJK.
 \newblock {\em IEEE TRANSACTIONS ON INFORMATION THEORY}, Vol. IT-18, No.~3, pp.
   395--399, May 1972.
 
+\bibitem{Paper03}
+Zhou Wang, Alan~Conrad Bovik, Hamid~Rahim Sheikh, and Eero P.Simoncelli.
+\newblock Image quality assessment: From error visibility to structural
+  similarity.
+\newblock {\em IEEE TRANSACTIONS ON INFORMATION THEORY}, Vol.~13, No.~4, pp.
+  600--612, April 2004.
+
 \end{thebibliography}

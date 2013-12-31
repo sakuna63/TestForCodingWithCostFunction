@@ -1,4 +1,4 @@
-This is pTeX, Version 3.141592-p3.1.11 (utf8.euc) (Web2C 7.5.4) (format=platex 2011.7.24)  27 DEC 2013 13:15
+This is pTeX, Version 3.141592-p3.1.11 (utf8.euc) (Web2C 7.5.4) (format=platex 2011.7.24)  31 DEC 2013 18:16
 **draft
 (./draft.tex
 pLaTeX2e <2006/11/10>+0 (based on LaTeX2e <2003/12/01> patch level 0)
@@ -286,26 +286,26 @@ LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <12> not available
 (Font)              Font shape `JY1/gt/m/n' tried instead on input line 17.
 LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
 (Font)              scaled to size 11.53198pt on input line 17.
-File: img/experiment1.png Graphic file (type bmp)
 
-<img/experiment1.png>
-LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
-(Font)              scaled to size 8.64899pt on input line 88.
-LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 8.64899pt on input line 88.
- [1
+[1
 
 
 
 ]
-File: img/graph_error_rate.png Graphic file (type bmp)
- <img/graph_error_rate.png>
+File: img/experiment1.png Graphic file (type bmp)
+ <img/experiment1.png>
+LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
+(Font)              scaled to size 8.64899pt on input line 98.
+LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
+(Font)              scaled to size 8.64899pt on input line 98.
+File: img/graph_error_rate2.png Graphic file (type bmp)
+ <img/graph_error_rate2.png>
 File: img/img_ssim.png Graphic file (type bmp)
  <img/img_ssim.png>
 LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
-(Font)              scaled to size 5.76599pt on input line 139.
+(Font)              scaled to size 5.76599pt on input line 150.
 LaTeX Font Info:    Font shape `OMS/txr/m/n' in size <8> not available
-(Font)              Font shape `OMS/txsy/m/n' tried instead on input line 140.
+(Font)              Font shape `OMS/txsy/m/n' tried instead on input line 151.
 
 (./draft.bbl
 LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
@@ -320,14 +320,19 @@ LaTeX Font Info:    Font shape `JY1/gt/m/it' in size <10> not available
 (Font)              Font shape `JY1/gt/m/n' tried instead on input line 11.
 LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
 (Font)              scaled to size 9.60999pt on input line 11.
+
+Underfull \hbox (badness 1552) in paragraph at lines 15--20
+[]\OT1/txr/m/n/10 Zhou Wang, Alan Con-rad Bovik, Hamid Rahim
+ []
+
 ) [2] (./draft.aux) ) 
 Here is how much of TeX's memory you used:
  1804 strings out of 94681
- 23279 string characters out of 1174371
+ 23274 string characters out of 1174371
  66349 words of memory out of 1500000
  5070 multiletter control sequences out of 10000+50000
  32711 words of font info for 116 fonts, out of 1200000 for 2000
  571 hyphenation exceptions out of 8191
  25i,8n,24p,178b,434s stack positions out of 5000i,500n,6000p,200000b,5000s
 
-Output written on draft.dvi (2 pages, 12152 bytes).
+Output written on draft.dvi (2 pages, 13436 bytes).
