@@ -4,7 +4,6 @@ import my.img.CoverData;
 import my.img.StegoData;
 import my.util.Excel;
 import my.util.IO;
-import my.util.ImgUtil;
 import my.util.Util;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -30,23 +29,31 @@ public class Main {
         Arrays.sort(files_img);
 
 
-//        CoverData[] covers = new CoverData[files_img.length];
-//        CoverData cover;
-//        StegoData stego;
-//        PrintWriter pw = getPrintWriter("./", "100", SHIFT_JIS);
-//        for(int i=0; i<files_img.length; i++) {
-//            cover = new CoverData(files_img[i]);
-//            stego = createStegoData(cover, msg, 8, 1);
-//            pw.print(stego.ssim(cover) + ",");
-//        }
-//        pw.close();
+        CoverData[] covers = new CoverData[files_img.length];
+        CoverData cover;
+        StegoData stego;
+        PrintWriter pw = getPrintWriter("./", "100", SHIFT_JIS);
+        pw.print(",");
+        for(int i=0; i<files_img.length; i++) {
+            pw.print(files_img[i].getName().replace(".bmp", "") + ",");
+        }
+        pw.println();
+
+        for(int length = 8; length <= 256; length++) {
+            pw.print(8.0 / length + ",");
+            for(int i=0; i<files_img.length; i++) {
+                cover = new CoverData(files_img[i]);
+                stego = createStegoData(cover, msg, length, 1);
+                pw.print(stego.ssim(cover) + ",");
+            }
+            pw.println();
+        }
+        pw.close();
 
 
-        files = new File("./img/img_b/").listFiles();
+//        files = new File("./img/img_b/").listFiles();
 //        ImgUtil.labeling(files);
-
-
-        ImgUtil.labeling1(files);
+//        ImgUtil.labeling1(files);
 
 
 //        xlsx_based_enb_rate(files);
