@@ -32,7 +32,7 @@ public class Main {
         CoverData[] covers = new CoverData[files_img.length];
         CoverData cover;
         StegoData stego;
-        PrintWriter pw = getPrintWriter("./", "100", SHIFT_JIS);
+        PrintWriter pw = getPrintWriter("./", "101", SHIFT_JIS);
         pw.print(",");
         for(int i=0; i<files_img.length; i++) {
             pw.print(files_img[i].getName().replace(".bmp", "") + ",");
