@@ -1,0 +1,147 @@
+\pagestyle{empty}
+
+\headheight=0cm
+\twocolumn
+
+\def\sectionsymbol{}
+\def\subsectionsymbol{}
+\def\subsubsectionsymbol{}
+
+\def\startsection{%
+  \def\@sectsymbol{\sectionsymbol}%
+  \@startsection{section}{1}{\z@}%
+  {0.1ex \@plus 1ex \@minus .2ex}%
+  {0.1ex \@plus .0ex}%
+  {\reset@font\normalsize\bfseries\mathversion{bold}}}
+
+\def\section{%
+  \def\@sectsymbol{\sectionsymbol}%
+  \@startsection{section}{1}{\z@}%
+  {2.5ex \@plus 1ex \@minus .2ex}%
+  {0.1ex \@plus .0ex}%
+  {\reset@font\normalsize\bfseries\mathversion{bold}}}
+%  {\reset@font\large\bfseries\mathversion{bold}}}
+
+\def\subsection{%
+  \def\@sectsymbol{\subsectionsymbol}%
+  \@startsection{subsection}{2}{\z@}%
+  {2.5ex \@plus 1ex \@minus .2ex}%
+  {1ex \@plus .2ex}%
+  {\reset@font\normalsize\bfseries\mathversion{bold}}}
+
+\def\l@section#1#2{%
+  \ifnum \c@tocdepth >\z@%
+    \addpenalty{\@secpenalty}%
+    \addvspace{1.0em \@plus\p@}%
+    \begingroup%
+      \parindent\z@ \rightskip\@pnumwidth \parfillskip-\rightskip%
+      \leavevmode\bfseries\mathversion{bold}%
+      \setlength\@lnumwidth{1.5em}%
+      \advance\leftskip\@lnumwidth \hskip-\leftskip%
+      #1\nobreak\hfil\nobreak\hbox to\@pnumwidth{\hss#2}\par%
+    \endgroup%
+  \fi}
+
+\def\@sect#1#2#3#4#5#6[#7]#8{%
+  \ifnum #2>\c@secnumdepth%
+    \let\@svsec\@empty%
+  \else%
+    \refstepcounter{#1}%
+    \protected@edef\@svsec{\@sectsymbol\@seccntformat{#1}\relax}%
+  \fi%
+  \@tempskipa #5\relax%
+  \ifdim \@tempskipa>\z@%
+    \begingroup%
+      #6{%
+        \@hangfrom{\hskip #3\relax\@svsec}%
+          \interlinepenalty \@M #8\@@par}%
+    \endgroup%
+    \csname #1mark\endcsname{#7}%
+    \addcontentsline{toc}{#1}{%
+      \ifnum #2>\c@secnumdepth%
+      \else%
+        \@sectsymbol\protect\numberline{\csname the#1\endcsname}%
+      \fi%
+      #7}%
+  \else%
+    \def\@svsechd{%
+      #6{\hskip #3\relax%
+      \@svsec #8}%
+      \csname #1mark\endcsname{#7}%
+      \addcontentsline{toc}{#1}{%
+        \ifnum #2>\c@secnumdepth%
+        \else%
+          \@sectsymbol\protect\numberline{\csname the#1\endcsname}%
+        \fi%
+        #7}}%
+  \fi%
+  \@xsect{#5}}
+
+
+
+% css2005.sty: style file for CSS2005
+% Computer Security Symposium 2005 Symposium Committee
+%
+% css2005.sty (ver 0.9) : Jul 12, 2005
+% css2004.sty (ver 0.9) : Jul 27, 2004 
+% css2003.sty (ver 1.1) : Aug 28, 2003
+% css2003.sty (ver 1.0) : Aug 25, 2003
+% css2003.sty (ver 0.9)  : Aug  5, 2003
+%
+% From jarticle.sty 16-Mar-88
+% -------------------------------------------------------------------------
+%
+%↑を参考に柿崎が改変
+%
+%
+\def\maketitle{
+	\par
+	\begingroup
+	\def\thefootnote{\fnsymbol{footnote}}
+	\def\@makefnmark{\hbox to 0pt{$^{\@thefnmark}$\hss}}
+	\twocolumn[\@maketitle]\@thanks
+	\endgroup
+	\let\maketitle\relax
+	\let\@maketitle\relax
+	\gdef\@thanks{}\gdef\@author{}\gdef\@title{}\let\thanks\relax
+}
+%
+%%%%%  Format of Page 1 %%%%%
+%
+% Title
+%
+\def\@maketitle{
+  \newpage\null\vskip 1em%
+  \begin{center}%
+% Japanese
+    {\Large\gt \@jtitle \par}
+%	{\Large \bf \@jtitle \par}
+	\vskip 2ex
+ 	{\large\gt \begin{tabular}[t]{c}\@jauthor \end{tabular}\par}
+	\begin{tabular}[t]{c} \@jcontact \end{tabular}\par
+	\par \vskip 2ex
+  \end{center}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%	Definitions
+%
+% Japanese titles
+%
+\def\jtitle#1{\gdef\@jtitle{#1}}
+\def\@jtitle#{\mkt\@warning\jtitle}
+%
+% Japanese authors
+%
+\long\def\jauthor#1{\long\gdef\@jauthor{#1}}
+\def\@jauthor{\mkt@warning\jauthor}
+%
+%  Japanese contact address
+%
+\long\def\jcontact#1{\long\gdef\@jcontact{#1}}
+\def\@jcontact{\mkt@warning\jcontact}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+

@@ -1,20 +1,38 @@
 \documentclass[a4j,fleqn,10pt]{jsarticle}
+\usepackage{fancyhdr}
 \usepackage{ipsj}
+\usepackage[top=2.0cm,bottom=1.0cm,left=2.0cm,right=2.0cm,textheight=24.8cm,textwidth=17cm,twocolumn=true,columnsep=7mm, includefoot=true]{geometry}
 \usepackage{txfonts}
 \usepackage[symbol*,perpage]{footmisc}
 \usepackage[dvipdfm]{graphicx, color}
+
+\jtitle{\gtfmily\mdseries\upshape}
+\renewcommand{\thesection}{\arabic{section}.}
 
 %-------------------------------------------jtitle and jauthors information
 \begin{document}
 
 \jtitle{$B8m$j%Q%?!<%sKd9~$_7?%9%F%,%N%0%i%U%#$K4X$9$k0l9M;!(B}
-\jauthor{$B:w<j0lJ?(B\dag \and $BJ!2,5WM:(B \dag}
-\jcontact{\dag $B>>9>9)6H9bEy@lLg3X9;(B}
+\jauthor{$B8&5f<T(B:$B:w<j0lJ?(B \and $B;XF3650w(B:$BJ!2,5WM:(B }
+\jcontact{}
 
 \maketitle
 
+%-------------------------------------------header and footer
+\renewcommand{\headrulewidth}{0pt}
+
+\lhead{}
+\chead{$BJ?@.#2#5G/EY>pJs9)3X2JB46H8&5f:G=*Js9p2q(B 2014.1.31}
+\rhead{}
+
+\lfoot{}
+\cfoot{1-\thepage}
+\rfoot{}
+
+
 %-------------------------------------------document
-\section{$B$O$8$a$K(B}{
+\pagestyle{fancy}
+\startsection{$B$O$8$a$K(B}{
  $B%9%F%,%N%0%i%U%#$H$OHkL)%G!<%?$r%a%G%#%"%G!<%?$KKd$a9~$`5;=Q!$8&5fJ,Ln(B
 $B$NAm>N$G$"$k!%0lHLE*$JDL?.$G$OHkL)%G!<%?$r0E9f2=$7!$$=$l$rAj<j$K(B
 $BAw?.$9$k!%$7$+$7!$$3$NJ}K!$G$OHkL)%G!<%?$NFbMF$=$N$b$N$r1#JC$9$k$3$H$O$G(B
@@ -33,11 +51,6 @@
 $B$H$N%H%l!<%I%*%U4X78$r<B83E*$KL@$i$+$K$9$k!%$J$*!$2h<ANt2=$N;XI8$K$O(B
 SSIM\cite{Paper03}$B$rMQ$$$k!%(B
 }
-%-------------------------------------------etitle and eauthors information
-\footnotemark[0]
-\footnotetext[0]{\hspace*{-5.2mm}A study on steganography based on embedding error patterns}
-\footnotetext[0]{\hspace*{-6.5mm}\dag Ippei Nawate and Hisao Fukuoka}
-\footnotetext[0]{\hspace*{-6.5mm}\dag Matsue College of Technology}
 
 \section{$B8m$j%Q%?!<%sKd$a9~$_K!$N35MW(B}{
  $B%9%F%,%N%0%i%U%#5;=Q$K$*$1$kBeI=E*$JKd$a9~$_J}<0$N0l$D$G$"$k(BLSB$BK!$G$O!$(B
@@ -91,6 +104,16 @@ SIDBA$B2hA|(B30$BKg$r;HMQ$7!$Kd$a9~$_$K;HMQ$9$k%F%-%9%H>pJs$O$[$\Ey3NN($GH/(
  \item $B2hA|$rF~$lBX$($F!J#3!K$r7+$jJV$9!%(B
 \end{enumerate}
 
+\section{$B<B837k2L(B}
+$B8m$jN($N7WB,7k2L$HJ88%(B\cite{Paper01}$B$K$*$$$F<($5$l$F$$$k8m$jN($NM}O@E*(B
+$B2<8B6J@~$r?^(B\ref{fig:graph_error_rate}$B$K<($9!%$J$*!$8m$j%Q%?!<%sKd$a9~(B
+$B$_K!$K$*$1$k8m$jN($OKd$a9~$^$l$k%G!<%?$NFbMF$K$N$_0MB8$9$k$?$a!$2hA|A4(B
+$B$F$KBP$7$F8m$jN($OEy$7$$!%$^$?!$(BSSIM$B$N>e0L2<0L(B10$BKg$N2hA|$NKd$a9~$_N($KBP(B
+$B$9$k(BSSIM$B$NJQ2=$N%0%i%U$r?^(B\ref{fig:graph_ssim}$B$K<($9(B.
+
+\newgeometry{top=1.5cm,bottom=1cm,left=2.0cm,right=2.0cm,textheight=24.8cm,textwidth=17cm,twocolumn=true,columnsep=7mm,includeheadfoot=true,
+headsep=1.5cm}
+
 \begin{figure}[htbp]
  \begin{center}
   \includegraphics[width=8cm]{img/experiment01.png}
@@ -98,13 +121,6 @@ SIDBA$B2hA|(B30$BKg$r;HMQ$7!$Kd$a9~$_$K;HMQ$9$k%F%-%9%H>pJs$O$[$\Ey3NN($GH/(
  \caption{$B<B8335MW(B1}
  \label{fig:experiment_outline1}
 \end{figure}
-
-\section{$B<B837k2L(B}
-$B8m$jN($N7WB,7k2L$HJ88%(B\cite{Paper01}$B$K$*$$$F<($5$l$F$$$k8m$jN($NM}O@E*(B
-$B2<8B6J@~$r?^(B\ref{fig:graph_error_rate}$B$K<($9!%$J$*!$8m$j%Q%?!<%sKd$a9~(B
-$B$_K!$K$*$1$k8m$jN($OKd$a9~$^$l$k%G!<%?$NFbMF$K$N$_0MB8$9$k$?$a!$2hA|A4(B
-$B$F$KBP$7$F8m$jN($OEy$7$$!%$^$?!$(BSSIM$B$N>e0L2<0L(B10$BKg$N2hA|$NKd$a9~$_N($KBP(B
-$B$9$k(BSSIM$B$NJQ2=$N%0%i%U$r?^(B\ref{fig:graph_ssim}$B$K<($9(B.
 
 \begin{figure}[htbp]
  \begin{center}
@@ -122,7 +138,7 @@ SIDBA$B2hA|(B30$BKg$r;HMQ$7!$Kd$a9~$_$K;HMQ$9$k%F%-%9%H>pJs$O$[$\Ey3NN($GH/(
  \label{fig:graph_ssim}
 \end{figure}
 
-\newpage
+% \newpage
 
  $B?^(B\ref{fig:graph_error_rate}$B$h$j!$<B:]$K7WB,$7$?8m$jN($OM}O@E*2<8B6J@~(B
 $B$HF1MM$KKd$a9~$_N($,A}2C$9$k$K$H$H$b$K8m$jN($bA}2C$9$k$3$H$H$J$C$?!%$=$7(B
@@ -148,6 +164,8 @@ SIDBA$B2hA|(B30$BKg$r;HMQ$7!$Kd$a9~$_$K;HMQ$9$k%F%-%9%H>pJs$O$[$\Ey3NN($GH/(
  $B$^$?!$(BShalkwijk$B$N?t$(>e$2Id9f$rMQ$$$?8m$j%Q%?!<%s$X$NF0E*$JJQ49J}K!$rDs(B
 $B0F$9$k$3$H$G!$6/$$%a%b%j@)Ls2<$K$*$1$k8m$j%Q%?!<%s%F!<%V%k$N<BAuLdBj$KBP(B
 $B$9$k2r7h:v$r<($7$?!%(B
+
+\footnotemark[0]
 
 %-------------------------------------------references
 \bibliographystyle{junsrt}
