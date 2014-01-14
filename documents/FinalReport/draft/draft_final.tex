@@ -1,20 +1,43 @@
 \documentclass[a4j,fleqn,10pt]{jsarticle}
+\usepackage{fancyhdr}
 \usepackage{ipsj}
+\usepackage[top=1.5cm,bottom=1.4cm,left=2.3cm,right=2.3cm,textheight=24.8cm,textwidth=17cm,twocolumn=true,columnsep=7mm,includeheadfoot=true,footskip=1.4cm,headheight=0.4cm,
+headsep=0.1cm]{geometry}
 \usepackage{txfonts}
 \usepackage[symbol*,perpage]{footmisc}
 \usepackage[dvipdfm]{graphicx, color}
+
+\title{\gtfmily\mdseries\upshape $B%?%$%H%k(B}
+\renewcommand{\thesection}{\arabic{section}.}
+
+\setlength\floatsep{0pt}
+\setlength\textfloatsep{0pt}
+\setlength\intextsep{10.0pt}
+\setlength\abovecaptionskip{2.0pt}
 
 %-------------------------------------------jtitle and jauthors information
 \begin{document}
 
 \jtitle{$B8m$j%Q%?!<%sKd9~$_7?%9%F%,%N%0%i%U%#$K4X$9$k0l9M;!(B}
-\jauthor{$B:w<j!!0lJ?(B\dag \and $BJ!2,!!5WM:(B \dag}
-\jcontact{\dag $B>>9>9)6H9bEy@lLg3X9;(B}
+\jauthor{$B8&5f<T!':w<j!!0lJ?(B \and $B;XF3650w!'J!2,!!5WM:(B}
+\jcontact{}
 
 \maketitle
 
+%-------------------------------------------header and footer
+\renewcommand{\headrulewidth}{0pt}
+
+\lhead{}
+\chead{\fontsize{9}{11}\selectfont $BJ?@.#2#5G/EY>pJs9)3X2JB46H8&5f:G=*Js9p2q(B 2014.1.31}
+\rhead{}
+
+\lfoot{}
+\cfoot{\fontsize{9}{11}\selectfont (1-\thepage)}
+\rfoot{}
+
 %-------------------------------------------document
-\section{$B$O$8$a$K(B}{
+\pagestyle{fancy}
+\startsection{$B$O$8$a$K(B}{
  $B%9%F%,%N%0%i%U%#$H$OHkL)%G!<%?$r%a%G%#%"%G!<%?$KKd$a9~$`5;=Q!$8&5fJ,Ln(B
 $B$NAm>N$G$"$k!%0lHLE*$JDL?.$G$OHkL)%G!<%?$r0E9f2=$7!$$=$l$rAj<j$K(B
 $BAw?.$9$k!%$7$+$7!$$3$NJ}K!$G$OHkL)%G!<%?$NFbMF$=$N$b$N$r1#JC$9$k$3$H$O$G(B
@@ -22,7 +45,7 @@
 $B@-$rGS=|$G$-$J$$!%0lJ}%9%F%,%N%0%i%U%#$G$O%a%G%#%"%G!<%?Fb$KHkL)%G!<%?$rKd$a9~$`(B
 $B$?$a!$Bh#3<T$KHkL)%G!<%?$NB8:_$rG'CN$5$l$:$KDL?.$r9T$&$3$H$,$G$-$k!%(B
 
- $B%9%F%,%N%0%i%U%#$G$O4pK\E*$K%a%G%#%"%G!<%?$N>iD9@-$rMxMQ$7$FHkL)%G!<%?(B
+$B%9%F%,%N%0%i%U%#$G$O4pK\E*$K%a%G%#%"%G!<%?$N>iD9@-$rMxMQ$7$FHkL)%G!<%?(B
 $B$NKd$a9~$_$r9T$&!%$7$+$7!$Kd$a9~$`%G!<%?NL$,A}2C$9$k$[$I$K%a%G%#(B
 $B%"%G!<%?$N<A$ONt2=$9$k!%%9%F%,%N%0%i%U%#$G$O$=$N@-<A$+$i$G$-$k$@$1B?$/$N(B
 $B%G!<%?$NKd$a9~$_$,2DG=$G$"$k$3$H!$Kd$a9~$_$,<g4QE*!&5R4QE*$K(B
@@ -33,11 +56,6 @@
 $B$H$N%H%l!<%I%*%U4X78$r<B83E*$KL@$i$+$K$9$k!%$J$*!$2h<ANt2=$N;XI8$K$O(B
 SSIM\cite{Paper03}$B$rMQ$$$k!%(B
 }
-%-------------------------------------------etitle and eauthors information
-\footnotemark[0]
-\footnotetext[0]{\hspace*{-5.2mm}A study on steganography based on embedding error patterns}
-\footnotetext[0]{\hspace*{-6.5mm}\dag Ippei Nawate and Hisao Fukuoka}
-\footnotetext[0]{\hspace*{-6.5mm}\dag Matsue College of Technology}
 
 \section{$B8m$j%Q%?!<%sKd$a9~$_K!$N35MW(B}{
  $B%9%F%,%N%0%i%U%#5;=Q$K$*$1$kBeI=E*$JKd$a9~$_J}<0$N0l$D$G$"$k(BLSB$BK!$G$O!$(B
@@ -45,8 +63,7 @@ SSIM\cite{Paper03}$B$rMQ$$$k!%(B
 $BKd$a9~$_$r9T$&!%$3$N<jK!$O%"%k%4%j%:%`$,C1=c$G$"$jB?$/$N>pJs$rKd$a9~$`$3(B
 $B$H$,$G$-$k$,!$(BLSB$BJ?LL$K$*$1$k%S%C%H8m$j$,5/$-$d$9$$!%(B
 $B$3$3$G!$Kd$a9~$_$K;HMQ$7$?(BLSB$BJ?LL$N%S%C%HNsD9(Bn$B$KBP$7!$Kd$a9~$s$@%G!<%?$N(B
-$B%S%C%HNsD9(B
-$n_{embeded}$$B$H$N3d9g(B$\frac{n_{embeded}}{n}$$B$rKd$a9~$_N(!$JQ2=$7$?%S%C%H(B
+$B%S%C%HNsD9(B$n_{embeded}$$B$H$N3d9g(B$\frac{n_{embeded}}{n}$$B$rKd$a9~$_N(!$JQ2=$7$?%S%C%H(B
 $B?t(B$n_{inverted}$$B$H$N3d9g(B$\frac{n_{inverted}}{n}$$B$r8m$jN($H$$$&!%(B
  
  LSB$BK!$K$*$1$k8m$jN($N2~A1$rL\E*$H$7$?J}<0$H$7$F!$8m$j%Q%?!<%sKd$a9~$_K!(B
@@ -93,39 +110,65 @@ SIDBA$B2hA|(B30$BKg$r;HMQ$7!$Kd$a9~$_$K;HMQ$9$k%F%-%9%H>pJs$O$[$\Ey3NN($GH/(
 
 \begin{figure}[htbp]
  \begin{center}
-  \includegraphics[width=8cm]{img/experiment01.png}
+  \includegraphics[width=7cm]{img/experiment01.png}
  \end{center}
  \caption{$B<B83<j=g$N35MW(B}
  \label{fig:experiment_outline1}
 \end{figure}
 
-\section{$B<B837k2L(B}
+\newgeometry{top=1.5cm,bottom=1.4cm,left=2.3cm,right=2.3cm,textheight=24.8cm,textwidth=17cm,twocolumn=true,columnsep=7mm,includeheadfoot=true,footskip=1.4cm,headheight=0.4cm,
+headsep=0.7cm}
+
+\startsection{$B<B837k2L(B}
 $B8m$jN($N7WB,7k2L$HJ88%(B\cite{Paper01}$B$K$*$$$F<($5$l$F$$$k8m$jN($NM}O@E*(B
 $B2<8B6J@~$r?^(B\ref{fig:graph_error_rate}$B$K<($9!%$J$*!$8m$j%Q%?!<%sKd$a9~(B
 $B$_K!$K$*$1$k8m$jN($OKd$a9~$^$l$k%G!<%?$NFbMF$K$N$_0MB8$9$k$?$a!$A4$F$N2hA|(B
 $B$K$D$$$F7WB,$5$l$k8m$jN($OEy$7$$!%$^$?!$(BSSIM$B$N>e0L$H2<0L$=$l$>$l(B10$BKg$N2hA|$NKd$a9~$_N($KBP(B
-$B$9$k(BSSIM$B$NJQ2=$r?^(B\ref{fig:graph_ssim}$B$K<($9(B.
+$B$9$k(BSSIM$B$NJQ2=$r?^(B\ref{fig:graph_ssim}$B$K!$(BSSIM$B$N:G$b9b$$2hA|$r?^(B
+\ref{fig:highest_ssim}$B!$:G$bDc$$2hA|$r?^(B\ref{fig:lowest_ssim}$B$K<($9!%(B
 
 \begin{figure}[htbp]
- \begin{center}
-  \includegraphics[width=8cm]{img/graph_ssim02.png}
- \end{center}
+ \centering
+ \includegraphics[width=8cm]{img/graph_ssim02.png}
  \caption{$BKd$a9~$_N($KBP$9$k8m$jN($NJQ2=(B}
  \label{fig:graph_error_rate}
 \end{figure}
 
+\vspace{-10pt}
+
 \begin{figure}[htbp]
- \begin{center}
-  \includegraphics[width=8cm]{img/graph_ssim.png}
- \end{center}
+ \centering
+ \includegraphics[width=8cm]{img/graph_ssim.png}
  \caption{$BKd$a9~$_N($KBP$9$k(BSSIM$B$NJQ2=!J2hA|$4$H!K(B}
  \label{fig:graph_ssim}
 \end{figure}
 
-\newpage
+\vspace{-10pt}
+
+\begin{figure}[htbp]
+ \begin{center}
+ \begin{minipage}{0.45\hsize}
+  \centering
+  \includegraphics[width=3.5cm]{img/BRIDGE.png}
+  
+  \caption{SSIM$B$N:G$b9b$$2hA|(B}
+  \label{fig:highest_ssim}
+ \end{minipage}
+  \hspace{5pt}
+ \begin{minipage}{0.45\hsize}
+  \centering
+  \includegraphics[width=3.5cm]{img/parrots256.png}
+  \caption{SSIM$B$N:G$bDc$$2hA|(B}
+  \label{fig:lowest_ssim}
+ \end{minipage}
+ \end{center}
+\end{figure}
+
+\vspace{-10pt}
 
  $B?^(B\ref{fig:graph_error_rate}$B$h$j!$<B:]$K7WB,$7$?8m$jN($OM}O@E*2<8B6J@~(B
-$B$HF1MM!$Kd$a9~$_N($,A}2C$9$k$H$H$b$K8m$jN($bA}2C$7!$M}O@E*2<8B6J@~$KHf$Y6JN($NDc$$6J@~$rIA$$$?!%(B
+$B$HF1MM!$Kd$a9~$_N($,A}2C$9$k$H$H$b$K8m$jN($bA}2C$7!$M}O@E*2<8B6J@~$KHf$Y(B
+$B6JN($NDc$$6J@~$rIA$$$?!%(B
 
 $B?^(B\ref{fig:graph_ssim}$B$h$j$9$Y$F$NKd$a9~$_N($K$D$$$F(BSSIM$B$,(B0.99$B$r>e2s$C$F(B
 $B$$$k$3$H$,$o$+$k!%0lHLE*$K(BSSIM$B$O(B0.98$B0J>e$G2hA|4V$N8+J,$1$,$D$+$J$$$H8@$o(B
@@ -134,11 +177,12 @@ SIDBA$B2hA|(B30$BKg$r;HMQ$7!$Kd$a9~$_$K;HMQ$9$k%F%-%9%H>pJs$O$[$\Ey3NN($GH/(
 $B$_N(!$8m$jN($K$h$C$F2h<A$,Bg$-$/Nt2=$9$k$3$H$O$J$/!$%9%F%,%N%0%i%U%#5;=Q(B
 $B$N1#JC@-$KBg$-$/1F6A$rM?$($k$3$H$O$J$$$H$$$&$3$H$,$o$+$k!%$^$?!$(B
 $B?^(B\ref{fig:graph_ssim}$B$h$j2hA|$K$h$C$F(BSSIM$B$NJQ2=$N;EJ}$K0c$$$,$"$k$3$H(B
-$B$,$o$+$k!%$3$l$K$D$$$F!$<B83$K;HMQ$7$?2hA|$r<g4QE*$K4Q;!$7$?$H$3$m!$A4BN(B
-$BE*$K$6$i$6$i$7$?9S$$2hA|$[$I(BSSIM$B$NJQ2=$,>.$5$/!$0lJ}$G%3%s%H%i%9%H(B
-$B$NDc$$Bg$-$JNN0h$r4^$s$@2hA|$[$I(BSSIM$B$NJQ2=$,Bg$-$/$J$k$H$$$&798~$,8+$i$l$?!%(B
+$B$,$o$+$k!%$3$l$K$D$$$F!$<B83$K;HMQ$7$?2hA|$r<g4QE*$K4Q;!$7$?$H$3$m!$?^(B\ref{fig:highest_ssim}
+$B$N$h$&$KA4BNE*$K$6$i$6$i$7$?9S$$2hA|$[$I(BSSIM$B$NJQ2=$,>.$5$/!$0lJ}$G?^(B
+\ref{fig:lowest_ssim}$B$N$h$&$K%3%s%H%i%9%H$NDc$$Bg$-$JNN0h$r4^$s$@2hA|$[$I(BSSIM$B$NJQ2=$,Bg$-$/$J$k$H$$$&798~$,8+$i$l(B
+$B$?!%(B
 
-\section{$B$^$H$a(B}
+\section{$B$*$o$j$K(B}
  $BK\8&5f$G$O8m$j%Q%?!<%sKd$a9~$_K!$K$*$1$kKd$a9~$_N($H8m$jN(!$2h<ANt2=$H(B
 $B$N%H%l!<%I%*%U4X78$r<B83E*$KL@$i$+$K$7$?!%$3$l$K$h$C$F!$Kd$a9~$_$r(BLSB$BJ?LL$K(B
 $B8BDj$7$?>l9g!$Kd$a9~$_N(!$8m$jN($K$h$C$F2h<A$,Bg$-$/Nt2=$9$k$3$H$O$J$/!$%9%F%,%N%0%i(B
@@ -150,6 +194,6 @@ SIDBA$B2hA|(B30$BKg$r;HMQ$7!$Kd$a9~$_$K;HMQ$9$k%F%-%9%H>pJs$O$[$\Ey3NN($GH/(
 
 %-------------------------------------------references
 \bibliographystyle{junsrt}
-\bibliography{draft}
+\bibliography{draft_final}
 
 \end{document}

@@ -1,8 +1,5 @@
 \pagestyle{empty}
 
-\headheight=0cm
-\twocolumn
-
 \def\sectionsymbol{}
 \def\subsectionsymbol{}
 \def\subsubsectionsymbol{}
@@ -11,13 +8,13 @@
   \def\@sectsymbol{\sectionsymbol}%
   \@startsection{section}{1}{\z@}%
   {0.1ex \@plus 1ex \@minus .2ex}%
-  {0.1ex \@plus .0ex}%
+  {0.001ex \@plus .0ex}%
   {\reset@font\normalsize\bfseries\mathversion{bold}}}
 
 \def\section{%
   \def\@sectsymbol{\sectionsymbol}%
   \@startsection{section}{1}{\z@}%
-  {2.5ex \@plus 1ex \@minus .2ex}%
+  {3.5ex \@plus 1ex \@minus .2ex}%
   {0.1ex \@plus .0ex}%
   {\reset@font\normalsize\bfseries\mathversion{bold}}}
 %  {\reset@font\large\bfseries\mathversion{bold}}}
@@ -111,15 +108,14 @@
 % Title
 %
 \def\@maketitle{
-  \newpage\null\vskip 1em%
+  \newpage\null\vskip 0em%
   \begin{center}%
 % Japanese
     {\Large\gt \@jtitle \par}
 %	{\Large \bf \@jtitle \par}
-	\vskip 2ex
+	\vskip 1ex
  	{\large\gt \begin{tabular}[t]{c}\@jauthor \end{tabular}\par}
-	\begin{tabular}[t]{c} \@jcontact \end{tabular}\par
-	\par \vskip 2ex
+	\par \vskip -2ex
   \end{center}%
 }
 
