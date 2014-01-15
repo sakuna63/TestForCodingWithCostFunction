@@ -29,27 +29,7 @@ public class Main {
         Arrays.sort(files_img);
 
 
-        CoverData[] covers = new CoverData[files_img.length];
-        CoverData cover;
-        StegoData stego;
-        PrintWriter pw = getPrintWriter("./", "101", SHIFT_JIS);
-        pw.print(",");
-        for(int i=0; i<files_img.length; i++) {
-            pw.print(files_img[i].getName().replace(".bmp", "") + ",");
-        }
-        pw.println();
-
-        for(int length = 8; length <= 256; length++) {
-            pw.print(8.0 / length + ",");
-            for(int i=0; i<files_img.length; i++) {
-                cover = new CoverData(files_img[i]);
-                stego = createStegoData(cover, msg, length, 1);
-                pw.print(stego.ssim(cover) + ",");
-            }
-            pw.println();
-        }
-        pw.close();
-
+        fin(files);
 
 //        files = new File("./img/img_b/").listFiles();
 //        ImgUtil.labeling(files);
@@ -62,6 +42,46 @@ public class Main {
 //        xlsx_base_msg_length(files);
 
         IO.print("埋め込み終了");
+    }
+
+    private static void fin(File[] files) {
+        int[] ranges = {1,3,7,15};
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet = null;
+        Row row;
+        Data[][] data;
+        Data d;
+        int rowNum;
+        for (int range : ranges) {
+            rowNum = 0;
+            sheet = wb.createSheet(range + "");
+
+            row = sheet.createRow(rowNum);
+            for (int i=0; i<files.length; i++) {
+                row.createCell(i + 1).setCellValue(chopExt(files[i].getName()));
+            }
+
+            data = readData(files[0].getName());
+            for (int length = 8; length <= 256; length++) {
+                d = data[range][length-1];
+                row = sheet.createRow(++rowNum);
+                row.createCell(0).setCellValue(d.embeding_rate);
+                row.createCell(1).setCellValue(d.ssim);
+            }
+
+
+
+            for (int i = 1; i < files.length; i++) {
+                data = readData(files[i].getName());
+                rowNum = 0;
+                for(int length = 8; length <= 256; length ++) {
+                    d = data[range][length-1];
+                    sheet.getRow(++rowNum).createCell(i+1).setCellValue(d.ssim);
+                }
+            }
+            IO.println(range);
+        }
+        Excel.outputWorkbook(wb, Path.BASE_IMG_DATA_PATH, "fin.xlsx");
     }
 
     // csvファイルに計算結果を書き込む
