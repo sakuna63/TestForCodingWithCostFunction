@@ -8,10 +8,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 
-public class StegoData {
+public class StegoData extends CoverData{
 
-    public byte[] buff;
-    public int error_count = 0, buff_offset, error_code_length, num_target_bit_dec;
+    public int error_count = 0, error_code_length, num_target_bit_dec;
 
     public StegoData(CoverData cover, int error_code_length, int num_target_bit_dec) {
         this.buff = cover.buff.clone();

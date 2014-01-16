@@ -10,6 +10,8 @@ public class Img {
     public int buff_offset;
     public String file_name;
 
+    public Img() {}
+
     public Img(File file) {
         this.file_name = file.getName();
         File2Buff(file);

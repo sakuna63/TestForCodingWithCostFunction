@@ -28,61 +28,56 @@ public class Main {
 //        File[] files = new File(Path.ROW_DATA_PATH).listFiles();
 //        Arrays.sort(files_img);
 
+        files_img = new File[]{files_img[0]};
+        fin2(files_img, msg);
 
-//        fin(files);
+        IO.print("埋め込み終了");
+    }
 
-        String[] paths = new String[]{"eo1", "eo2", "eo3"};
-        int[] ranges = new int[]{2,4,8};
-        int[] m = new int[IMAGE_SIZE * IMAGE_SIZE];
-        int w = 1;
+    private static void fin2(File[] files, int[] msg) {
         CoverData c;
-        StegoData s;
+        StegoData s, s2;
+
         XSSFWorkbook wb = new XSSFWorkbook();
         XSSFSheet sheet;
         Row row;
         int rowNum = 0;
-        for(String p: paths) {
-            rowNum = 0;
-            sheet = wb.createSheet(p);
-            row = sheet.createRow(0);
 
-            for(int i =0; i<files_img.length; i++) {
-                row.createCell(i + 1).setCellValue(chopExt(files_img[i].getName()));
+        int[] ranges1 = new int[]{1, 3, 7};
+        int[] ranges2 = new int[]{2, 4, 8};
+        int[] m = new int[IMAGE_SIZE * IMAGE_SIZE];
+
+        for(int j =0 ; j<ranges1.length; j++) {
+            rowNum = 0;
+            sheet = wb.createSheet(ranges1[j] + "");
+            row = sheet.createRow(rowNum);
+
+            for(int i=0; i<files.length; i++) {
+                row.createCell(i + 1).setCellValue(chopExt(files[i].getName()));
             }
 
-            System.arraycopy(msg, IMAGE_SIZE * IMAGE_SIZE / 8 * w, m, 0, IMAGE_SIZE * IMAGE_SIZE / 8);
-            File[] files = new File(Path.IMG_PATH + p).listFiles();
+            System.arraycopy(msg, IMAGE_SIZE * IMAGE_SIZE / 8 * (j+1), m, 0, IMAGE_SIZE * IMAGE_SIZE / 8);
 
             c = new CoverData(files[0]);
+            s = c.embeding(msg, 8, ranges1[j]);
             for(int l=8; l<=256; l++) {
-                s = createStegoData(c, msg, l, ranges[w]);
+                s2 = s.embeding(m, l, ranges1[j] + 1);
                 row = sheet.createRow(++rowNum);
                 row.createCell(0).setCellValue(8.0 / l);
-                row.createCell(1).setCellValue(s.ssim(c));
+                row.createCell(1).setCellValue(s2.ssim(c));
             }
 
             for(int i=1; i<files.length; i++) {
                 c = new CoverData(files[i]);
+                s = c.embeding(msg, 8, ranges1[j]);
                 rowNum = 0;
                 for(int l=8; l<=256; l++) {
-                    s = createStegoData(c, msg, l, ranges[w]);
-                    sheet.getRow(++rowNum).createCell(i+1).setCellValue(s.ssim(c));
+                    s2 = s.embeding(m, l, ranges1[j] + 1);
+                    sheet.getRow(++rowNum).createCell(i+1).setCellValue(s2.ssim(c));
                 }
             }
-            w++;
         }
-
-//        files = new File("./img/img_b/").listFiles();
-//        ImgUtil.labeling(files);
-//        ImgUtil.labeling1(files);
-
-
-//        xlsx_based_enb_rate(files);
-//        xlsx_based_range(files);
-//        xlsx_based_img(files);
-//        xlsx_base_msg_length(files);
-
-        IO.print("埋め込み終了");
+        Excel.outputWorkbook(wb, "./", "test");
     }
 
     private static void fin(File[] files) {
