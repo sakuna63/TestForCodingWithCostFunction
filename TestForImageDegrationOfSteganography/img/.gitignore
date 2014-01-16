@@ -1,4 +1,3 @@
-!_origin/*bmp
+*.bmp
 !origin/*.bmp
-!origin2/*bmp
-!origin3/*bmp
+!origin_unused/*.bmp

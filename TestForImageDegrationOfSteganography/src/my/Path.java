@@ -1,8 +1,8 @@
 package my;
 
 public class Path {
-    private static final String IMG_PATH = "./img/";
-    private static final String DATA_PATH = "./data/";
+    public static final String IMG_PATH = "./img/";
+    public static final String DATA_PATH = "./data/";
     public static final String ORIGIN_IMG_PATH = IMG_PATH + "origin/";
     public static final String EMBEDED_IMG_PATH = IMG_PATH + "embeded_img/";
     public static final String EMBEDED_IMG_MSG_PATH = IMG_PATH + "embeded_img_msg/";

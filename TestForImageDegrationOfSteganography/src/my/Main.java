@@ -25,11 +25,52 @@ public class Main {
     public static void main(String[] args) {
         int[] msg = createMsg(0, IMAGE_SIZE * IMAGE_SIZE);
         File[] files_img = new File(Path.ORIGIN_IMG_PATH).listFiles();
-        File[] files = new File(Path.ROW_DATA_PATH).listFiles();
-        Arrays.sort(files_img);
+//        File[] files = new File(Path.ROW_DATA_PATH).listFiles();
+//        Arrays.sort(files_img);
 
 
-        fin(files);
+//        fin(files);
+
+        String[] paths = new String[]{"eo1", "eo2", "eo3"};
+        int[] ranges = new int[]{2,4,8};
+        int[] m = new int[IMAGE_SIZE * IMAGE_SIZE];
+        int w = 1;
+        CoverData c;
+        StegoData s;
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet;
+        Row row;
+        int rowNum = 0;
+        for(String p: paths) {
+            rowNum = 0;
+            sheet = wb.createSheet(p);
+            row = sheet.createRow(0);
+
+            for(int i =0; i<files_img.length; i++) {
+                row.createCell(i + 1).setCellValue(chopExt(files_img[i].getName()));
+            }
+
+            System.arraycopy(msg, IMAGE_SIZE * IMAGE_SIZE / 8 * w, m, 0, IMAGE_SIZE * IMAGE_SIZE / 8);
+            File[] files = new File(Path.IMG_PATH + p).listFiles();
+
+            c = new CoverData(files[0]);
+            for(int l=8; l<=256; l++) {
+                s = createStegoData(c, msg, l, ranges[w]);
+                row = sheet.createRow(++rowNum);
+                row.createCell(0).setCellValue(8.0 / l);
+                row.createCell(1).setCellValue(s.ssim(c));
+            }
+
+            for(int i=1; i<files.length; i++) {
+                c = new CoverData(files[i]);
+                rowNum = 0;
+                for(int l=8; l<=256; l++) {
+                    s = createStegoData(c, msg, l, ranges[w]);
+                    sheet.getRow(++rowNum).createCell(i+1).setCellValue(s.ssim(c));
+                }
+            }
+            w++;
+        }
 
 //        files = new File("./img/img_b/").listFiles();
 //        ImgUtil.labeling(files);
