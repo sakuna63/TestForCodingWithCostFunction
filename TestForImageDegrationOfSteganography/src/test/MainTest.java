@@ -37,7 +37,7 @@ public class MainTest extends TestCase{
         compMsg.setAccessible(true);
 
         main = new Main();
-        msg = (int[]) createMsg.invoke(main, new Object[]{0, cover.calcBuffWithoutOffset().length});
+        msg = (int[]) createMsg.invoke(main, new Object[]{0, cover.sliceBuffWithoutOffset().length});
     }
 
     public static Test suite(){

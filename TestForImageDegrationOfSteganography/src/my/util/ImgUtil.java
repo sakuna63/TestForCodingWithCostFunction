@@ -21,9 +21,9 @@ public class ImgUtil {
 
 
 
-        for (int j =0; j < files.length; j++) {
-            if(files[j].getName().equals("brickhouse256.bmp7.bmp")) continue;
-            img = new Img(files[j]);
+        for (File f : files) {
+            if(f.getName().equals("brickhouse256.bmp7.bmp")) continue;
+            img = new Img(f);
             if(sheet == null || !sheet.getSheetName().equals(img.file_name.split("\\.")[0])) {
                 rownum = 0;
                 sheet = wb.createSheet(img.file_name.split("\\.")[0]);
@@ -42,7 +42,6 @@ public class ImgUtil {
                     // buffがラベル付をスべき場所（白）でかつまだラベル付けされていない場合(buff_c = 0)
                     if (buff[y][x] == -1 && buff_c[y][x] == 0) {
                         label_val++;
-                        cou = 0;
                         search(buff, buff_c, x, y, label_val);
                     }
                 }
@@ -60,7 +59,7 @@ public class ImgUtil {
             int max = max(counts);
             int min = label_val == 0 ? 0 : min(counts);
             double ave = label_val == 0 ? 0 : Calc.average(counts);
-            double dep = label_val == 0 ? 0 : Calc.despersion(counts);
+            double dep = label_val == 0 ? 0 : Calc.dispersion(counts);
 
             setCellsDouble(sheet.createRow(++rownum), img.file_name, new double[]{max, min, ave, dep, label_val});
         }
@@ -84,9 +83,9 @@ public class ImgUtil {
         Arrays.sort(files);
 
         StringBuilder builder = new StringBuilder(",");
-        StringBuilder builder1 = new StringBuilder(",");
         for(File f : files) {
-            builder.append(f.getName() + ",");
+            builder.append(f.getName());
+            builder.append(",");
         }
         Excel.setCellsString(maxsheet.createRow(0), builder.toString());
         Excel.setCellsString(minsheet.createRow(0), builder.toString());
@@ -125,7 +124,6 @@ public class ImgUtil {
                         // buffがラベル付をスべき場所（白）でかつまだラベル付けされていない場合(buff_c = 0)
                         if (buff[y][x] == -1 && buff_c[y][x] == 0) {
                             label_val++;
-                            cou = 0;
                             search(buff, buff_c, x, y, label_val);
                         }
                     }
@@ -143,7 +141,7 @@ public class ImgUtil {
                 int max = max(counts);
                 int min = label_val == 0 ? 0 : min(counts);
                 double ave = label_val == 0 ? 0 : Calc.average(counts);
-                double dep = label_val == 0 ? 0 : Calc.despersion(counts);
+                double dep = label_val == 0 ? 0 : Calc.dispersion(counts);
 
                 maxsheet.getRow(i + 1).createCell(j + 1).setCellValue(max);
                 minsheet.getRow(i + 1).createCell(j + 1).setCellValue(min);
@@ -154,16 +152,10 @@ public class ImgUtil {
         }
 
         int num = files[0].listFiles().length;
-        String formula;
         maxsheet.createRow(num + 3).createCell(0).setCellValue("最大値");
         maxsheet.getRow(num + 3).createCell(1).setCellFormula("MAX(B2:B" + (num + 1) + ")");
-//        for(int i = 0; i<files.length; i++) {
-//            formula = String.format("MAX(%c2:%c%d)", 66 + i, 66 + i, num + 1); // A = 66
-//            maxsheet.getRow(num + 3).createCell(i + 1).setCellFormula(formula);
-//        }
         setCellsDouble(maxsheet.createRow(num + 4), "SSIM", new double[]{0.996489345, 0.998214126, 0.996448282, 0.999420996, 0.998781024, 0.998444163, 0.995857457, 0.998627797, 0.996700629, 0.997481098, 0.996846235, 0.999004726, 0.998642206, 0.997134099, 0.995772864, 0.996806564, 0.996507547, 0.995688226, 0.995740667, 0.997288, 0.998617902});
         
-//        maxsheet.getRow(num + 4).createCell(files.length + 1).setCellFormula("");
         Excel.outputWorkbook(wb, "./", "bi30-100.xlsx");
     }
 
@@ -210,10 +202,7 @@ public class ImgUtil {
         return buff_sq;
     }
 
-    static int cou;
-
     private static void search(byte[][] buff, int[][] buff_c, int x, int y, int val) {
-//        IO.println(cou++);
         if (inside(x, y) && buff[y][x] == -1 && buff_c[y][x] == 0) {
 
             buff_c[y][x] = val;

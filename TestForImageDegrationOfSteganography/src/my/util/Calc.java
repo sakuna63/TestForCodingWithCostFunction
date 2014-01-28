@@ -96,7 +96,7 @@ public class Calc {
         return sum / nums.length;
     }
     
-    public static double despersion(byte[] nums) {
+    public static double dispersion(byte[] nums) {
         double sum_m2 = 0.0;
         double ave = average(nums);
         
@@ -108,7 +108,7 @@ public class Calc {
         return sum_m2 / nums.length - ave * ave;
     }
 
-    public static double despersion(int[] nums) {
+    public static double dispersion(int[] nums) {
         double sum_m2 = 0.0;
         double ave = average(nums);
 
@@ -121,18 +121,18 @@ public class Calc {
     }
 
     public static double standardDivision(byte[] nums) {
-        return Math.sqrt(despersion(nums));
+        return Math.sqrt(dispersion(nums));
     }
     
-    public static double convariance(byte[] nums1, byte[] nums2) {
+    public static double covariance(byte[] nums1, byte[] nums2) {
         if (nums1.length != nums2.length) return -100.0;
 
         double sum = 0.0;
         double ave1 = average(nums1), ave2 = average(nums2);
         
         for (int i=0; i < nums1.length; i++) {
-            int n1 = nums1[0] & 0x000000ff;
-            int n2 = nums2[0] & 0x000000ff;
+            int n1 = nums1[i] & 0x000000ff;
+            int n2 = nums2[i] & 0x000000ff;
             sum += (n1 - ave1) * (n2 - ave2);
         }
         
@@ -140,10 +140,10 @@ public class Calc {
     }
 
     public static double correlationCoefficient(byte[] nums1, byte[] nums2) {
-        return convariance(nums1, nums2) / (standardDivision(nums1) * standardDivision(nums2));
+        return covariance(nums1, nums2) / (standardDivision(nums1) * standardDivision(nums2));
     }
 
-    public static double splitedAreaDespersion(byte[] img_buff, int img_size, int area_size) {
+    public static double splitAreaDispersion(byte[] img_buff, int img_size, int area_size) {
         boolean isAvailableCalculating = img_buff.length % (area_size * area_size) != 0 && img_size % area_size != 0;
         if (isAvailableCalculating) return -1;
 
@@ -162,12 +162,12 @@ public class Calc {
             }
         }
 
-        double[] area_despersion = new double[area_num];
+        double[] area_dispersion = new double[area_num];
         for (int i=0; i < area_num; i++) {
-            area_despersion[i] = despersion(areas[i]);
+            area_dispersion[i] = dispersion(areas[i]);
         }
 
-        return average(area_despersion);
+        return average(area_dispersion);
     }
 
     /**
@@ -182,7 +182,6 @@ public class Calc {
         if(img1.length != img2.length)
             return -1;
         
-        double psnr = 0;
         double mse = 0;
         
         for(int i=offset; i<img1.length; i++) {
@@ -190,9 +189,8 @@ public class Calc {
         }
         
         mse /= (img1.length - offset);
-        psnr = mse == 0.0 ? -1 : 10 * Math.log10( Math.pow(255, 2) / mse );
-        
-        return psnr;
+
+        return mse == 0.0 ? -1 : 10 * Math.log10( Math.pow(255, 2) / mse );
     }
     
     /**
@@ -238,7 +236,7 @@ public class Calc {
         /**
          * フィルター作成処理
          */
-        double distance = 0;
+        double distance;
         int center = (opt.filter_width/2);
         double total = 0;
         double sigma_sq=opt.sigma_gauss*opt.sigma_gauss;
@@ -332,10 +330,10 @@ public class Calc {
         double[] ssim = new double[image_dimension];
         double suma=0;
         for (pointer =0; pointer<image_dimension; pointer++) {
-            ssim[pointer] = (double) (( 2*mu1_mu2[pointer] + opt.C1)* (2*sigma12[pointer] + opt.C2)) / ((mu1_sq[pointer]+mu2_sq[pointer] + opt.C1) * (sigma1_sq[pointer] + sigma2_sq[pointer] + opt.C2));
+            ssim[pointer] = (( 2*mu1_mu2[pointer] + opt.C1)* (2*sigma12[pointer] + opt.C2)) / ((mu1_sq[pointer]+mu2_sq[pointer] + opt.C1) * (sigma1_sq[pointer] + sigma2_sq[pointer] + opt.C2));
             suma = suma + ssim[pointer];
         }   
         
-        return (double) suma / image_dimension;
+        return suma / image_dimension;
     }
 }

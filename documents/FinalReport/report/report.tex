@@ -1,0 +1,236 @@
+\documentclass[a4j,fleqn,10pt]{jsarticle}
+\usepackage[top=5cm,hmargin=3cm,textheight=24.8cm,textwidth=17cm]{geometry}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{txfonts}
+\usepackage[symbol*,perpage]{footmisc}
+\usepackage[dvipdfm]{graphicx, color}
+
+%------------------------------------------- define sections
+\titlelabel{\thetitle. \quad}
+
+%-------------------------------------------jtitle and jauthors information
+\begin{document}
+{\begin{titlepage}
+\begin{center}
+
+ \newlength{\titleLineSpace}
+ \setlength{\titleLineSpace}{20pt}
+
+ \newlength{\marginBetweenTitle}
+ \setlength{\marginBetweenTitle}{10pt}
+
+ \newlength{\marginUnderTitle}
+ \setlength{\marginUnderTitle}{65pt}
+ 
+ \newlength{\marginUnderAuthor}
+ \setlength{\marginUnderAuthor}{65pt}
+ 
+ \newlength{\marginUnderCollege}
+ \setlength{\marginUnderCollege}{75pt}
+
+ \newlength{\marginUnderAbstract}
+ \setlength{\marginUnderAbstract}{20pt}
+ 
+ {\LARGE 誤りパターン埋込み型ステガノグラフィに \\
+ \vspace{\titleLineSpace} 関する一考察} \\
+
+ \vspace{\marginBetweenTitle}
+ 
+ {\LARGE\bf A study on steganography \\ \vspace{\titleLineSpace} based on embedding error patterns}
+
+ \vspace{\marginUnderTitle}
+
+ {\large 研究者 : 索手　一平 \hspace{80pt} 指導教員 : 福岡　久雄} \\
+ {\large Researcher : Ippei NAWATE \hspace{40pt} Supervisor : Hisao Fukuoka}
+
+ \vspace{\marginUnderAuthor} 
+
+ {\large 松江工業高等専門学校情報工学科} \\
+ {\large Department of Information Engineering, Matsue College of
+ Technology}
+
+ \vspace{\marginUnderCollege}
+
+ {\large\bf Abstract} \\
+
+ \vspace{-11pt}
+ 
+ \begin{flushleft}
+  \begin{spacing}{1.3}
+   {\fontsize{11}{12}\selectfont 本論文は，テキスト情報をグレースケール画像に埋め込むステガ
+   ノグラフィ技術を対象とする．データの埋め込み手 法の一つである誤りパター
+   ン埋め込み法は，テキスト情報を冗長かつハミング重みの小さいビット列（こ
+   れを誤りパターンという）に変換し，画像中のLSB平面との排他的論理和でLSB
+   平面を置き換える．本研究では，誤りパターン埋め込み法における画質劣化等に
+   ついて考察する．また，Shalkwijkの数え上げ符号を用いた誤りパターンの動的
+   生成方法を提案する．}
+  \end{spacing}
+ \end{flushleft}
+ 
+ \vspace{\marginUnderAbstract}
+ 
+ {\large\bf Keywords} \\
+ {\normalsize ステガノグラフィ，セキュリティ，誤りパターン}
+
+\end{center} 
+\end{titlepage}}
+
+\newgeometry{top=3cm,hmargin=2.3cm,textheight=24.8cm,textwidth=17cm}
+
+\tableofcontents
+\newpage
+
+\newgeometry{top=3cm,hmargin=2.3cm,textheight=24.8cm,textwidth=17cm,twocolumn=true}
+
+\section{はじめに}{
+・通信危ういよ
+・ステガノグラフィで解決できるよ
+・本研究ではこういうのを
+・カバー、ステゴの説明
+}
+
+\section{ステガノグラフィとは}
+ステガノグラフィとは秘密データを別の媒体に埋め込む技術，研究の総称である．
+ステガノグラフィを用いた通信は図\ref{figstego_com}のように，送信者がステ
+ゴデータを生成することで秘密データの存在を隠蔽し，それを送信するという形
+で行われる．このとき，受信者は送信されたステゴデータから埋め込まれた情報
+を抽出することで情報を受け取る．
+
+このような通信モデルは，第三者が送信内容を確認することができたとしても，
+秘密データの存在を認識されないことから，第三者に対し一般的な通信であるか
+のように振る舞うことができる．つまり，秘密データの通信行為そのものを隠蔽
+することができるため通信妨害を受けない安全な通信を実現できる．
+
+\begin{figure}[htbp]
+ \begin{center}
+  \includegraphics[width=7cm]{img/lsb_emb.png}
+ \end{center}
+ \caption{LSB法での埋め込み}
+ \label{fig:lsb_emb}
+\end{figure}
+
+ステガノグラフィではこのような性質から以下の特性が強く求められる．
+
+\begin{enumerate}
+ \item できるだけ多くの情報の埋め込みが可能であること
+ \item 埋め込みが主観的・客観的に認知されないこと
+\end{enumerate}
+
+埋め込み媒体にはには主にメディアデータが用いられる．ほとんどのメディア
+データはいくらかの冗長性を有している．本実験で扱う画像の場合，画像中の各
+ピクセルにおけるLSBなどの下位ビットが挙げられる．特にLSBは各ピクセルに対
+する情報量が少なく，変化させたとしても画像の視覚的変化はほとんど発生しな
+い．この特性を利用した埋め込み手法としてLSB法が提案されており，ステガノ
+グラフィにおける最も一般的な手法として知られている．
+
+この手法は画像の各ピクセルにおけるLSBのみを埋め込み対象とすることで，埋
+め込みによる画像の劣化を抑えた手法である．また，埋め込みはLSBに対し
+しテキスト情報のバイナリ表現をそのまま置き換えることで行われる．
+（図\ref{fig:lsb_emb}）
+
+\begin{figure}[htbp]
+ \begin{center}
+  \includegraphics[width=7cm]{img/lsb_emb.png}
+ \end{center}
+ \caption{LSB法での埋め込み}
+ \label{fig:lsb_emb}
+\end{figure}
+
+また，埋め込み時にLSBをテキスト情報のバイナリ表現でそのまま置換する
+ことから，LSBのビット列をそのまま抽出することでテキスト情報を画像から抽
+出することができる．（図\ref{fig:lsb_ext}）
+
+\begin{figure}[htbp]
+ \begin{center}
+  \includegraphics[width=7cm]{img/lsb_ext.png}
+ \end{center}
+ \caption{LSB法での抽出}
+ \label{fig:lsb_ext}
+\end{figure}
+
+品質が劣化
+することはほとんどない．LSB法では埋め込みをLSBに対して行うことから画像の視覚的変化が少ない．単純なアルゴリズムである
+ため，高い埋め込み率を確保できているが，一方で誤り率が高く，画質劣化，ス
+テガナライザーによる検出性の増加などの問題を引き起こす可能性がある．
+
+}
+
+\section{誤りパターン埋め込み法} {
+LSB法をもとに，より低い誤り率での埋め込みを実現した手法として誤りパター
+ン埋め込み法が知られている．この手法では後述する変換方式によりテキスト情
+報のバイナリ表現をより長くハミング重みの小さいビット列である誤りパターンに変
+換し，カバービット列とそのまま置換するのではなく，カバービット列と誤りパ
+ターンとの排他的論理和でカバービット列を置き換える（図\ref{fig:error_pt_emb}）．
+
+\begin{figure}[htbp]
+ \begin{center}
+  \includegraphics[width=7cm]{img/error_pt_emb.png}
+ \end{center}
+ \caption{誤りパターン埋め込み法での埋め込み}
+ \label{fig:error_pt_emb}
+\end{figure}
+
+またテキスト情報の抽出時は，カバービット列とステゴビット列との排他的論理
+和をとることで誤りパターンを抽出し，その誤りパターンを逆変換することでテ
+キスト情報を抽出することができる（図\ref{fig:error_pt_ext}）．
+
+\begin{figure}[htbp]
+ \begin{center}
+  \includegraphics[width=7cm]{img/error_pt_ext.png}
+ \end{center}
+ \caption{誤りパターン埋め込み法での抽出}
+ \label{fig:error_pt_ext}
+\end{figure}
+
+排他的論理和を用いることから，埋め込み時には誤りパターンにおける「１」の
+に対応するビットのみがカバービット列の中で置き換わるため，ビット誤りを大
+きく抑えることができる．一方でより長いビット列を使用することから必然的に
+埋め込み率は減少する．また，テキスト情報の抽出時にカバービット列とステゴビット列の比較
+を用いることから，抽出時にステゴデータとともにカバーデータを必要とする．
+
+}
+
+\section{誤りパターンの生成方法} {
+
+一般的な生成方法は表\ref{tab:error_pt_table}に示すような各文字のバイナリ表現と誤りパターンとの
+対応を示した誤りパターンテーブルを事前に用意し，埋め込み時，抽出時
+に参照する形で相互の変換を行うというものである．参照するだけという単純なアルゴリズムであ
+り，高速な相互変換を行うことができるが，一方でテキスト情報の各文字のバイ
+ナリ表現を$m$ビットとしたときに$2^m$個の要素を対応付けたテーブルを用意す
+る必要があることから，強いメモリ制約下での実装が困難であるという問題点が
+あげられる．
+
+\begin{table}[h]
+ \centering
+ \caption{誤りパターンテーブル}
+ \label{tab:error_pt_table}
+ \begin{tabular}{|c|c|} \hline
+  埋め込みデータ & 誤りパターン \\ \hline
+  000 & 0000000 \\ \hline
+  001 & 0000001 \\ \hline
+  010 & 0000010 \\ \hline
+  011 & 0000100 \\ \hline
+  100 & 0001000 \\ \hline
+  101 & 0010000 \\ \hline
+  110 & 0100000 \\ \hline
+  111 & 1000000 \\ \hline
+ \end{tabular}
+\end{table}
+
+}
+
+\section{}
+
+
+
+%-------------------------------------------header and footer
+
+%-------------------------------------------document
+
+%-------------------------------------------references
+\bibliographystyle{junsrt}
+\bibliography{draft_final}
+
+\end{document}
+

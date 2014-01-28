@@ -59,9 +59,9 @@ public class Main {
             System.arraycopy(msg, IMAGE_SIZE * IMAGE_SIZE / 8 * (j+1), m, 0, IMAGE_SIZE * IMAGE_SIZE / 8);
 
             c = new CoverData(files[0]);
-            s = c.embeding(msg, 8, ranges1[j]);
+            s = c.embedding(msg, 8, ranges1[j]);
             for(int l=8; l<=256; l++) {
-                s2 = s.embeding(m, l, ranges1[j] + 1);
+                s2 = s.embedding(m, l, ranges1[j] + 1);
                 row = sheet.createRow(++rowNum);
                 row.createCell(0).setCellValue(8.0 / l);
                 row.createCell(1).setCellValue(s2.ssim(c));
@@ -69,10 +69,10 @@ public class Main {
 
             for(int i=1; i<files.length; i++) {
                 c = new CoverData(files[i]);
-                s = c.embeding(msg, 8, ranges1[j]);
+                s = c.embedding(msg, 8, ranges1[j]);
                 rowNum = 0;
                 for(int l=8; l<=256; l++) {
-                    s2 = s.embeding(m, l, ranges1[j] + 1);
+                    s2 = s.embedding(m, l, ranges1[j] + 1);
                     sheet.getRow(++rowNum).createCell(i+1).setCellValue(s2.ssim(c));
                 }
             }
@@ -101,7 +101,7 @@ public class Main {
             for (int length = 8; length <= 256; length++) {
                 d = data[range][length-1];
                 row = sheet.createRow(++rowNum);
-                row.createCell(0).setCellValue(d.embeding_rate);
+                row.createCell(0).setCellValue(d.embedding_rate);
                 row.createCell(1).setCellValue(d.ssim);
             }
 
@@ -123,8 +123,8 @@ public class Main {
     // csvファイルに計算結果を書き込む
     private static void writeData(int[] msg, CoverData[] covers) {
         StegoData stego;
-        int msg_length, embeding_limit_per_bit = covers[0].calcBuffWithoutOffset().length;
-        double embeding_rate;
+        int msg_length, embedding_limit_per_bit = covers[0].sliceBuffWithoutOffset().length;
+        double embedding_rate;
 
         for (CoverData c : covers) {
             PrintWriter pw = getPrintWriter("./data/row_data/", c.file_name.replace(".bmp", ""), UTF_8);
@@ -136,14 +136,14 @@ public class Main {
                     pw.print(stego.psnr(c) + ",");
                     pw.print(stego.ssim(c) + ",");
                     pw.print(stego.getErrorRate() + ",");
-                    pw.print(embeding_limit_per_bit + ",");
+                    pw.print(embedding_limit_per_bit + ",");
 
-                    embeding_rate = (double) 8 / length * 100;
-                    msg_length = embeding_limit_per_bit * Util.calcTargetBits(range).length / length;
+                    embedding_rate = (double) 8 / length * 100;
+                    msg_length = embedding_limit_per_bit * Util.calcTargetBits(range).length / length;
 
-                    pw.print(embeding_limit_per_bit + ",");
+                    pw.print(embedding_limit_per_bit + ",");
                     pw.print(msg_length + ",");
-                    pw.println(embeding_rate);
+                    pw.println(embedding_rate);
                 }
             }
             pw.close();
@@ -252,7 +252,7 @@ public class Main {
                     d = data[range][length-1];
 
                     Excel.setCellsDouble(sheet.createRow(++rowNum), new double[]{
-                            d.embeding_rate,
+                            d.embedding_rate,
                             range,
                             d.psnr,
                             d.ssim,
@@ -288,7 +288,7 @@ public class Main {
 
                     Excel.setCellsDouble(sheet.createRow(++rowNum), new double[]{
                             range,
-                            d.embeding_rate,
+                            d.embedding_rate,
                             d.psnr,
                             d.ssim,
                             d.error_rate
@@ -347,7 +347,7 @@ public class Main {
             pw.println("メッセージ長, SSIM(1bit), SSIM(2bit), SSIMの差");
 
             for (int length = 8; length <= 128; length++) {
-                int msg_length = covers[0].calcBuffWithoutOffset().length / length;
+                int msg_length = covers[0].sliceBuffWithoutOffset().length / length;
                 StegoData stego1 = createStegoData(c, msg, msg_length, length, 1);
                 StegoData stego2 = createStegoData(c, msg, msg_length, length * 2, 3);
                 double ssim1 = stego1.ssim(c), ssim2 = stego2.ssim(c);
@@ -359,7 +359,7 @@ public class Main {
         }
 //        for (int length : lengths) {
         for (int length = 8; length <= 128; length++) {
-            int msg_length = covers[0].calcBuffWithoutOffset().length / length;
+            int msg_length = covers[0].sliceBuffWithoutOffset().length / length;
             PrintWriter pw = getPrintWriter(Path.BASE_MSG_LENGTH_DATA_PATH, "" + msg_length, SHIFT_JIS);
             pw.println("メッセージ長, ファイル名, 誤り率(1bit), PSNR(1bit), SSIM(1bit), 誤り率(2bit), PSNR(2bit), SSIM(2bit), 誤り率(3bit), PSNR(3bit), SSIM(3bit)");
             for (CoverData c : covers) {
@@ -399,7 +399,7 @@ public class Main {
             for (int length = 8; length <= 256; length++) {
                 d = data[range][length-1];
                 row = sheet.createRow(++rowNum);
-                row.createCell(0).setCellValue(d.embeding_rate);
+                row.createCell(0).setCellValue(d.embedding_rate);
                 row.createCell(1).setCellValue(d.ssim);
             }
 
@@ -449,7 +449,7 @@ public class Main {
 
         IO.println("run %s codeLength:%d range:%d", cover.file_name, code_length, range);
 
-        StegoData stego = msg_length == -1 ? cover.embeding(msg, code_length, range) : cover.embeding(msg, msg_length, code_length, range);
+        StegoData stego = msg_length == -1 ? cover.embedding(msg, code_length, range) : cover.embedding(msg, msg_length, code_length, range);
         String name_dir = (msg_length == -1 ? Path.EMBEDED_IMG_PATH : Path.EMBEDED_IMG_MSG_PATH) + cover.file_name.replace(".bmp", "") + "/";
         String name_file = code_length + "_" + range + "_" + cover.file_name;
         stego.output(name_dir, name_file);

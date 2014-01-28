@@ -5,10 +5,10 @@ public class Util {
 	private static final int MASK = 0x0000000000000000000000000000000000000000000000000000000000000001;
 	
 	public static int error2Message(int[] error, int error_length) {
-		int haming_weight = hamingWeight(error);
-		int	offset = calcOffset(error_length, haming_weight);
+		int hamming_weight = hamingWeight(error);
+		int	offset = calcOffset(error_length, hamming_weight);
 		
-		return antiCountableCode(error_length, haming_weight, error) + offset;
+		return antiCountableCode(error_length, hamming_weight, error) + offset;
 	}
 	
 	public static int[] message2Error(int msg, int error_length) {
@@ -182,7 +182,7 @@ public class Util {
 
     public static int[] calcTargetBits(int num) {
         char[] binary = Integer.toBinaryString(num).toCharArray();
-        int count_target = countItemNumInTraget(binary, '1');
+        int count_target = countItemNumInTarget(binary, '1');
         int[] targets = new int[count_target];
         int index_t = 0;
         for (int i=binary.length-1; i >=0; i--) {
@@ -194,7 +194,7 @@ public class Util {
         return targets;
     }
 
-    private static int countItemNumInTraget(char[] target, char item) {
+    private static int countItemNumInTarget(char[] target, char item) {
         int count = 0;
         for(char c : target) {
             count += c == item ? 1 : 0;

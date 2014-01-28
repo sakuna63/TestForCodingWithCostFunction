@@ -26,7 +26,7 @@ public class Excel {
         String name = filePath + fileName;
         File dir = new File(filePath);
         File xlsx = new File(filePath + fileName);
-        FileOutputStream fio = null;
+        FileOutputStream fio;
         try {
             if(!dir.exists()) dir.mkdir();
             if(xlsx.exists()) xlsx.delete();
@@ -35,7 +35,7 @@ public class Excel {
             IO.println("出力しました");
             fio.close();
         }catch (IOException e) {
-
+            e.printStackTrace();
         }
     }
 
