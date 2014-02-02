@@ -1,10 +1,10 @@
-This is pTeX, Version 3.141592-p3.1.11 (utf8.euc) (Web2C 7.5.4) (format=platex 2011.7.24)  27 JAN 2014 15:38
+This is pTeX, Version 3.141592-p3.1.11 (utf8.euc) (Web2C 7.5.4) (format=platex 2011.7.24)  2 FEB 2014 13:56
 **report
 (./report.tex
 pLaTeX2e <2006/11/10>+0 (based on LaTeX2e <2003/12/01> patch level 0)
-(/Applications/UpTex.app/teTeX/share/texmf/ptex/platex/jsclasses/jsarticle.cls
+(/Applications/UpTeX.app/teTeX/share/texmf/ptex/platex/jsclasses/jsarticle.cls
 Document Class: jsarticle 2009/02/22 okumura
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/base/fleqn.clo
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/base/fleqn.clo
 File: fleqn.clo 1998/08/17 v1.1c Standard LaTeX option (flush left equations)
 \mathindent=\dimen118
 )
@@ -44,19 +44,19 @@ LaTeX Info: Redefining \LaTeXe on input line 1753.
 (/Users/sakuna63/Library/texmf/tex/latex/geometry.sty
 Package: geometry 2010/09/12 v5.6 Page Geometry
 
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/graphics/keyval.sty
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
 \KV@toks@=\toks15
 )
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/generic/oberdiek/ifpdf.sty
 Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
 Package ifpdf Info: pdfTeX in PDF mode is not detected.
 )
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/generic/oberdiek/ifvtex.sty
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/generic/oberdiek/ifvtex.sty
 Package: ifvtex 2010/03/01 v1.5 Switches for detecting VTeX and its modes (HO)
 Package ifvtex Info: VTeX not detected.
 )
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/generic/ifxetex/ifxetex.sty
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/generic/ifxetex/ifxetex.sty
 Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 )
 \Gm@cnth=\count90
@@ -76,26 +76,22 @@ Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 Package geometry Warning: Over-specification in `h'-direction.
     `width' (483.69684pt) is ignored.
 
-
-Package geometry Warning: `bmargin' results in NEGATIVE (-2.84537pt).
-    `height' or `tmargin' should be shortened in length.
-
+) (/Users/sakuna63/Library/texmf/tex/latex/setspace/setspace.sty
+Package: setspace 2011/12/19 v6.7a set line spacing
 )
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/setspace/setspace.sty
-Package: setspace 2000/12/01 6.7 Contributed and Supported LaTeX2e package
-Package: `setspace' 6.7 <2000/12/01>
-)
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/titlesec/titlesec.sty
-Package: titlesec 2005/01/22 v2.6 Sectioning titles
+(/Users/sakuna63/Library/texmf/tex/latex/titlesec/titlesec.sty
+Package: titlesec 2011/12/15 v2.10.0 Sectioning titles
 \ttl@box=\box42
 \beforetitleunit=\skip43
 \aftertitleunit=\skip44
 \ttl@plus=\dimen130
 \ttl@minus=\dimen131
+\ttl@toksa=\toks17
 \titlewidth=\dimen132
 \titlewidthlast=\dimen133
 \titlewidthfirst=\dimen134
-) (/Applications/UpTex.app/teTeX/share/texmf/tex/latex/txfonts/txfonts.sty
+)
+(/Applications/UpTeX.app/teTeX/share/texmf/tex/latex/txfonts/txfonts.sty
 Package: txfonts 2008/01/22 v3.2.1
 LaTeX Font Info:    Redeclaring symbol font `operators' on input line 21.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
@@ -172,9 +168,9 @@ LaTeX Font Info:    Overwriting symbol font `largesymbolsA' in version `bold'
 (Font)                  U/txexa/m/n --> U/txexa/bx/n on input line 129.
 LaTeX Info: Redefining \not on input line 1043.
 )
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/footmisc/footmisc.sty
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/footmisc/footmisc.sty
 Package: footmisc 2004/05/02 v5.3c a miscellany of footnote facilities
-\FN@temptoken=\toks17
+\FN@temptoken=\toks18
 \footnotemargin=\dimen135
 \c@pp@next@reset=\count93
 
@@ -195,85 +191,93 @@ Package footmisc Info: Declaring symbol style lamport* on input line 816.
 Package footmisc Info: Declaring symbol style lamport*-robust on input line 825
 .
 )
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/graphics/graphicx.sty
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
 
-(/Applications/UpTex.app/teTeX/share/texmf/tex/latex/graphics/dvipdfmx-contrib-
+(/Applications/UpTeX.app/teTeX/share/texmf/tex/latex/graphics/dvipdfmx-contrib-
 latex/graphics.sty
 Package: graphics 2001/07/07 v1.0n Standard LaTeX Graphics (DPC,SPQR)
 
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/graphics/trig.sty
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/graphics/trig.sty
 Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 )
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/graphics/graphics.cfg
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/graphics/graphics.cfg
 File: graphics.cfg 2005/02/03 v1.3 graphics configuration of teTeX/TeXLive
 )
 Package graphics Info: Driver file: dvipdfm.def on input line 81.
- (/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/dvipdfm/dvipdfm.def
+ (/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/dvipdfm/dvipdfm.def
 File: dvipdfm.def 1999/9/6 vx.x Driver-dependant file
 ))
 \Gin@req@height=\dimen136
 \Gin@req@width=\dimen137
 )
-(/Applications/UpTex.app/teTeX/share/texmf/tex/latex/graphics/dvipdfmx-contrib-
+(/Applications/UpTeX.app/teTeX/share/texmf/tex/latex/graphics/dvipdfmx-contrib-
 latex/color.sty
 Package: color 1999/02/16 v1.0i Standard LaTeX Color (DPC)
 
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/graphics/color.cfg
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/graphics/color.cfg
 File: color.cfg 2005/02/03 v1.3 color configuration of teTeX/TeXLive
 )
 Package color Info: Driver file: dvipdfm.def on input line 126.
 
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/graphics/dvipsnam.def
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/graphics/dvipsnam.def
 File: dvipsnam.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
-)) (./report.aux)
+)) (./tcpascaltrig.sty
+Package: tcpascaltrig 
+\tcpc@n=\count95
+\tcpc@m=\count96
+\tcpc@j=\count97
+\tcpc@k=\count98
+) (./report.aux
+
+LaTeX Warning: Label `tab:despertion_vs_ssim' multiply defined.
+
+)
 \openout1 = `report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/txmi/m/it on input line 13.
-LaTeX Font Info:    Try loading font information for OML+txmi on input line 13.
+LaTeX Font Info:    Checking defaults for OML/txmi/m/it on input line 14.
+LaTeX Font Info:    Try loading font information for OML+txmi on input line 14.
 
-
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/txfonts/omltxmi.fd
+ (/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/omltxmi.fd
 File: omltxmi.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for OMS/txsy/m/n on input line 13.
-LaTeX Font Info:    Try loading font information for OMS+txsy on input line 13.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMS/txsy/m/n on input line 14.
+LaTeX Font Info:    Try loading font information for OMS+txsy on input line 14.
 
-
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/txfonts/omstxsy.fd
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/omstxsy.fd
 File: omstxsy.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for OMX/txex/m/n on input line 13.
-LaTeX Font Info:    Try loading font information for OMX+txex on input line 13.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMX/txex/m/n on input line 14.
+LaTeX Font Info:    Try loading font information for OMX+txex on input line 14.
 
 
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/txfonts/omxtxex.fd
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/omxtxex.fd
 File: omxtxex.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for U/txexa/m/n on input line 13.
-LaTeX Font Info:    Try loading font information for U+txexa on input line 13.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for U/txexa/m/n on input line 14.
+LaTeX Font Info:    Try loading font information for U+txexa on input line 14.
 
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/txfonts/utxexa.fd
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/utxexa.fd
 File: utxexa.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for JY1/mc/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for JT1/mc/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for JY1/mc/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for JT1/mc/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
 
 (I search kanjifont definition file: . . ) (I search font definition file: . .
 . . . . . )
-LaTeX Font Info:    Try loading font information for OT1+txr on input line 13.
+LaTeX Font Info:    Try loading font information for OT1+txr on input line 14.
 
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/txfonts/ot1txr.fd
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/ot1txr.fd
 File: ot1txr.fd 2000/12/15 v3.1
 )
 *geometry* driver: auto-detecting
@@ -285,14 +289,14 @@ File: ot1txr.fd 2000/12/15 v3.1
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
 * modes: 
 * h-part:(L,W,R)=(85.35826pt, 426.79135pt, 85.35826pt)
-* v-part:(T,H,B)=(142.26378pt, 705.62843pt, -2.84537pt)
+* v-part:(T,H,B)=(113.81102pt, 705.62843pt, 25.60739pt)
 * \paperwidth=597.50787pt
 * \paperheight=845.04684pt
 * \textwidth=426.79135pt
 * \textheight=705.62843pt
 * \oddsidemargin=13.08827pt
 * \evensidemargin=13.08827pt
-* \topmargin=31.53587pt
+* \topmargin=3.08311pt
 * \headheight=20.0pt
 * \headsep=18.45792pt
 * \topskip=10.0pt
@@ -317,33 +321,33 @@ File: ot1txr.fd 2000/12/15 v3.1
 \marginUnderCollege=\skip49
 \marginUnderAbstract=\skip50
 LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
-(Font)              scaled to size 16.60605pt on input line 35.
+(Font)              scaled to size 16.60605pt on input line 36.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 16.60605pt on input line 35.
+(Font)              scaled to size 16.60605pt on input line 36.
 LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <17.28> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 40.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 41.
 LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
-(Font)              scaled to size 16.60605pt on input line 40.
+(Font)              scaled to size 16.60605pt on input line 41.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <17.28> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 40.
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 41.
 LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
-(Font)              scaled to size 16.60605pt on input line 40.
+(Font)              scaled to size 16.60605pt on input line 41.
 LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
-(Font)              scaled to size 11.53198pt on input line 44.
+(Font)              scaled to size 11.53198pt on input line 45.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 11.53198pt on input line 44.
+(Font)              scaled to size 11.53198pt on input line 45.
 LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <12> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 55.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 56.
 LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
-(Font)              scaled to size 11.53198pt on input line 55.
+(Font)              scaled to size 11.53198pt on input line 56.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <12> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 55.
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 56.
 LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
-(Font)              scaled to size 11.53198pt on input line 55.
+(Font)              scaled to size 11.53198pt on input line 56.
 LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
-(Font)              scaled to size 10.57098pt on input line 61.
+(Font)              scaled to size 10.57098pt on input line 62.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 10.57098pt on input line 61.
+(Font)              scaled to size 10.57098pt on input line 62.
 [1
 
 ]
@@ -384,20 +388,20 @@ Package geometry Warning: Over-specification in `h'-direction.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
-(Font)              scaled to size 13.83836pt on input line 81.
+(Font)              scaled to size 13.83836pt on input line 82.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 13.83836pt on input line 81.
+(Font)              scaled to size 13.83836pt on input line 82.
 LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
-(Font)              scaled to size 13.83836pt on input line 81.
+(Font)              scaled to size 13.83836pt on input line 82.
 LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
-(Font)              scaled to size 13.83836pt on input line 81.
-LaTeX Font Info:    Try loading font information for OT1+txss on input line 81.
+(Font)              scaled to size 13.83836pt on input line 82.
+LaTeX Font Info:    Try loading font information for OT1+txss on input line 82.
 
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/txfonts/ot1txss.fd
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/ot1txss.fd
 File: ot1txss.fd 2000/12/15 v3.1
 )
 LaTeX Font Info:    Font shape `OT1/txss/m/n' will be
-(Font)              scaled to size 13.67995pt on input line 81.
+(Font)              scaled to size 13.67995pt on input line 82.
 
 (./report.toc
 LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
@@ -406,11 +410,35 @@ LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
 (Font)              scaled to size 9.60999pt on input line 1.
 LaTeX Font Info:    Font shape `OT1/txss/m/n' will be
 (Font)              scaled to size 9.49997pt on input line 1.
+LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
+(Font)              scaled to size 6.72699pt on input line 5.
+LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
+(Font)              scaled to size 4.805pt on input line 5.
+LaTeX Font Info:    Try loading font information for U+txmia on input line 5.
+
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/utxmia.fd
+File: utxmia.fd 2000/12/15 v3.1
 )
+LaTeX Font Info:    Try loading font information for U+txsya on input line 5.
+
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/utxsya.fd
+File: utxsya.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    Try loading font information for U+txsyb on input line 5.
+
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/utxsyb.fd
+File: utxsyb.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    Try loading font information for U+txsyc on input line 5.
+
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/utxsyc.fd
+File: utxsyc.fd 2000/12/15 v3.1
+))
 \tf@toc=\write3
 \openout3 = `report.toc'.
 
- [1
+
+[1
 
 ]
 
@@ -449,61 +477,107 @@ Package geometry Warning: Over-specification in `h'-direction.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-File: img/lsb_emb.png Graphic file (type bmp)
-<img/lsb_emb.png>
+File: img/stego_com_model.png Graphic file (type bmp)
+<img/stego_com_model.png>
 LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
-(Font)              scaled to size 8.64899pt on input line 97.
+(Font)              scaled to size 8.64899pt on input line 122.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 8.64899pt on input line 97.
+(Font)              scaled to size 8.64899pt on input line 122.
+File: img/lsb_emb.png Graphic file (type bmp)
+ <img/lsb_emb.png>
 File: img/lsb_ext.png Graphic file (type bmp)
- <img/lsb_ext.png>
-File: img/error_pt_emb.png Graphic file (type bmp)
- <img/error_pt_emb.png>
-File: img/error_pt_ext.png Graphic file (type bmp)
-
-<img/error_pt_ext.png>
-LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 6.72699pt on input line 161.
-LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 4.805pt on input line 161.
-LaTeX Font Info:    Try loading font information for U+txmia on input line 161.
-
-
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/txfonts/utxmia.fd
-File: utxmia.fd 2000/12/15 v3.1
-)
-LaTeX Font Info:    Try loading font information for U+txsya on input line 161.
-
-
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/txfonts/utxsya.fd
-File: utxsya.fd 2000/12/15 v3.1
-)
-LaTeX Font Info:    Try loading font information for U+txsyb on input line 161.
-
-
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/txfonts/utxsyb.fd
-File: utxsyb.fd 2000/12/15 v3.1
-)
-LaTeX Font Info:    Try loading font information for U+txsyc on input line 161.
-
-
-(/Applications/UpTex.app/teTeX/share/texmf-dist/tex/latex/txfonts/utxsyc.fd
-File: utxsyc.fd 2000/12/15 v3.1
-)
-[2
+ <img/lsb_ext.png> [2
 
 ]
-No file report.bbl.
-[3
+File: img/error_pt_emb.png Graphic file (type bmp)
 
-] (./report.aux) ) 
+<img/error_pt_emb.png>
+File: img/error_pt_ext.png Graphic file (type bmp)
+ <img/error_pt_ext.png>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[3]
+LaTeX Font Info:    Font shape `OT1/txss/m/n' will be
+(Font)              scaled to size 11.39996pt on input line 260.
+LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
+(Font)              scaled to size 5.76599pt on input line 303.
+LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <10> not available
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 322.
+LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
+(Font)              scaled to size 9.60999pt on input line 322.
+LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <10> not available
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 322.
+LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
+(Font)              scaled to size 9.60999pt on input line 322.
+
+
+LaTeX Warning: Reference `fig:same_ix' on page 4 undefined on input line 322.
+
+[4]
+
+LaTeX Warning: Reference `fig:expe' on page 5 undefined on input line 355.
+
+File: img/lsb_emb.png Graphic file (type bmp)
+<img/lsb_emb.png>
+File: img/lsb_emb.png Graphic file (type bmp)
+ <img/lsb_emb.png>
+File: img/lsb_emb.png Graphic file (type bmp)
+ <img/lsb_emb.png>
+LaTeX Font Info:    Try loading font information for OT1+txtt on input line 424
+.
+
+(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/ot1txtt.fd
+File: ot1txtt.fd 2000/12/15 v3.1
+)
+[5]
+File: img/lsb_emb.png Graphic file (type bmp)
+ <img/lsb_emb.png>
+File: img/lsb_emb.png Graphic file (type bmp)
+ <img/lsb_emb.png>
+File: img/lsb_emb.png Graphic file (type bmp)
+ <img/lsb_emb.png>
+File: img/lsb_emb.png Graphic file (type bmp)
+ <img/lsb_emb.png>
+[6]
+File: img/lsb_emb.png Graphic file (type bmp)
+ <img/lsb_emb.png>
+
+LaTeX Warning: Reference `enum:split1' on page 7 undefined on input line 520.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+LaTeX Warning: Reference `tab:areasize_vs_ssim' on page 7 undefined on input li
+ne 566.
+
+(./report.bbl
+LaTeX Font Info:    Font shape `JT1/gt/m/it' in size <10> not available
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 7.
+LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
+(Font)              scaled to size 9.60999pt on input line 7.
+LaTeX Font Info:    Font shape `JY1/gt/m/it' in size <10> not available
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 7.
+LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
+(Font)              scaled to size 9.60999pt on input line 7.
+ [7]) [8
+
+] (./report.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
 Here is how much of TeX's memory you used:
- 2560 strings out of 94681
- 34372 string characters out of 1174371
- 85089 words of memory out of 1500000
- 5800 multiletter control sequences out of 10000+50000
- 26438 words of font info for 95 fonts, out of 1200000 for 2000
+ 2703 strings out of 94681
+ 36379 string characters out of 1174371
+ 89669 words of memory out of 1500000
+ 5935 multiletter control sequences out of 10000+50000
+ 34114 words of font info for 118 fonts, out of 1200000 for 2000
  571 hyphenation exceptions out of 8191
- 25i,8n,31p,187b,428s stack positions out of 5000i,500n,6000p,200000b,5000s
+ 25i,9n,31p,204b,540s stack positions out of 5000i,500n,6000p,200000b,5000s
 
-Output written on report.dvi (4 pages, 10040 bytes).
+Output written on report.dvi (9 pages, 49284 bytes).

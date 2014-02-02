@@ -1,0 +1,48 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tcpascaltrig}
+
+%% 変数定義
+%(整数値)
+\newcount\tcpc@n
+\newcount\tcpc@m
+\newcount\tcpc@j
+\newcount\tcpc@k
+%(配列型)
+%\tcpc@v/*
+
+\def\tcpc@nameedef#1{%
+  \expandafter\edef\csname#1\endcsname
+}
+
+%%(公開:マクロ) \pascaltrigfont - 出力に用いるフォント指定
+\newcommand*{\pascaltrigfont}{\small}
+%%(公開:マクロ) \pascaltrigcellwidth - 1つの数の出力の幅
+\newcommand*{\pascaltrigcellwidth}{2.5em}
+
+%%(公開) \pascaltrig{整数n}
+% 第n行(0から)までのパスカルの三角形を出力する.
+\newcommand*{\pascaltrig}[1]{%
+  \begin{center}\pascaltrigfont
+    \tcpc@n=-1
+    \@whilenum \tcpc@n<#1\relax \do{%
+      \advance\tcpc@n 1
+      \tcpc@nameedef{tcpc@v/\the\tcpc@n}{1}%
+      \tcpc@m=\tcpc@n \advance\tcpc@m -1
+      \@whilenum \tcpc@m>0 \do{%
+        \tcpc@j=\tcpc@m \advance\tcpc@j -1
+        \tcpc@k=\@nameuse{tcpc@v/\the\tcpc@j}%
+        \advance\tcpc@k\@nameuse{tcpc@v/\the\tcpc@m}%
+        \tcpc@nameedef{tcpc@v/\the\tcpc@m}{\the\tcpc@k}%
+        \tcpc@m=\tcpc@j
+      }%
+      \tcpc@m=-1
+      \@whilenum \tcpc@m<\tcpc@n \do{%
+        \advance\tcpc@m 1
+        \makebox[\pascaltrigcellwidth]{\@nameuse{tcpc@v/\the\tcpc@m}}
+      }%
+      \par
+    }%
+  \end{center}%
+}
+
+\endinput
