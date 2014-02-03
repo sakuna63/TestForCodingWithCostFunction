@@ -1,4 +1,5 @@
 \documentclass[a4j,fleqn,10pt]{jsarticle}
+\usepackage{ipsj}
 \usepackage[top=4cm,hmargin=3cm,textheight=24.8cm,textwidth=17cm]{geometry}
 \usepackage{setspace}
 \usepackage{titlesec}
@@ -8,7 +9,8 @@
 \usepackage{tcpascaltrig}
 
 %------------------------------------------- define sections
-\titlelabel{\thetitle. \quad}
+% \titlelabel{\thetitle. \quad}
+\renewcommand{\thesection}{\arabic{section}.}
 
 %-------------------------------------------jtitle and jauthors information
 \begin{document}
@@ -82,7 +84,7 @@
 \tableofcontents
 \newpage
 
-\newgeometry{top=3cm,hmargin=2.3cm,textheight=24.8cm,textwidth=17cm,twocolumn=true}
+\newgeometry{top=3cm,bottom=3cm,hmargin=2.3cm,textheight=24.8cm,textwidth=17cm,twocolumn=true}
 
 \section{はじめに}{
 近年のネットワーク通信の増加に伴い，安全に通信を行うための技術の重要性が
@@ -117,7 +119,7 @@
 
 \begin{figure}[htbp]
  \begin{center}
-  \includegraphics[width=7cm]{img/stego_com_model.png}
+  \includegraphics[width=7.5cm]{img/stego_com_model.png}
  \end{center}
  \caption{ステガノグラフィの通信モデル}
  \label{fig:stego_com}
@@ -135,43 +137,51 @@
  \item 埋め込みが主観的・客観的に認知されない
 \end{enumerate}
 
-埋め込み媒体には主にメディアデータが用いられる．ほとんどのメディア
-データはいくらかの冗長性を有している．本実験で扱う画像のでは画像中の各
-ピクセルにおけるLSBなどの下位ビットが挙げられる．これらのビットは値を変
-化させたとしても視覚的変化はほとんど発生しない．特にLSBは各ピクセルに対する情
-報量が最も少ないことから，ほとんどの場合に埋め込みに利用される．実際，こ
-の特性を利用した埋め込み手法としてLSB法が提案されており，ステガノグラフィ
-における最も一般的な手法として知られている．
+本論文では後者についてステガノグラフィにおける隠蔽性（以下隠蔽性）と呼ぶ．
 
-この手法は画像の各ピクセルにおけるLSBのみを埋め込み対象とすることで，埋
-め込みによる画像の劣化を抑えた手法である．また，埋め込みはLSBに対し
-しテキスト情報のバイナリ表現をそのまま置き換えることで行われる．
+埋め込み媒体には主にメディアデータが用いられる．ほとんどのメディア
+データはいくらかの冗長性を有しており，これらを利用した埋め込みが主流であ
+る．本実験で扱う画像，この冗長性とは画像中の各ピクセルにおけるLSBなどの
+下位ビットである．これらのビットはそれぞれが持つ情報量が少なく，変化させ
+たとしても視覚的変化がほとんど発生しない．特にLSBは情報量が最も少ないこ
+とから，埋め込み利用されることが多い．実際，この特性を利用した埋め込み手
+法としてLSB法が提案されており，ステガノグラフィにおける最も一般的な手法
+として知られている．
+
+LSB法とは画像の各ピクセルにおけるLSBのみを埋め込み対象とすることで，埋
+め込みによる画像の劣化を抑えた手法である．また，埋め込みはカバーデータ中
+のLSBに対しテキスト情報のバイナリ表現をそのまま置き換えることで行われる．
 （図\ref{fig:lsb_emb}）
 
 \begin{figure}[htbp]
  \begin{center}
-  \includegraphics[width=7cm]{img/lsb_emb.png}
+  \includegraphics[width=7.5cm]{img/lsb_emb.png}
  \end{center}
  \caption{LSB法での埋め込み}
  \label{fig:lsb_emb}
 \end{figure}
 
-また，埋め込み時にLSBをテキスト情報のバイナリ表現でそのまま置換する
+埋め込み時にLSBをテキスト情報のバイナリ表現でそのまま置換する
 ことから，LSBのビット列をそのまま抽出することでテキスト情報を画像から抽
 出することができる．（図\ref{fig:lsb_ext}）
 
 \begin{figure}[htbp]
  \begin{center}
-  \includegraphics[width=7cm]{img/lsb_ext.png}
+  \includegraphics[width=7.5cm]{img/lsb_ext.png}
  \end{center}
  \caption{LSB法での抽出}
  \label{fig:lsb_ext}
 \end{figure}
 
-単純なアルゴリズムであるため実装が容易である反面，埋め込み後のビット誤り
+単純なアルゴリズムであり実装が容易である反面，埋め込み後のビット誤り
 が起きやすく，図\ref{fig:lsb_emb}のようにすべてのビットが反転してしまう
-場合もある．このため，ステゴデータの画質が劣化しやすく，同時に隠蔽性に問
+場合もある．このため，ステゴデータの画質が劣化しやすく，視覚的なに隠蔽性に問
 題を引き起こす可能性がある．
+
+このような問題から，これまでLSB法におけるビット誤りを改善した手法が多数
+提案されてきた．それらの中でも本論文で扱う誤りパターン埋め込み法はビット
+誤りを大きく改善した手法として知られている．これについて章
+\ref{sec:way_error_pattern}にて述べる．
 
 本論文ではカバーデータのうち，埋め込みに対象となるビット列をカバービット
 列，ステゴデータ中のデータが埋め込まれたビット列をステゴビット列と呼ぶ．
@@ -179,14 +189,15 @@
 $n$，$m$，ステゴビット列中の誤りビットの数を$d$として，$\frac{m}{n}$を埋
 め込み率，$\frac{d}{n}$を誤り率とする．
 
-これらは埋め込み手法の評価指標である．埋め込み率はいかに効率よくテキスト
-情報を埋め込めているかを表しており，高いほどに多くの情報を埋め込むことが
-できる．また，誤り率は埋め込みによるビット誤りの発生頻度を表しており，一
-般的に誤り率が高いほど画質が劣化する．LSB法では埋め込み率は常に100％であ
-るが，一方でビット誤りが起きやすいことから誤り率が高い．
+埋め込み率，誤り率は埋め込み評価指標として利用される．埋め込み率はいかに
+効率よくテキスト情報を埋め込めているかを表しており，高いほどに多くの情報
+を埋め込むことができる．また，誤り率は埋め込みによるビット誤りの発生頻度
+を表しており，一般的に誤り率が高いほど画質が劣化する傾向にある．LSB法で
+は埋め込み率は常に100％であるが，一方でビット誤りが起きやすいことから誤
+り率が高い．
 }
 
-\section{誤りパターン埋め込み法} {
+\section{誤りパターン埋め込み法\label{sec:way_error_pattern}} {
 LSB法をもとに，より低い誤り率での埋め込みを実現した手法として誤りパター
 ン埋め込み法が知られている．この手法では後述する変換方式（章
 \ref{sec:create_error_pt}）を用いてテキスト情報のバイナリ表現を，より長くハミ
@@ -196,7 +207,7 @@ LSB法をもとに，より低い誤り率での埋め込みを実現した手法として誤りパター
 
 \begin{figure}[htbp]
  \begin{center}
-  \includegraphics[width=7cm]{img/error_pt_emb.png}
+  \includegraphics[width=7.5cm]{img/error_pt_emb.png}
  \end{center}
  \caption{誤りパターン埋め込み法での埋め込み}
  \label{fig:error_pt_emb}
@@ -208,7 +219,7 @@ LSB法をもとに，より低い誤り率での埋め込みを実現した手法として誤りパター
 
 \begin{figure}[htbp]
  \begin{center}
-  \includegraphics[width=7cm]{img/error_pt_ext.png}
+  \includegraphics[width=7.5cm]{img/error_pt_ext.png}
  \end{center}
  \caption{誤りパターン埋め込み法での抽出}
  \label{fig:error_pt_ext}
@@ -219,22 +230,24 @@ LSB法をもとに，より低い誤り率での埋め込みを実現した手法として誤りパター
 きる．一方でより長いビット列を使用することから必然的に埋め込み率は減少す
 る．
 
-また，この手法はにおける誤り率はカバービット列との比較を行う一方で埋め込
-まれるテキスト情報の内容にのみ依存する．テキスト情報の抽出時にカバービッ
-ト列とステゴビット列の比較を用いることから，抽出時にステゴデータとともに
-カバーデータを必要とする．
-
+この手法ではステゴビット列中で発生するビット誤りは誤りパターンのハ
+ミング重みと同じであり，誤りパターンの発生は埋め込まれるテキスト情報に依
+存することから，誤り率はテキスト情報の内容に依存する．そのため同じテキス
+ト情報を埋め込みデータとした場合，カバーデータによらず誤り率は等しい．ま
+た，テキスト情報の抽出時にカバービット列とステゴビット列の比較を用いるこ
+とから，この手法は埋め込みデータの抽出にカバーデータを必要とする手法であ
+る．
 }
 
 \section{誤りパターンの生成方法\label{sec:create_error_pt}} {
 
-一般的な生成方法として表\ref{tab:error_pt_table}に示すような各文字のバイ
-ナリ表現と誤りパターンとの対応を示した誤りパターンテーブルを利用した方法
-がある．この方法では埋め込み時，抽出時にテーブルを参照することで相互の変
-換う.しかし，この方法ではテキスト情報の各文字のバイナリ表現を$m$ビットとした
-とき，$2^m$個の要素を対応付けたテーブルを用意する必要があることから，文
-字サイズの増加に伴ってテーブルサイズが指数的に増加し，膨大な大きさとなる
-ため強いメモリ制約下での実装が困難であるという問題点があげられる．
+一般的な生成方法として各文字のバイナリ表現と誤りパターンとの対応を示した
+誤りパターンテーブルを利用した方法がある．誤りパターンテーブルの例を表
+\ref{tab:error_pt_table}に示す．この方法では埋め込み時，抽出時にテーブル
+を参照することで相互の変換を行う.単純な方式であり実装が容易である一方で，
+テキスト情報の各文字のバイナリ表現を$m$ビットとしたとき，$2^m$個の誤りパ
+ターンを対応付ける必要があることから，テーブルが膨大となりやすく強い
+メモリ制約下での実装が困難であるという問題点がある．
 
 \begin{table}[h]
  \centering
@@ -254,9 +267,9 @@ LSB法をもとに，より低い誤り率での埋め込みを実現した手法として誤りパター
 \end{table}
 
 この問題の解決策として文献\cite{Paper01}では，コスト付き符号化を用いた誤
-りパターンテーブルの効率的実装方法が提案されている．
-本論文では誤りパターンテーブルを用いない方法として，Shalkwijkの数え上げ
-符号\cite{Paper02}を用いた誤りパターンの動的生成手法を提案する．
+りパターンテーブルの効率的実装方法が提案されている．本論文では誤りパター
+ンテーブルを用いない方法として，Shalkwijkの数え上げ符号\cite{Paper02}を
+用いた誤りパターンの動的生成手法を提案する．
 
 \subsection{Slalkwijkの数え上げ符号\label{sec:shalkwijk}}
 Shalkwijkの数え上げ符号とは長さ$n$，ハミング重み$k$の２進数列xの
@@ -275,55 +288,59 @@ Shalkwijkの数え上げ符号とは長さ$n$，ハミング重み$k$の２進数列x
  \label{fig:pascale}
 \end{figure}
 
-またパスカルの三角形を用いた$x$，$i(x)$間の相互変換が可能である．一例と
-して$x= 010100$としたときの符号化について考える．この２進数列$x$は$n = 6$，
-$k = 2$であるからまず頂点の$1$から数えて$7$段目，左から$3$番目の値である$15$に注目する．ここから$x$中のMSBから１ビットずつ値を取り出し，$0$であれ
+またパスカルの三角形を用いて$x$，$i(x)$間の相互変換が可能である．この方
+法ではパスカルの三角形における$n+1$段目，左から$k+1$番目の値を起点として変換を行う．
+一例として$x= 010100$としたときの符号化について考える．この$x$は
+$n = 6$，$k = 2$であるからまず頂点の$1$から数えて$7$段目，左から$3$番目
+の値である$15$に注目する．ここから$x$中のMSBから$1$ビットずつ値を取り出し，
+$0$であれば右斜め上に，$1$ならば左斜め上の値に注目点を移動する．また取り出した値が
+$1$であったとき注目点を移動する前の値から見て右斜め上の値を記憶し加算し
+ていく．今回の場合，MSBが$0$であるから右斜め上の$10$に移動する．そして次のビットは
+$1$であるから右斜め上の$6$を記憶し，左斜め上の$4$に移動する．これを繰り
+返し，頂点に達した時点で終りとなる．$x = 010100$とした場合，最終的に$8$
+が得られる．これが$x$に割り当てられる$i(x)$となる．
 
-ば右斜め上に，$1$ならば左斜め上に移動する．また取り出した値が$1$であっ
-たとき移動前の座標から見た右斜め上の値を記憶し加算していく．今回の場合，
-MSBが$0$であるから右斜め上の$10$に移動する．そして次のビットは$1$で
-あるから右斜め上の$6$を記憶し，左斜め上の$4$に移動する．これを繰り返し
-ていくことによって最終的に$8$が得られ，これが$x$に割り当てられる10進数$i(x)$
-となる．
 
-この逆変換である$8$からそれに対応する２進数列$x$を求める方法は，は前述の
-ものと同様，上から$7$段目，左から$3$番目の$15$を起点として求めることがで
-きる．逆変換では起点から見て右斜め上の値と変換元である$8$とを比較するこ
-とでMSBから順に書くビットの値を決定することができる．まず，$15$の位置か
-ら見て右斜め上の値は$10$であり，これよりも$8$は小さいことからMSBは$0$で
-あることが決まり，そのまま右斜め上の$10$に移動する．$10$のいちから見ると
-右斜め上の値は$6$であり，$8$のほうが大きいことから左斜め上の$4$に移動し，
-次のビットは$1$となる．このとき，値$8$から$6$を引いた値である$2$を記憶し
-今後の比較では$2$を用いる．これを繰り返していくことによって最終的に
-$010100$が得られる．これが$n = 6, k = 2$とした場合に$8$に対応する2進数列
-$x$ということになる．$n = 6, k = 2$の2進数列$x$の集合に対する10進数
-$i(x)$の割り当てを表\ref{tab:shalkwijk}に示す．
+次に$i(x)$から$x$への復号化について考える．
+復号化では注目点から見て右斜め上の値と$i(x)$とを比較し，MSBから順に各ビッ
+トの値が決定される．比較対象となる値を$n$として$ i(x) < n$であればビッ
+トは$0$として注目点を右斜め上の値移動する．$ i(x) \geq n$であればビット
+は$1$として左斜め上の値に移動し，$i(x) = i(x) - n$としてi(x)の値を減らし
+ていく．今回の場合，起点である$15$から見て右斜め上
+の値は$10$であり，これよりも$8$は小さいことからMSBは$0$であることが決ま
+り，そのまま右斜め上の$10$に移動する．次に，$10$の位置から見ると右斜め上の値は
+$6$であり$8$のほうが大きいことから左斜め上の$4$に移動し，
+次のビットは$1$とする．このとき，値$8$から$6$を引いた値である$2$を記憶す
+る．これを繰り返していくことによって最終的に$010100$が得られる．
+これが$n = 6, k = 2$とした場合に$8$に対応する$x$ということになる．最終的
+に$n =6, k = 2$の2進数列$x$の集合は10進数$i(x)$が表\ref{tab:shalkwijk}の
+ように割り当てられる．
 
 \begin{table}[h]
  \centering
  \caption{$n = 6, k = 2$の場合の対応付け}
  \label{tab:shalkwijk}
  \begin{tabular}{|c|c|c|c|} \hline
-  $i(x)$ & $x$ & $i(x)$ & $x$ \\ \hline
-  0 & 000011 & 8  & 010100 \\ \hline
-  1 & 000101 & 9  & 011000 \\ \hline
-  2 & 000110 & 10 & 100001 \\ \hline
-  3 & 001001 & 11 & 100010 \\ \hline
-  4 & 001010 & 12 & 100100 \\ \hline
-  5 & 001100 & 13 & 101000 \\ \hline
-  6 & 010001 & 14 & 110000 \\ \hline
-  7 & 010010 &    &        \\ \hline
+  $x$    & $i(x)$ & $x$    & $i(x)$ \\ \hline
+  000011 & 0      & 010100 & 8      \\ \hline
+  000101 & 1      & 011000 & 9      \\ \hline
+  000110 & 2      & 100001 & 10     \\ \hline
+  001001 & 3      & 100010 & 11     \\ \hline
+  001010 & 4      & 100100 & 12     \\ \hline
+  001100 & 5      & 101000 & 13     \\ \hline
+  010001 & 6      & 110000 & 14     \\ \hline
+  010010 & 7      &        &        \\ \hline
  \end{tabular}
 \end{table}
 
 \subsection{誤りパターンの動的生成\label{sec:dynamic_error_pt}}
-実際の生成ではShalkwijkの数え上げ符号における2進数列$x$をテキスト情報の各
-文字のバイナリ表現，$i(x)$を誤りパターンとして生成を行う．章
-\ref{sec:shalkwijk}で述べた手順を用いて誤りパターンの生成を行うが，テキ
-スト情報は各文字で異なるハミング重みを持つため，図\ref{fig:same_ix}のよ
-うに異なる文字に対して同じ$i(x)$が割り当てられてしまう．そこで２進数列x
-の長さn，ハミング重みkを元に式(\ref{eq:offset})で求められるoffset$_k$を
-求められたi(x)に加算することで一意の誤りパターンとすることができる．
+動的生成のアルゴリズム中ではテキスト情報の各文字のバイナリ表現を2進数列
+$x$として与えることで，パスカルの三角形を用いて10進数$i(x)$へと変換する．
+このとき，$x$は一意の値となるが$i(x)$は同じ値が割り振られてしまう．例え
+ば，表\ref{tab:shalkwijk}で$x = 000011$に割り当てられる$i(x)$は$0$である
+が，$x = 000000$に割り当てられる$i(x)$も同様に$0$である．そこで$x$
+の長さ$n$，ハミング重み$k$を元に式(\ref{eq:offset})で求められるoffset$_k$を
+i(x)に加算することで一意の誤りパターンとする．
 
 \begin{equation}  % displaymath,eqnarray いずれも可能
  \begin{array}{l}
@@ -333,8 +350,8 @@ $i(x)$の割り当てを表\ref{tab:shalkwijk}に示す．
  \label{eq:offset}
 \end{equation}
 
-この方法を用いることで誤りパターンを動的に生成し，強いメモリ制約下での実
-装を可能にすることができる．
+この方法を用いることで誤りパターンを動的に生成し，強いメモリ制約下での誤
+りパターン変換をを可能にすることができる．
 }
 
 %------- やったこと（ステガノグラフィ）
@@ -352,11 +369,12 @@ $i(x)$の割り当てを表\ref{tab:shalkwijk}に示す．
 % ・ビット周りの分散
 
 
-\section{実験}
-実験手順の概要を図\ref{fig:expe}に示す．以下に示す手順で実験を行った．実
+\section{埋込率に対する誤り率，SSIMに関する実験}
+\subsection{実験手順}
+実験手順の概要を図\ref{fig:experiment1}に示す．以下に示す手順で実験を行った．実
 験には256$\times$256pxの8ビットグレイスケールBitmapであるSIDBA画像30枚を
 使用し，埋め込みに使用するテキスト情報は当確率で発生する8bitコードの列と
-した．テキスト情報の生成にはコジゲンに分布する乱数発生器であるSFMTを用いた．
+した．テキスト情報の生成には625次元に分布する乱数発生器であるSFMTを用いた．
 
 \begin{enumerate}
 \renewcommand{\labelenumi}{(\arabic{enumi})}
@@ -370,14 +388,14 @@ $i(x)$の割り当てを表\ref{tab:shalkwijk}に示す．
 
 \begin{figure}[htbp]
  \begin{center}
-  \includegraphics[width=7cm]{img/lsb_emb.png}
+  \includegraphics[width=7.5cm]{img/experiment01.png}
  \end{center}
- \caption{割り当て}
+ \caption{実験概要}
  \label{fig:experiment1}
 \end{figure}
 
-\section{実験結果}
-\subsection{誤り率と埋め込み率}
+\subsection{実験結果}
+\subsubsection{誤り率と埋め込み率}
 誤り率の計測結果と文献\cite{Paper01}において示されている誤りパターン埋め
 込み法における誤り率の理論的下限曲線を図\ref{fig:graph_error_rate}に示す．
 なお，誤りパターン埋め込み法における誤り率は埋め込まれるテキスト情報にの
@@ -386,7 +404,7 @@ $i(x)$の割り当てを表\ref{tab:shalkwijk}に示す．
 
 \begin{figure}[htbp]
  \begin{center}
-  \includegraphics[width=7cm]{img/lsb_emb.png}
+  \includegraphics[width=7.5cm]{img/graph_error.png}
  \end{center}
  \caption{埋込率に対する誤り率の変化}
  \label{fig:graph_error_rate}
@@ -396,15 +414,15 @@ $i(x)$の割り当てを表\ref{tab:shalkwijk}に示す．
 と同様，埋め込み率が増加するとともに誤り率も増加し，理論的下限曲線に比べ
 曲率の低い曲線を描いた．
 
-\subsection{SSIMと誤り率\label{sec:result_ssim1}}
+\subsubsection{SSIMと誤り率\label{sec:result_ssim1}}
 30枚のSIDBA画像のうち，SSIMの最も高い画像10枚と最も低い10枚の埋込率に対
 するSSIMの変化を図3に示す．
 
 \begin{figure}[htbp]
  \begin{center}
-  \includegraphics[width=7cm]{img/lsb_emb.png}
+  \includegraphics[width=7.5cm]{img/graph_ssim_lsb_only.png}
  \end{center}
- \caption{埋込率に対する誤り率の変化}
+ \caption{埋込率に対するSSIMの変化（画像ごと）}
  \label{fig:graph_ssim1}
 \end{figure}
 
@@ -416,38 +434,38 @@ $i(x)$の割り当てを表\ref{tab:shalkwijk}に示す．
 の面でステガノグラフィ技術の隠蔽性に大きく影響を与えることはないというこ
 とがわかる．同時に図\ref{fig:graph_ssim1}より，画像ごとにSSIMの変化の様
 子に異なりが見られることがわかる．この２点についてさらなる実験・考察を行っ
-た，その内容について章\ref{sec:more_bit_prane}，\ref{sec:consider_ssim}
-にて述べる．
+た，その内容について章\ref{sec:more_bit_prane}，
+\ref{sec:despertion_vs_ssim}，\ref{sec:image_area_exp}にて述べる．
 
-\subsection{2ビットプレーン以降の埋め込みでの実験結果\label{sec:more_bit_prane}}
+\subsubsection{2ビットプレーン以降の埋め込みでの実験結果\label{sec:more_bit_prane}}
 LSBのみの埋め込みでは画質劣化がほとんど起きないことから，隠蔽性に影響を
 及ぼさない範囲で2ビットプレーン以降への埋め込みも可能なのではないかと考
-え，2\verb|~|4ビットプレーンまでの埋め込みを行った．実験手順はこれまでと
+え，2〜4ビットプレーンまでの埋め込みを行った．実験手順はこれまでと
 同様の手順で行い，実験対象となるビットプレーン以下のビットプレーンについ
 ては埋め込み率100％で埋め込みを行った．実験結果をそれぞれ図
-\ref{fig:graph_ssim2}\verb|~|\ref{fig:graph_ssim4}に示す．
+\ref{fig:graph_ssim2}〜\ref{fig:graph_ssim4}に示す．
 
 \begin{figure}[htbp]
  \begin{center}
-  \includegraphics[width=7cm]{img/lsb_emb.png}
+  \includegraphics[width=7.5cm]{img/graph_ssim_second_plane.png}
  \end{center}
- \caption{埋込率に対する誤り率の変化}
+ \caption{埋込率に対するSSIMの変化（2ビットプレーン使用）}
  \label{fig:graph_ssim2}
 \end{figure}
 
 \begin{figure}[htbp]
  \begin{center}
-  \includegraphics[width=7cm]{img/lsb_emb.png}
+  \includegraphics[width=7.5cm]{img/graph_ssim_third_plain.png}
  \end{center}
- \caption{埋込率に対する誤り率の変化}
+ \caption{埋込率に対するSSIMの変化（3ビットプレーン使用）}
  \label{fig:graph_ssim3}
 \end{figure}
 
 \begin{figure}[htbp]
  \begin{center}
-  \includegraphics[width=7cm]{img/lsb_emb.png}
+  \includegraphics[width=7.5cm]{img/graph_ssim_fouth_plain.png}
  \end{center}
- \caption{埋込率に対する誤り率の変化}
+ \caption{埋込率に対するSSIMの変化（4ビットプレーン使用）}
  \label{fig:graph_ssim4}
 \end{figure}
 
@@ -457,23 +475,63 @@ LSBのみの埋め込みでは画質劣化がほとんど起きないことから，隠蔽性に影響を
 の視覚的な隠蔽性に影響を及ぼさない範囲で，約1.9倍のテキスト情報の埋め込
 みが実現できるといえる．
 
-図\ref{fig:graph_ssim3}において３ビットプレーンまで埋め込み率100％での埋め込みを行ったとし
-てもSSIMが0.98を上回る画像があることがわかる．また，図
-\ref{fig:graph_ssim4}においても最大で埋め込み率50％前後までテキスト情報
-を埋め込むことができることがわかる．これらのことから適切な画像を選択する
-ことでより多くのテキスト情報の埋め込みが可能になるということが言える．
+図\ref{fig:graph_ssim3}より３ビットプレーンまで埋め込み率100％での埋め込
+みを行ったとしてもSSIMが0.98を上回る画像があることがわかる．また，図
+\ref{fig:graph_ssim4}においても最大で埋め込み率0.2前後までテキスト情報を
+埋め込むことができることがわかる．これらのことから適切な画像を選択するこ
+とでよりLSBのみへの埋め込みに比べ3倍以上のテキスト情報の埋め込みが可能に
+なるといえる．SSIMが最も高かった画像と最も低かった画像についてカバーデー
+タとステゴデータを図\ref{fig:best_ssim_image}〜\ref{fig:least_ssim_image_emb}に
+示す．ステゴデータは3ビットプレーンにまで埋め込み率100％で埋め込みを行っ
+たものである．
 
-\subsection{メッセージ長が同じ場合の劣化について}
-埋め込み範囲を変えて同じメッセージ量を埋め込む場合，埋め込み範囲を広げる
-ことで誤りパターン長を長くすることができることからステゴデータの誤り率を
-下げることができる．例えば，LSBのみへ埋め込み率100％，つまり誤りパターン
+\begin{figure}[htbp]
+ \begin{center}
+  \includegraphics[width=7.5cm]{img/BRIDGE.png}
+ \end{center}
+ \caption{埋込率に対する誤り率の変化}
+ \label{fig:best_ssim_image}
+\end{figure}
+
+\begin{figure}[htbp]
+ \begin{center}
+  \includegraphics[width=7.5cm]{img/8_7_BRIDGE.png}
+ \end{center}
+ \caption{埋込率に対する誤り率の変化}
+ \label{fig:best_ssim_image_emb}
+\end{figure}
+
+\begin{figure}[htbp]
+ \begin{center}
+  \includegraphics[width=7.5cm]{img/Balloon.png}
+ \end{center}
+ \caption{埋込率に対する誤り率の変化}
+ \label{fig:least_ssim_image}
+\end{figure}
+
+\begin{figure}[htbp]
+ \begin{center}
+  \includegraphics[width=7.5cm]{img/8_7_Balloon.png}
+ \end{center}
+ \caption{埋込率に対する誤り率の変化}
+ \label{fig:least_ssim_image_emb}
+\end{figure}
+
+\subsubsection{メッセージ長が同じ場合の劣化について}
+埋め込み範囲を広げて同じメッセージ量を埋め込む場合，より長い誤りパターン
+を用いることができることから，ステゴデータの誤り率を下げることができる．
+
+例えば，LSBのみへ埋め込み率100％，つまり誤りパターン
 長を8ビットとしてで埋め込んだ場合，256$\times$256pxの画像であれば8192文字の埋
 め込みが可能である．これを2ビットプレーンにまで埋め込み範囲を拡張し8192
 文字を埋め込んだ場合，単純に埋め込み範囲が倍になることから誤りパターン長
-を2倍の16ビットとして埋め込みを行うことができるため，誤り率を半減させる
-ことができる．このことから，メッセージ長を同じ長さにしてLSBのみへ埋め込
-んだ場合と，LSBに加え2ビットプレーンにまで埋め込んだ場合のSSIMについ
-て，同様の実験手順で比較を行った．実験結果を図
+を2倍の16ビットとして埋め込みを行うことができるため，理論上誤り率を半減させる
+ことができる．
+
+このことから，メッセージ長を固定しLSBのみへ埋め込みを行った場合と2ビット
+プレーンまで埋め込んだ場合のSSIMについて，同様の実験手順で比較を行った．
+
+30枚のSIDBA画像のうちLennaを使用した場合の実験結果を図
 \ref{fig:graph_vs_same_message_length}に示す．この結果からLSBのみへ埋め
 込みを行った場合のSSIMが埋め込み率にかかわらず，常に2ビットプレーンにま
 で埋め込み範囲を拡張した場合を上回っていることがわかる．このことから埋め
@@ -484,34 +542,34 @@ LSBのみの埋め込みでは画質劣化がほとんど起きないことから，隠蔽性に影響を
 
 \begin{figure}[htbp]
  \begin{center}
-  \includegraphics[width=7cm]{img/lsb_emb.png}
+  \includegraphics[width=7.5cm]{img/graph_same_message_length.png}
  \end{center}
  \caption{埋込率に対する誤り率の変化}
  \label{fig:graph_vs_same_message_length}
 \end{figure}
 
+\section{SSIMに対する画像特性に関する実験\label{sec:consider_ssim}}
 
-
-
-\subsection{SSIMの落ちにくい画像の特性についての実験
-  \label{sec:consider_ssim}}
 章\ref{sec:result_ssim1}にて，画像によってSSIMの変化が大きくことなること
 を示した．これについて実験者の主観で画像評価を行ったところ，複雑度の高い
 画像ほどSSIMが下がりにくくなる傾向にあるということがわかった．ここで複雑
-度とは画素値の明暗の変化の激しさを表しており，複雑度が高いほどにノイズ画
+度とは画像全体における画素間の明暗の変化の多さを表しており，複雑度が高いほどにノイズ画
 像のようになる．これを客観的に評価するため，２つの評価方法を考案し実験を
-行った．これらの実験では画像の特性が正規分布であることを前提とするため，
-第\ref{sec:result_ssim1}の実験で使用した30枚のSIDBA画像に加え，同サイズ
-の8ビットグレースケールビットマップ70枚をWeb上で収集し使用した．
+行った．これらの実験では画像を母集団とみなし，それらがが正規分布であると
+するために，第\ref{sec:result_ssim1}の実験で使用した30枚のSIDBA画像に加え，同サイズ
+の8ビットグレースケールビットマップ70枚をWeb上で収集し使用した．章
+\ref{sec:result_ssim1}においてSSIMが最も高かった画像，最も低かった画像の
+埋め込み前後の画像を図
 
-\subsubsection{画素周辺との分散値による実験\label{sec:despertion_vs_ssim}}
+
+\subsection{画素周辺との分散値による実験\label{sec:despertion_vs_ssim}}
 画像を図\ref{fig:graph_ssim3}のように少区間に分割し，その少区間中での画
 素値の分散値の平均を求めることで，画像の複雑度を判別できると考え以下の手
 順で実験を行った．
 
 \begin{figure}[htbp]
  \begin{center}
-  \includegraphics[width=7cm]{img/lsb_emb.png}
+  \includegraphics[width=7.5cm]{img/lsb_emb.png}
  \end{center}
  \caption{埋込率に対する誤り率の変化}
 \end{figure}
@@ -546,7 +604,7 @@ LSBのみの埋め込みでは画質劣化がほとんど起きないことから，隠蔽性に影響を
  \end{tabular}
 \end{table}
 
-\subsubsection{画素区切りと面積}
+\subsection{画素区切りと面積\label{sec:image_area_exp}}
 画素値を0〜5，6〜10というように細かい区間で区切り，その区間内の画素値を
 持つ画素のみを画像から抽出する（以下抽出画像とする）．抽出された画素によって構成される面積を計算
 することで，画像の複雑度を判別できると考え以下の実験を行った．また，本実
@@ -580,6 +638,14 @@ LSBのみの埋め込みでは画質劣化がほとんど起きないことから，隠蔽性に影響を
   30  & 0.65476536  \\ \hline
  \end{tabular}
 \end{table}
+
+\section{まとめ}
+
+\section{今後の課題}
+
+\section{実験環境}
+
+\section{おわりに}
 
 %-------------------------------------------header and footer
 

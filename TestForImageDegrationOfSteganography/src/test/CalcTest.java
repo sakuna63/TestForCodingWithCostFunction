@@ -31,7 +31,7 @@ public class CalcTest extends TestCase{
         for(int i = 0; i<50; i++) {
             buff[i] = -128;
         }
-        double result = Calc.splitedAreaDespersion(buff, 10, 5);
+        double result = Calc.splitAreaDispersion(buff, 10, 5);
         assertEquals(0.0, result);
     }
 }

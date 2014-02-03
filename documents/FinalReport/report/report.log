@@ -1,4 +1,4 @@
-This is pTeX, Version 3.141592-p3.1.11 (utf8.euc) (Web2C 7.5.4) (format=platex 2011.7.24)  2 FEB 2014 13:56
+This is pTeX, Version 3.141592-p3.1.11 (utf8.euc) (Web2C 7.5.4) (format=platex 2011.7.24)  3 FEB 2014 18:36
 **report
 (./report.tex
 pLaTeX2e <2006/11/10>+0 (based on LaTeX2e <2003/12/01> patch level 0)
@@ -41,7 +41,7 @@ LaTeX Info: Redefining \LaTeX on input line 1728.
 LaTeX Info: Redefining \LaTeXe on input line 1753.
 \heisei=\count89
 )
-(/Users/sakuna63/Library/texmf/tex/latex/geometry.sty
+(./ipsj.sty) (/Users/sakuna63/Library/texmf/tex/latex/geometry.sty
 Package: geometry 2010/09/12 v5.6 Page Geometry
 
 (/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/graphics/keyval.sty
@@ -235,47 +235,47 @@ LaTeX Warning: Label `tab:despertion_vs_ssim' multiply defined.
 )
 \openout1 = `report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/txmi/m/it on input line 14.
-LaTeX Font Info:    Try loading font information for OML+txmi on input line 14.
+LaTeX Font Info:    Checking defaults for OML/txmi/m/it on input line 16.
+LaTeX Font Info:    Try loading font information for OML+txmi on input line 16.
 
  (/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/omltxmi.fd
 File: omltxmi.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for OMS/txsy/m/n on input line 14.
-LaTeX Font Info:    Try loading font information for OMS+txsy on input line 14.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMS/txsy/m/n on input line 16.
+LaTeX Font Info:    Try loading font information for OMS+txsy on input line 16.
 
 (/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/omstxsy.fd
 File: omstxsy.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for OMX/txex/m/n on input line 14.
-LaTeX Font Info:    Try loading font information for OMX+txex on input line 14.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMX/txex/m/n on input line 16.
+LaTeX Font Info:    Try loading font information for OMX+txex on input line 16.
 
 
 (/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/omxtxex.fd
 File: omxtxex.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for U/txexa/m/n on input line 14.
-LaTeX Font Info:    Try loading font information for U+txexa on input line 14.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for U/txexa/m/n on input line 16.
+LaTeX Font Info:    Try loading font information for U+txexa on input line 16.
 
 (/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/utxexa.fd
 File: utxexa.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for JY1/mc/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for JT1/mc/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for JY1/mc/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for JT1/mc/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
 
 (I search kanjifont definition file: . . ) (I search font definition file: . .
 . . . . . )
-LaTeX Font Info:    Try loading font information for OT1+txr on input line 14.
+LaTeX Font Info:    Try loading font information for OT1+txr on input line 16.
 
 (/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/ot1txr.fd
 File: ot1txr.fd 2000/12/15 v3.1
@@ -321,33 +321,33 @@ File: ot1txr.fd 2000/12/15 v3.1
 \marginUnderCollege=\skip49
 \marginUnderAbstract=\skip50
 LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
-(Font)              scaled to size 16.60605pt on input line 36.
+(Font)              scaled to size 16.60605pt on input line 38.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 16.60605pt on input line 36.
+(Font)              scaled to size 16.60605pt on input line 38.
 LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <17.28> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 41.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 43.
 LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
-(Font)              scaled to size 16.60605pt on input line 41.
+(Font)              scaled to size 16.60605pt on input line 43.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <17.28> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 41.
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 43.
 LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
-(Font)              scaled to size 16.60605pt on input line 41.
+(Font)              scaled to size 16.60605pt on input line 43.
 LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
-(Font)              scaled to size 11.53198pt on input line 45.
+(Font)              scaled to size 11.53198pt on input line 47.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 11.53198pt on input line 45.
+(Font)              scaled to size 11.53198pt on input line 47.
 LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <12> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 56.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 58.
 LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
-(Font)              scaled to size 11.53198pt on input line 56.
+(Font)              scaled to size 11.53198pt on input line 58.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <12> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 56.
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 58.
 LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
-(Font)              scaled to size 11.53198pt on input line 56.
+(Font)              scaled to size 11.53198pt on input line 58.
 LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
-(Font)              scaled to size 10.57098pt on input line 62.
+(Font)              scaled to size 10.57098pt on input line 64.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 10.57098pt on input line 62.
+(Font)              scaled to size 10.57098pt on input line 64.
 [1
 
 ]
@@ -387,63 +387,52 @@ Package geometry Warning: Over-specification in `h'-direction.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
-(Font)              scaled to size 13.83836pt on input line 82.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 13.83836pt on input line 82.
-LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
-(Font)              scaled to size 13.83836pt on input line 82.
-LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
-(Font)              scaled to size 13.83836pt on input line 82.
-LaTeX Font Info:    Try loading font information for OT1+txss on input line 82.
-
-(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/ot1txss.fd
-File: ot1txss.fd 2000/12/15 v3.1
-)
-LaTeX Font Info:    Font shape `OT1/txss/m/n' will be
-(Font)              scaled to size 13.67995pt on input line 82.
-
-(./report.toc
-LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
-(Font)              scaled to size 9.60999pt on input line 1.
-LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
-(Font)              scaled to size 9.60999pt on input line 1.
-LaTeX Font Info:    Font shape `OT1/txss/m/n' will be
-(Font)              scaled to size 9.49997pt on input line 1.
+(Font)              scaled to size 6.72699pt on input line 84.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 6.72699pt on input line 5.
-LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 4.805pt on input line 5.
-LaTeX Font Info:    Try loading font information for U+txmia on input line 5.
-
+(Font)              scaled to size 4.805pt on input line 84.
+LaTeX Font Info:    Try loading font information for U+txmia on input line 84.
 (/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/utxmia.fd
 File: utxmia.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    Try loading font information for U+txsya on input line 5.
+LaTeX Font Info:    Try loading font information for U+txsya on input line 84.
 
 (/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/utxsya.fd
 File: utxsya.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    Try loading font information for U+txsyb on input line 5.
+LaTeX Font Info:    Try loading font information for U+txsyb on input line 84.
 
 (/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/utxsyb.fd
 File: utxsyb.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    Try loading font information for U+txsyc on input line 5.
+LaTeX Font Info:    Try loading font information for U+txsyc on input line 84.
 
 (/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/utxsyc.fd
 File: utxsyc.fd 2000/12/15 v3.1
-))
+)
+(./report.toc
+LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <10> not available
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 1.
+LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
+(Font)              scaled to size 9.60999pt on input line 1.
+LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <10> not available
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 1.
+LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
+(Font)              scaled to size 9.60999pt on input line 1.
+)
 \tf@toc=\write3
 \openout3 = `report.toc'.
 
-
-[1
+ [1
 
 ]
 
 Package geometry Warning: Over-specification in `h'-direction.
     `width' (483.69684pt) is ignored.
+
+
+Package geometry Warning: Over-specification in `v'-direction.
+    `height' (705.62843pt) is ignored.
 
 *geometry* verbose mode - [ newgeometry ] result:
 * driver: dvips
@@ -452,11 +441,11 @@ Package geometry Warning: Over-specification in `h'-direction.
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
 * modes: 
 * h-part:(L,W,R)=(65.44142pt, 466.62503pt, 65.44142pt)
-* v-part:(T,H,B)=(85.35826pt, 705.62843pt, 54.06015pt)
+* v-part:(T,H,B)=(85.35826pt, 674.33032pt, 85.35826pt)
 * \paperwidth=597.50787pt
 * \paperheight=845.04684pt
 * \textwidth=466.62503pt
-* \textheight=705.62843pt
+* \textheight=674.33032pt
 * \oddsidemargin=-6.82857pt
 * \evensidemargin=-6.82857pt
 * \topmargin=-25.36964pt
@@ -480,9 +469,9 @@ Package geometry Warning: Over-specification in `h'-direction.
 File: img/stego_com_model.png Graphic file (type bmp)
 <img/stego_com_model.png>
 LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
-(Font)              scaled to size 8.64899pt on input line 122.
+(Font)              scaled to size 8.64899pt on input line 124.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 8.64899pt on input line 122.
+(Font)              scaled to size 8.64899pt on input line 124.
 File: img/lsb_emb.png Graphic file (type bmp)
  <img/lsb_emb.png>
 File: img/lsb_ext.png Graphic file (type bmp)
@@ -493,64 +482,45 @@ File: img/error_pt_emb.png Graphic file (type bmp)
 
 <img/error_pt_emb.png>
 File: img/error_pt_ext.png Graphic file (type bmp)
- <img/error_pt_ext.png>
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[3]
-LaTeX Font Info:    Font shape `OT1/txss/m/n' will be
-(Font)              scaled to size 11.39996pt on input line 260.
+ <img/error_pt_ext.png> [3] [4]
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 5.76599pt on input line 303.
-LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <10> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 322.
-LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
-(Font)              scaled to size 9.60999pt on input line 322.
-LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <10> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 322.
-LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
-(Font)              scaled to size 9.60999pt on input line 322.
+(Font)              scaled to size 5.76599pt on input line 321.
+File: img/experiment01.png Graphic file (type bmp)
+ <img/experiment01.png>
+File: img/graph_error.png Graphic file (type bmp)
 
+<img/graph_error.png> [5]
+File: img/graph_ssim_lsb_only.png Graphic file (type bmp)
+ <img/graph_ssim_lsb_only.png>
+File: img/graph_ssim_second_plane.png Graphic file (type bmp)
 
-LaTeX Warning: Reference `fig:same_ix' on page 4 undefined on input line 322.
+<img/graph_ssim_second_plane.png>
+File: img/graph_ssim_third_plain.png Graphic file (type bmp)
+ <img/graph_ssim_third_plain.png>
+File: img/graph_ssim_fouth_plain.png Graphic file (type bmp)
 
-[4]
+<img/graph_ssim_fouth_plain.png> [6]
+File: img/BRIDGE.png Graphic file (type bmp)
+ <img/BRIDGE.png>
+File: img/8_7_BRIDGE.png Graphic file (type bmp)
+ <img/8_7_BRIDGE.png>
+File: img/Balloon.png Graphic file (type bmp)
 
-LaTeX Warning: Reference `fig:expe' on page 5 undefined on input line 355.
+<img/Balloon.png>
+File: img/8_7_Balloon.png Graphic file (type bmp)
+ <img/8_7_Balloon.png> [7]
+File: img/graph_same_message_length.png Graphic file (type bmp)
 
-File: img/lsb_emb.png Graphic file (type bmp)
-<img/lsb_emb.png>
-File: img/lsb_emb.png Graphic file (type bmp)
- <img/lsb_emb.png>
-File: img/lsb_emb.png Graphic file (type bmp)
- <img/lsb_emb.png>
-LaTeX Font Info:    Try loading font information for OT1+txtt on input line 424
-.
-
-(/Applications/UpTeX.app/teTeX/share/texmf-dist/tex/latex/txfonts/ot1txtt.fd
-File: ot1txtt.fd 2000/12/15 v3.1
-)
-[5]
-File: img/lsb_emb.png Graphic file (type bmp)
- <img/lsb_emb.png>
-File: img/lsb_emb.png Graphic file (type bmp)
- <img/lsb_emb.png>
-File: img/lsb_emb.png Graphic file (type bmp)
- <img/lsb_emb.png>
-File: img/lsb_emb.png Graphic file (type bmp)
- <img/lsb_emb.png>
-[6]
+<img/graph_same_message_length.png>
 File: img/lsb_emb.png Graphic file (type bmp)
  <img/lsb_emb.png>
 
-LaTeX Warning: Reference `enum:split1' on page 7 undefined on input line 520.
+LaTeX Warning: Reference `enum:split1' on page 8 undefined on input line 579.
 
+[8]
 
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
-LaTeX Warning: Reference `tab:areasize_vs_ssim' on page 7 undefined on input li
-ne 566.
+LaTeX Warning: Reference `tab:areasize_vs_ssim' on page 9 undefined on input li
+ne 625.
 
 (./report.bbl
 LaTeX Font Info:    Font shape `JT1/gt/m/it' in size <10> not available
@@ -561,9 +531,7 @@ LaTeX Font Info:    Font shape `JY1/gt/m/it' in size <10> not available
 (Font)              Font shape `JY1/gt/m/n' tried instead on input line 7.
 LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
 (Font)              scaled to size 9.60999pt on input line 7.
- [7]) [8
-
-] (./report.aux)
+) [9] (./report.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -572,12 +540,12 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 2703 strings out of 94681
- 36379 string characters out of 1174371
- 89669 words of memory out of 1500000
- 5935 multiletter control sequences out of 10000+50000
- 34114 words of font info for 118 fonts, out of 1200000 for 2000
+ 2681 strings out of 94681
+ 36012 string characters out of 1174371
+ 88822 words of memory out of 1500000
+ 5907 multiletter control sequences out of 10000+50000
+ 30661 words of font info for 109 fonts, out of 1200000 for 2000
  571 hyphenation exceptions out of 8191
  25i,9n,31p,204b,540s stack positions out of 5000i,500n,6000p,200000b,5000s
 
-Output written on report.dvi (9 pages, 49284 bytes).
+Output written on report.dvi (10 pages, 53616 bytes).

@@ -28,8 +28,13 @@ public class Main {
 //        File[] files = new File(Path.ROW_DATA_PATH).listFiles();
 //        Arrays.sort(files_img);
 
-        files_img = new File[]{files_img[0]};
-        fin2(files_img, msg);
+//        files_img = new File[]{files_img[0]};
+//        fin2(files_img, msg);
+
+        for(File f : files_img) {
+            CoverData c = new CoverData(f);
+            StegoData s = createStegoData(c, msg, 8, 7);
+        }
 
         IO.print("埋め込み終了");
     }
@@ -450,7 +455,7 @@ public class Main {
         IO.println("run %s codeLength:%d range:%d", cover.file_name, code_length, range);
 
         StegoData stego = msg_length == -1 ? cover.embedding(msg, code_length, range) : cover.embedding(msg, msg_length, code_length, range);
-        String name_dir = (msg_length == -1 ? Path.EMBEDED_IMG_PATH : Path.EMBEDED_IMG_MSG_PATH) + cover.file_name.replace(".bmp", "") + "/";
+        String name_dir = (msg_length == -1 ? Path.EMBEDDED_IMG_PATH : Path.EMBEDDED_IMG_MSG_PATH) + cover.file_name.replace(".bmp", "") + "/";
         String name_file = code_length + "_" + range + "_" + cover.file_name;
         stego.output(name_dir, name_file);
 
