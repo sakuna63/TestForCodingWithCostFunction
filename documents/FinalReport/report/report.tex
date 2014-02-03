@@ -7,10 +7,12 @@
 \usepackage[symbol*,perpage]{footmisc}
 \usepackage[dvipdfm]{graphicx, color}
 \usepackage{tcpascaltrig}
+\usepackage{url}
 
 %------------------------------------------- define sections
 % \titlelabel{\thetitle. \quad}
 \renewcommand{\thesection}{\arabic{section}.}
+\setcounter{tocdepth}{3}
 
 %-------------------------------------------jtitle and jauthors information
 \begin{document}
@@ -80,6 +82,7 @@
 \end{titlepage}}
 
 \newgeometry{top=3cm,hmargin=2.3cm,textheight=24.8cm,textwidth=17cm}
+
 
 \tableofcontents
 \newpage
@@ -368,13 +371,12 @@ i(x)に加算することで一意の誤りパターンとする．
 % ・分割からの面積計算
 % ・ビット周りの分散
 
-
-\section{埋込率に対する誤り率，SSIMに関する実験}
+\section{実験}
 \subsection{実験手順}
 実験手順の概要を図\ref{fig:experiment1}に示す．以下に示す手順で実験を行った．実
 験には256$\times$256pxの8ビットグレイスケールBitmapであるSIDBA画像30枚を
 使用し，埋め込みに使用するテキスト情報は当確率で発生する8bitコードの列と
-した．テキスト情報の生成には625次元に分布する乱数発生器であるSFMTを用いた．
+した．テキスト情報の生成には623次元に分布する乱数発生器であるSFMTを用いた．
 
 \begin{enumerate}
 \renewcommand{\labelenumi}{(\arabic{enumi})}
@@ -433,14 +435,18 @@ i(x)に加算することで一意の誤りパターンとする．
 場合，埋め込み率，誤り率によって画質が大きく劣化することはなく，画質劣化
 の面でステガノグラフィ技術の隠蔽性に大きく影響を与えることはないというこ
 とがわかる．同時に図\ref{fig:graph_ssim1}より，画像ごとにSSIMの変化の様
-子に異なりが見られることがわかる．この２点についてさらなる実験・考察を行っ
-た，その内容について章\ref{sec:more_bit_prane}，
-\ref{sec:despertion_vs_ssim}，\ref{sec:image_area_exp}にて述べる．
+子が異なることがわかる．これについて，実験に使用した画像を主観的に観察し
+たところ，図\ref{fig:best_ssim_image}のように画像全体の複雑度が高い画像
+ほどSSIMの変化が小さく，一方で図\ref{fig:least_ssim_image_emb}のように複
+雑度の低い大きな領域を含む画像ほどSSIMの変化が大きくなるという傾向が見ら
+れた．ここで複雑度とは画像全体における画素間の明暗の変化の多さを表してお
+り，複雑度が高いほどにノイズ画像のようになる．これは，テキスト情報中の
+0,1の発生はランダムであり，埋め込みによる画像の劣化がノイズ上になること
+から図\ref{fig:best_ssim_image_emb}のように複雑度が高い画像であれば画像
+中にノイズが溶け込んでしまうためであると考えられる．
 
 \subsubsection{2ビットプレーン以降の埋め込みでの実験結果\label{sec:more_bit_prane}}
-LSBのみの埋め込みでは画質劣化がほとんど起きないことから，隠蔽性に影響を
-及ぼさない範囲で2ビットプレーン以降への埋め込みも可能なのではないかと考
-え，2〜4ビットプレーンまでの埋め込みを行った．実験手順はこれまでと
+章\ref{sec:result_ssim1}の結果から，隠蔽性に影響を及ぼさない範囲で2ビットプレーン以降への埋め込みも可能なのではないかと考え，2〜4ビットプレーンまでの埋め込みを行った．実験手順はこれまでと
 同様の手順で行い，実験対象となるビットプレーン以下のビットプレーンについ
 ては埋め込み率100％で埋め込みを行った．実験結果をそれぞれ図
 \ref{fig:graph_ssim2}〜\ref{fig:graph_ssim4}に示す．
@@ -478,42 +484,31 @@ LSBのみの埋め込みでは画質劣化がほとんど起きないことから，隠蔽性に影響を
 図\ref{fig:graph_ssim3}より３ビットプレーンまで埋め込み率100％での埋め込
 みを行ったとしてもSSIMが0.98を上回る画像があることがわかる．また，図
 \ref{fig:graph_ssim4}においても最大で埋め込み率0.2前後までテキスト情報を
-埋め込むことができることがわかる．これらのことから適切な画像を選択するこ
+埋め込むことができることがわかる．
+ここで，図\ref{fig:best_ssim_image}，
+\ref{fig:least_ssim_image_emb}のステゴデータをそれぞれ図
+\ref{fig:least_ssim_image_emb}，\ref{fig:least_ssim_image_emb}に示す．ス
+テゴデータは3ビットプレーンにまで埋め込み率100％で埋め込みを行ったもので
+ある．これらの画像から明らかに図\ref{fig:least_ssim_image_emb}はもとの画
+像に比べ視覚的に大きく劣化が生じている一方で図
+\ref{fig:best_ssim_image_emb}は劣化が小さく元の画像を知らなければほとん
+ど劣化に気づかないレベルであるといえる．これらのことから適切な画像を選択するこ
 とでよりLSBのみへの埋め込みに比べ3倍以上のテキスト情報の埋め込みが可能に
-なるといえる．SSIMが最も高かった画像と最も低かった画像についてカバーデー
-タとステゴデータを図\ref{fig:best_ssim_image}〜\ref{fig:least_ssim_image_emb}に
-示す．ステゴデータは3ビットプレーンにまで埋め込み率100％で埋め込みを行っ
-たものである．
+なるといえる．
 
 \begin{figure}[htbp]
  \begin{center}
-  \includegraphics[width=7.5cm]{img/BRIDGE.png}
+  \includegraphics[width=7cm]{img/8_7_BRIDGE.png}
  \end{center}
- \caption{埋込率に対する誤り率の変化}
- \label{fig:best_ssim_image}
-\end{figure}
-
-\begin{figure}[htbp]
- \begin{center}
-  \includegraphics[width=7.5cm]{img/8_7_BRIDGE.png}
- \end{center}
- \caption{埋込率に対する誤り率の変化}
+ \caption{BRIDGE.bmpのステゴデータ}
  \label{fig:best_ssim_image_emb}
 \end{figure}
 
 \begin{figure}[htbp]
  \begin{center}
-  \includegraphics[width=7.5cm]{img/Balloon.png}
+  \includegraphics[width=7cm]{img/8_7_Balloon.png}
  \end{center}
- \caption{埋込率に対する誤り率の変化}
- \label{fig:least_ssim_image}
-\end{figure}
-
-\begin{figure}[htbp]
- \begin{center}
-  \includegraphics[width=7.5cm]{img/8_7_Balloon.png}
- \end{center}
- \caption{埋込率に対する誤り率の変化}
+ \caption{Balloon.bmpのステゴデータ}
  \label{fig:least_ssim_image_emb}
 \end{figure}
 
@@ -531,14 +526,14 @@ LSBのみの埋め込みでは画質劣化がほとんど起きないことから，隠蔽性に影響を
 このことから，メッセージ長を固定しLSBのみへ埋め込みを行った場合と2ビット
 プレーンまで埋め込んだ場合のSSIMについて，同様の実験手順で比較を行った．
 
-30枚のSIDBA画像のうちLennaを使用した場合の実験結果を図
+30枚のSIDBA画像のうちBRIDGE.bmp（図\ref{fig:best_ssim_image}）を使用した場合の実験結果を図
 \ref{fig:graph_vs_same_message_length}に示す．この結果からLSBのみへ埋め
 込みを行った場合のSSIMが埋め込み率にかかわらず，常に2ビットプレーンにま
 で埋め込み範囲を拡張した場合を上回っていることがわかる．このことから埋め
 込み範囲を拡張することによる画質劣化の抑制は基本的に不可能であるというこ
 とが言える．しかし，この図においてSSIMは0.98を上回っており，視覚的な隠蔽
 性に問題がないことから，誤りによる埋め込みの検出を回避する目的に利用する
-という面では有用であるといえる．
+xという面では有用であるといえる．
 
 \begin{figure}[htbp]
  \begin{center}
@@ -548,104 +543,129 @@ LSBのみの埋め込みでは画質劣化がほとんど起きないことから，隠蔽性に影響を
  \label{fig:graph_vs_same_message_length}
 \end{figure}
 
-\section{SSIMに対する画像特性に関する実験\label{sec:consider_ssim}}
+% \section{SSIMに対する画像特性に関する実験\label{sec:consider_ssim}}
 
-章\ref{sec:result_ssim1}にて，画像によってSSIMの変化が大きくことなること
-を示した．これについて実験者の主観で画像評価を行ったところ，複雑度の高い
-画像ほどSSIMが下がりにくくなる傾向にあるということがわかった．ここで複雑
-度とは画像全体における画素間の明暗の変化の多さを表しており，複雑度が高いほどにノイズ画
-像のようになる．これを客観的に評価するため，２つの評価方法を考案し実験を
-行った．これらの実験では画像を母集団とみなし，それらがが正規分布であると
-するために，第\ref{sec:result_ssim1}の実験で使用した30枚のSIDBA画像に加え，同サイズ
-の8ビットグレースケールビットマップ70枚をWeb上で収集し使用した．章
-\ref{sec:result_ssim1}においてSSIMが最も高かった画像，最も低かった画像の
-埋め込み前後の画像を図
+% 章\ref{sec:result_ssim1}にて，画像によってSSIMの変化が大きくことなること
+% を示した．これについて実験者の主観で画像評価を行ったところ，複雑度の高い
+% 画像ほどSSIMが下がりにくくなる傾向にあるということがわかった．ここで複雑
+% 度とは画像全体における画素間の明暗の変化の多さを表しており，複雑度が高いほどにノイズ画
+% 像のようになる．これを客観的に評価するため，２つの評価方法を考案し実験を
+% 行った．これらの実験では画像を母集団とみなし，それらがが正規分布であると
+% するために，第\ref{sec:result_ssim1}の実験で使用した30枚のSIDBA画像に加え，同サイズ
+% の8ビットグレースケールビットマップ70枚をWeb上で収集し使用した．章
+% \ref{sec:result_ssim1}においてSSIMが最も高かった画像，最も低かった画像の
+% 埋め込み前後の画像を図
 
 
-\subsection{画素周辺との分散値による実験\label{sec:despertion_vs_ssim}}
-画像を図\ref{fig:graph_ssim3}のように少区間に分割し，その少区間中での画
-素値の分散値の平均を求めることで，画像の複雑度を判別できると考え以下の手
-順で実験を行った．
+% \subsection{画素周辺との分散値による実験\label{sec:despertion_vs_ssim}}
+% 画像を図\ref{fig:graph_ssim3}のように少区間に分割し，その少区間中での画
+% 素値の分散値の平均を求めることで，画像の複雑度を判別できると考え以下の手
+% 順で実験を行った．
 
-\begin{figure}[htbp]
- \begin{center}
-  \includegraphics[width=7.5cm]{img/lsb_emb.png}
- \end{center}
- \caption{埋込率に対する誤り率の変化}
-\end{figure}
+% \begin{figure}[htbp]
+%  \begin{center}
+%   \includegraphics[width=7.5cm]{img/lsb_emb.png}
+%  \end{center}
+%  \caption{埋込率に対する誤り率の変化}
+% \end{figure}
 
-\begin{enumerate}
- \item 各画像の少区間ごとの画素値の分散を計算し，それらの平均を求める．\label{enu:split1}
- \item 少区間のサイズを変え，再度(\ref{enum:split1})を繰り返す．\label{enu:split2}
- \item 画像を入れ替えて(\ref{enu:split2})を繰り返す．
-\end{enumerate}
+% \begin{enumerate}
+%  \item 各画像の少区間ごとの画素値の分散を計算し，それらの平均を求める．\label{enu:split1}
+%  \item 少区間のサイズを変え，再度(\ref{enum:split1})を繰り返す．\label{enu:split2}
+%  \item 画像を入れ替えて(\ref{enu:split2})を繰り返す．
+% \end{enumerate}
 
-この実験では256$\times$256pxの画像を使用したことから，少区間のサイズは画
-素の漏れや重複なく計算が行えるよう一辺が画素数2,4,8,16,32,64個分である正
-方形とした．
-少区間ごとの画素値の分散の平均値と埋め込み率100％でLSBに埋め込みを行った
-場合のSSIMとの相関を表\ref{tab:despertion_vs_ssim}に示す．この結果から少
-区間を細かく設定することでSSIMとの高い相関が得られていることがわかる．こ
-のことからは予想通りSSIMと小区間での画素値の変化が高いこと，つまり複雑度の高い画
-像ほどSSIMが高く保たれる傾向にあるといえる．
+% この実験では256$\times$256pxの画像を使用したことから，少区間のサイズは画
+% 素の漏れや重複なく計算が行えるよう一辺が画素数2,4,8,16,32,64個分である正
+% 方形とした．
+% 少区間ごとの画素値の分散の平均値と埋め込み率100％でLSBに埋め込みを行った
+% 場合のSSIMとの相関を表\ref{tab:despertion_vs_ssim}に示す．この結果から少
+% 区間を細かく設定することでSSIMとの高い相関が得られていることがわかる．こ
+% のことからは予想通りSSIMと小区間での画素値の変化が高いこと，つまり複雑度の高い画
+% 像ほどSSIMが高く保たれる傾向にあるといえる．
 
-\begin{table}[h]
- \centering
- \caption{誤りパターンテーブル}
- \label{tab:despertion_vs_ssim}
- \begin{tabular}{|c|c|} \hline
-  少区間の一辺の画素数 & 相関 \\ \hline
-  2  & 0.721631188            \\ \hline
-  4  & 0.717703982            \\ \hline
-  8  & 0.65476536             \\ \hline
-  16 & 0.569234861            \\ \hline
-  32 & 0.466591644            \\ \hline
-  64 & 0.337251306            \\ \hline
- \end{tabular}
-\end{table}
+% \begin{table}[h]
+%  \centering
+%  \caption{誤りパターンテーブル}
+%  \label{tab:despertion_vs_ssim}
+%  \begin{tabular}{|c|c|} \hline
+%   少区間の一辺の画素数 & 相関 \\ \hline
+%   2  & 0.721631188            \\ \hline
+%   4  & 0.717703982            \\ \hline
+%   8  & 0.65476536             \\ \hline
+%   16 & 0.569234861            \\ \hline
+%   32 & 0.466591644            \\ \hline
+%   64 & 0.337251306            \\ \hline
+%  \end{tabular}
+% \end{table}
 
-\subsection{画素区切りと面積\label{sec:image_area_exp}}
-画素値を0〜5，6〜10というように細かい区間で区切り，その区間内の画素値を
-持つ画素のみを画像から抽出する（以下抽出画像とする）．抽出された画素によって構成される面積を計算
-することで，画像の複雑度を判別できると考え以下の実験を行った．また，本実
-験は章\ref{sec:despertion_vs_ssim}と同様の画像100枚を用いて実験を行った．
+% \subsection{画素区切りと面積\label{sec:image_area_exp}}
+% 画素値を0〜5，6〜10というように細かい区間で区切り，その区間内の画素値を
+% 持つ画素のみを画像から抽出する（以下抽出画像とする）．抽出された画素によって構成される面積を計算
+% することで，画像の複雑度を判別できると考え以下の実験を行った．また，本実
+% 験は章\ref{sec:despertion_vs_ssim}と同様の画像100枚を用いて実験を行った．
 
-\begin{enumerate}
- \item 画像から画素値区間ごとの画素のみを抽出し，抽出画像を生成する
- \item 抽出画像を区間内の画素とそれ以外の画素とで2値化する
- \item 生成された画像それぞれに対しラベリング処理を行い，抽出画像ごとの最大面積を計算
-       する
- \item 抽出画像ごとの最大面積の中で最大の面積を求める
- \item 画像を入れ替えて(1)〜(4)を繰り返す
- \item 画素値区間の分割数を変更し，(5)を繰り返す．
-\end{enumerate}
+% \begin{enumerate}
+%  \item 画像から画素値区間ごとの画素のみを抽出し，抽出画像を生成する
+%  \item 抽出画像を区間内の画素とそれ以外の画素とで2値化する
+%  \item 生成された画像それぞれに対しラベリング処理を行い，抽出画像ごとの最大面積を計算
+%        する
+%  \item 抽出画像ごとの最大面積の中で最大の面積を求める
+%  \item 画像を入れ替えて(1)〜(4)を繰り返す
+%  \item 画素値区間の分割数を変更し，(5)を繰り返す．
+% \end{enumerate}
 
-画素は10，20，30個の区間に分割し，それぞれ計測を行った．計測された最大面
-積と埋め込み率100％でLSBに埋め込みを行った場合のSSIMとの相関を表
-\ref{tab:areasize_vs_ssim}に示す．この結果から画素値区間の分割数をを20ま
-たは30とすることで高い相関が得られていることがわかる．このことから近しい
-画素値によって構成される大きな領域を含む画像ほどSSIMが減少しやすいといえ
-る．
+% 画素は10，20，30個の区間に分割し，それぞれ計測を行った．計測された最大面
+% 積と埋め込み率100％でLSBに埋め込みを行った場合のSSIMとの相関を表
+% \ref{tab:areasize_vs_ssim}に示す．この結果から画素値区間の分割数をを20ま
+% たは30とすることで高い相関が得られていることがわかる．このことから近しい
+% 画素値によって構成される大きな領域を含む画像ほどSSIMが減少しやすいといえ
+% る．
 
-\begin{table}[h]
- \centering
- \caption{誤りパターンテーブル}
- \label{tab:despertion_vs_ssim}
- \begin{tabular}{|c|c|} \hline
-  分割数 & 相関 \\ \hline
-  10  & 0.721631188 \\ \hline
-  20 & 0.717703982  \\ \hline
-  30  & 0.65476536  \\ \hline
- \end{tabular}
-\end{table}
-
-\section{まとめ}
-
-\section{今後の課題}
+% \begin{table}[h]
+%  \centering
+%  \caption{誤りパターンテーブル}
+%  \label{tab:despertion_vs_ssim}
+%  \begin{tabular}{|c|c|} \hline
+%   分割数 & 相関 \\ \hline
+%   10  & 0.721631188 \\ \hline
+%   20 & 0.717703982  \\ \hline
+%   30  & 0.65476536  \\ \hline
+%  \end{tabular}
+% \end{table}
 
 \section{実験環境}
+\begin{itemize}
+ \item OS : Mac OS X 8，9，Windows 7，Ubuntu 13.10
+ \item IDE : Intellij IDEA 13.0
+\end{itemize}
+
+\section{画像の入手元}
+\begin{enumerate}
+ \item 神奈川大学 \\
+       \url{http://www.ess.ic.kanagawa-it.ac.jp/app_images_j.html}
+ \item 京都大学 \\
+       \url{http://vision.kuee.kyoto-u.ac.jp/IUE/IMAGE_DATABASE/STD_IMAGES/index.html}
+ \item Ashi-LAB \\
+       \url{http://asssy.sakura.ne.jp/idba.html}
+ \item Rensselaer Polytechnic Institute
+       \url{http://www.cipr.rpi.edu/resource/stills/index.html}
+\end{enumerate}
 
 \section{おわりに}
+ 本研究では誤りパターン埋め込み法における埋め込み率と誤り率，画質劣化と
+のトレードオフ関係を実験的に明らかにした．これによって，埋め込みをLSB平面に
+限定した場合，埋め込み率，誤り率によって画質が大きく劣化することはなく，ステガノグラ
+フィ技術の隠蔽性に大きく影響を与えることはないということがわかった．さら
+に，この結果から埋め込み範囲を広げてのSSIMの計測を行い，2ビットプレーン
+を使用することでほとんどの画像に対し1.9倍近くのテキスト情報の埋め込みが
+可能であること，画像を適切に選択することで3倍以上ものテキスト情報の埋め
+込みが可能であることを示した．
+
+ また，Shalkwijkの数え上げ符号を用いた誤りパターンへの動的な変換方法を提
+案することで，強いメモリ制約下における誤りパターンテーブルの実装問題に対
+する解決策を示した．しかし，本実験で使用した環境は決してメモリ制約の強い
+環境ではないため，今後実際に強いメモリ制約下での実験を行う必要がある．
 
 %-------------------------------------------header and footer
 
