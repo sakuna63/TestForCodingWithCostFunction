@@ -1,16 +1,16 @@
 \begin{thebibliography}{1}
 
 \bibitem{Paper03}
-Z.Wang, A.C.Bovik, H.R.Sheikh, E.P.Simoncelli.
+Z.Wang, A.C.Bovik, H.R.Sheikh, and E.P.Simoncelli.
 \newblock Image quality assessment: From error visibility to structural
   similarity.
 \newblock {\em IEEE TRANSACTIONS ON IMAGE PROCESSING}, Vol.~13, No.~4, pp.
   600--612, April 2004.
 
 \bibitem{Paper01}
-$B9gEDfF(B, $BEOJU=T(B, $B>>K\OB9,(B, $B5HEDL-(B, $BKL8&Fs(B.
-\newblock $B%3%9%HIU$-Id9f2=$rMQ$$$?%9%F%,%N%0%i%U%#(B.
-\newblock $B?.3X5;K!(BIT, Vol. 113, No. 153, pp. 5--9, 7 2013.
+合田翔, 渡辺峻, 松本和幸, 吉田稔, 北研二.
+\newblock コスト付き符号化を用いたステガノグラフィ.
+\newblock 信学技法IT, Vol. 113, No. 153, pp. 5--9, 7 2013.
 
 \bibitem{Paper02}
 J.P.M.Shalkwijk.

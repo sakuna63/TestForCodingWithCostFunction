@@ -2,6 +2,7 @@ all:
 	python convert.py
 	ebb img/*.png
 	platex     report
+	jbibtex    report
 	platex     report
 	platex 	   report		
 	dvipdfmx  -p a4 report
