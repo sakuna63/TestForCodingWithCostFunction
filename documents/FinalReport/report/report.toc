@@ -10,7 +10,7 @@
 \contentsline {subsection}{\numberline {6.2}実験結果}{4}
 \contentsline {subsubsection}{\numberline {6.2.1}誤り率と埋め込み率}{4}
 \contentsline {subsubsection}{\numberline {6.2.2}SSIMと誤り率}{5}
-\contentsline {subsubsection}{\numberline {6.2.3}2ビットプレーン以降の埋め込みでの実験結果}{5}
+\contentsline {subsubsection}{\numberline {6.2.3}2ビットプレーン以降の埋め込み}{5}
 \contentsline {subsubsection}{\numberline {6.2.4}メッセージ長が同じ場合の劣化について}{6}
 \contentsline {section}{\numberline {7}実験環境}{7}
 \contentsline {section}{\numberline {8}画像の入手元}{7}
