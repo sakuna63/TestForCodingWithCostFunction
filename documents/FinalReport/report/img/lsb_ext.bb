@@ -1,5 +1,5 @@
 %%Title: ./img/lsb_ext.png
 %%Creator: extractbb 20110311
-%%BoundingBox: 0 0 333 81
-%%CreationDate: Tue Feb  4 21:11:20 2014
+%%BoundingBox: 0 0 123 256
+%%CreationDate: Thu Feb  6 09:29:51 2014
 

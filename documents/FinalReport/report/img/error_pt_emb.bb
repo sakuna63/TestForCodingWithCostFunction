@@ -1,5 +1,5 @@
 %%Title: ./img/error_pt_emb.png
 %%Creator: extractbb 20110311
-%%BoundingBox: 0 0 472 268
-%%CreationDate: Tue Feb  4 21:11:20 2014
+%%BoundingBox: 0 0 433 362
+%%CreationDate: Thu Feb  6 09:29:51 2014
 
