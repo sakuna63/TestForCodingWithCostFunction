@@ -13,12 +13,12 @@ public class CoverData {
     public int buff_offset;
     public String file_name;
 
-    public CoverData() {
-    }
-
     public CoverData(File file) {
         this.file_name = file.getName();
         File2Buff(file);
+    }
+
+    public CoverData() {
     }
 
     private void File2Buff(File file) {
@@ -79,6 +79,26 @@ public class CoverData {
         return buff_wo;
     }
 
+    public StegoData lsb(int[] msg) {
+        StegoData stego = new StegoData(this, 8, 1);
+        int index = 0;
+        byte before, after;
+
+        for(int m : msg) {
+            byte[] m_arr = Util.splitError(new int[]{m}, 8);
+            for(byte m_a : m_arr) {
+                before = stego.buff[index + buff_offset];
+                after = (byte) (before % 2 == 0 ? before + m_a : before - 1 + m_a);
+//                IO.println("before:" + before + " emb:" + m_a + " after:" + after);
+                stego.error_count += Math.abs(before - after);
+                stego.buff[index + buff_offset] = after;
+                index++;
+            }
+            if(index + buff_offset >= stego.buff.length) break;
+        }
+
+        return stego;
+    }
 
     /**
      * 指定された埋め込み範囲中で限界までmsgを埋め込む

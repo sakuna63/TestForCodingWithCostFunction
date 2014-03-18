@@ -45,6 +45,12 @@
     \endgroup%
   \fi}
 
+\def\numberline#1{%
+   \setbox\z@\hbox{#1\ }%
+   \ifdim\wd\z@<\@lnumwidth \hbox to\@lnumwidth{\unhbox\z@\hfil}%
+   \else                    \box\z@
+   \fi}
+  
 % \def\l@subsection{%
 %           \@tempdima\js@tocl@width \advance\@tempdima -1zw
 %           \@dottedtocline{2}{\@tempdima}{3zw}}

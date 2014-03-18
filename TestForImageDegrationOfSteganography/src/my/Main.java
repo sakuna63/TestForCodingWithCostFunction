@@ -30,11 +30,18 @@ public class Main {
 
 //        files_img = new File[]{files_img[0]};
 //        fin2(files_img, msg);
-
+        PrintWriter pw = getPrintWriter("./", "lsb", SHIFT_JIS);
+        pw.println("ファイル名,誤り率,PSNR,SSIM");
+        assert files_img != null;
         for(File f : files_img) {
             CoverData c = new CoverData(f);
-            StegoData s = createStegoData(c, msg, 8, 7);
+            StegoData s = c.lsb(msg);
+            pw.print(f.getName() + ",");
+            pw.print(s.getErrorRate() + ",");
+            pw.print(s.psnr(c) + ",");
+            pw.println(s.ssim(c) + ",");
         }
+        pw.close();
 
         IO.print("埋め込み終了");
     }
